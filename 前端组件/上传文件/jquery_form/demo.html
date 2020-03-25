@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="myForm" >
+    <input type="text" name="cid" />
+    <input type="text" name="title"/>
+    <input type="number" name="pageindex" />
+    <input type="number" name="pagesize" />
+    <div>
+        <input type="checkbox" value="吃" name="like">吃
+        <input type="checkbox" value="喝" name="like">喝
+        <input type="checkbox" value="玩" name="like">玩
+    </div>
+    <a href="javascript:;" class="submit">提交</a>
+    <!--<input type="submit" value="提交"/>-->
+</form>
+</body>
+<script src="lib/jquery-1.10.2.js"></script>
+<script src="lib/jquery.form.min.js"></script>
+<script>
+    /*官方api http://malsup.com/jquery/form/
+    * 在上传文件时 jqForm 会自动加上正确的 enctype="multipart/form-data"
+    * */
+
+    var $myForm=$('#myForm');
+    var options ={
+        url: '',                                // 接口地址
+        type: 'post',                           //（get or post）
+        data:{param:"额外参数"},                 // 除去表单内部额外参数要添加的参数(不会发生覆盖)
+        dataType: 'json',                       //html(默认), xml, script, json...接受服务端返回的类型
+        beforeSubmit: function (formData, jqForm, options) {  //提交前的回调函数
+            //formData  [Object, Object]   是要发送的数据
+            //根据formData做表单校验用 或者对其中某些值进行处理
+            //return false;             //如果返回false 不会发送
+        },
+        success: function (res) {      //提交后的回调函数
+            console.log(res)
+        },
+//        clearForm: true,          //成功提交后，清除所有表单元素的值
+//        resetForm: true,          //成功提交后，重置所有表单元素的值
+        timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+    };
+
+    /*方法一 推荐*/
+    $('.submit').on('click',function () {
+        $myForm.ajaxSubmit(options);
+    })
+
+    /*方法二  给该表单绑定监听事件  点击<input type="submit" value="提交"/> 就会上传*/
+//    $myForm.ajaxForm(options);
+</script>
+</html>

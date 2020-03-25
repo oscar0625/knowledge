@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单分页</title>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        body{
+            height:6000px;
+        }
+        *{
+            font-family: "Microsoft YaHei";
+        }
+        .oscarPagination{
+            display: table;
+            margin:0 auto 85px;
+            color: #555555;
+        }
+        .oscarPagination >span{
+            float: left;
+            margin-left: 10px;
+            cursor: pointer;
+            line-height: 28px;
+
+        }
+        .oscarPagination .prev,.oscarPagination .next{
+            width: 74px;
+            line-height: 26px;
+            text-align: center;
+            border: 1px solid #4591e2;
+            color: #555555;
+            -webkit-border-radius: 13px;
+            -moz-border-radius: 13px;
+            -ms-border-radius: 13px;
+            border-radius: 13px;
+        }
+        .oscarPagination .prev{
+            margin:0 10px 0 30px;
+        }
+        .oscarPagination .next{
+            margin:0 30px 0 10px;
+        }
+        .oscarPagination .o_disabled{
+            cursor:not-allowed;
+            opacity: 0.5;
+        }
+
+        .oscarPagination>ul{
+            float: left;
+        }
+        .oscarPagination>ul >li{
+            float: left;
+            width: 28px;
+            line-height: 28px;
+            text-align: center;
+            cursor: pointer;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            -ms-border-radius: 50%;
+            border-radius: 50%;
+            margin-left:5px;
+        }
+        .oscarPagination>ul>.o_active{
+            background: #4591e2;
+            color: #fff;
+        }
+        .oscarPagination>ul>span{
+            float: left;
+            width: 28px;
+            line-height: 28px;
+            margin-left:5px;
+        }
+    </style>
+</head>
+<body>
+<div id="oscarPagination" class="clearfix"></div>
+</body>
+<script src="pagination.js"></script>
+<script>
+    var page=new Pagination({
+        target:'#oscarPagination', //容器盒子id值
+        lastPage:20,  //最后一页的页码
+        currentPage:1 , //初始页
+        maxPage:10, //当前可见最多页码个数
+        activeClass:'o_active',//激活时的类名
+        disabledClass:'o_disabled',//到头的类名
+        paginationOnLoad:function (index) {   //分页列表加载完成后触发
+
+        },
+        callback:function (index) {   //点击分页才会触发
+            console.log(index)
+        }
+    })
+
+//    var ele=$('#oscarPagination'),content;
+//    postAjax(url, {"pageindex": 1,"pagesize": pagesize }, function (res) {
+//
+//        var lastPage = Math.ceil(res.count / pagesize);
+//
+//        var page = new Pagination({
+//            target: ele[0], //容器盒子id值
+//            lastPage: lastPage,  //最后一页的页码
+//            currentPage: 1, //初始页
+//            maxPage: 10, //当前可见最多页码个数
+//            activeClass: 'o_active',//激活时的类名
+//            disabledClass: 'o_disabled',//到头的类名
+//            mTop: mTop,
+//            paginationOnLoad: function (index) {   //分页列表加载完成后触发
+//                //写入
+//            },
+//            callback: function (index) {   //点击分页才会触发
+//                //console.log(index)
+//                postAjax(url, {"pageindex": index, "pagesize": pagesize }, function (res) {
+//                    //写入
+//                },function () {
+//                    content.html(app.gifImg||'')
+//                })
+//            }
+//        })
+//    }, function () {
+//        ele.css({display: 'none'}).html('');
+//        content.html(app.gifImg||'')
+//    });
+</script>
+</html>

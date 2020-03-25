@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background: #051232;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="700" height="312" id="drawing"></canvas>
+</body>
+<script>
+    function keepDecimal(num, n) { //keepDecimal(3.1415926,2)
+        var times = Math.pow(10, n);
+        return (Math.round(num * times) / times).toFixed(n)
+    }
+
+    function Pie2(obj) {
+        this.ps = obj.canvas.getContext('2d'); //2d上下文 canvas
+        this.width = obj.width; //宽
+        this.height = obj.height; //高
+        this.centerX = obj.centerX; //图形中心x
+        this.centerY = obj.centerY; //图形中心y
+        this.radiusMax = obj.radiusMax; //圆环外层半径
+        this.radiusMin = obj.radiusMin; //圆环内层半径 
+        this.img = obj.img; //图片
+        this.imgWidth = obj.imgWidth; //图片宽度
+        this.color = obj.color; //圆环颜色
+        this.data = obj.data; // 数据
+    }
+    Pie2.prototype.draw = function (imgRotate) {
+        var ps = this.ps,
+            centerX = this.centerX,
+            centerY = this.centerY,
+            radiusMax = this.radiusMax,
+            radiusMin = this.radiusMin,
+            img = this.img,
+            color = this.color,
+            data = this.data,
+            lineWidth = radiusMax - radiusMin, //线宽
+            radius = radiusMax - lineWidth / 2, //当前线宽下的半径
+            gap = 14 * Math.PI / 180, //分割的角度
+            biasLong = 20, //斜线长度
+            straightLong = 5; //直线长度
+
+        ps.clearRect(0, 0, this.width, this.height)
+
+        //画图片
+        ps.save();
+        ps.translate(centerX, centerY);
+        ps.rotate(imgRotate * Math.PI / 180);
+        ps.drawImage(img,0,0,img.width,img.height,-this.imgWidth/2, -this.imgWidth/2,this.imgWidth,this.imgWidth);
+        ps.restore();
+
+        var sum = 0,
+            percentageSum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var percentage, angle, coordinate;
+            if (i == data.length - 1) {
+                percentage = keepDecimal(1 - percentageSum, 3);
+            } else {
+                percentage = keepDecimal(data[i].value / data[i].count, 3);
+                percentageSum += percentage * 1;
+            }
+            angle = percentage * Math.PI * 2;
+            coordinate = this.toXY(centerX, centerY, radiusMax, Math.PI * 2 - (sum + (angle - gap) / 2), biasLong,
+                straightLong);
+
+            //画扇形
+            ps.beginPath();
+            ps.lineWidth = lineWidth;
+            ps.lineCap = "round"; //设置或返回线条的结束端点样式。 round：圆形线帽。
+            ps.arc(centerX, centerY, radius, sum, sum + angle - gap, false);
+            ps.strokeStyle = color;
+            ps.stroke();
+
+            //画文字
+            ps.beginPath();
+            ps.font = '14px/14px Microsoft YaHei';
+            ps.fillStyle = '#fdfdfd';
+            ps.fillText(data[i].title, coordinate.starX + (coordinate.isPlus ? 20 : -(20 + ps.measureText(data[i].title)
+                    .width)),
+                coordinate.starY);
+            ps.fillText('解密数量：' + data[i].value + '（' + (percentage * 100).toFixed(1) + '%）', coordinate.starX + (
+                coordinate.isPlus ? 0 : -(ps.measureText('解密数量：' + data[i].value + '（' + (percentage * 100)
+                    .toFixed(1) + '%）').width)), coordinate.starY + 20);
+
+            //加sum
+            sum += angle;
+        }
+
+    }
+    Pie2.prototype.toXY = function (centerX, centerY, radius, angle, biasLong, straightLong) {
+        var starX, starY, isPlus = true,
+            sin = Math.abs(Math.sin(angle)),
+            cos = Math.abs(Math.cos(angle));
+        if (angle >= 0 && angle < Math.PI / 2) {
+            //第一象限 sin要负值  cos要正值 straightLong是正值
+            sin = -sin;
+        } else if (angle >= Math.PI / 2 && angle < Math.PI) {
+            //第二象限 sin cos straightLong是负值 
+            sin = -sin;
+            cos = -cos;
+            straightLong = -straightLong;
+            isPlus = false;
+        } else if (angle >= Math.PI && angle < Math.PI * 1.5) {
+            //第三象限 sin要正值  cos要负值 straightLong是负值
+            cos = -cos;
+            straightLong = -straightLong;
+            isPlus = false;
+        } else if (angle >= Math.PI * 1.5 && angle < Math.PI * 2) {
+            //第四象限 sin cos straightLong是正值  
+        } else {
+            //不再0~360范围 递归处理
+            if (angle < 0) {
+                angle += 2 * Math.PI;
+            } else {
+                angle -= 2 * Math.PI;
+            }
+            return this.toXY(centerX, centerY, radius, angle, biasLong, straightLong);
+        }
+        starX = centerX + (radius + biasLong) * cos + straightLong;
+        starY = centerY + (radius + biasLong) * sin;
+
+        return {
+            starX: starX,
+            starY: starY,
+            isPlus: isPlus
+        }
+    }
+
+    var img = new Image();
+    img.src = 'img/azureDragonrc1.png';
+    img.onload = function () {
+        var circle = new Pie2({
+            canvas: document.getElementById('drawing'),
+            width: 700,
+            height: 312,
+            centerX: 350,
+            centerY: 150,
+            radiusMax: 115,
+            radiusMin: 100,
+            img: img,
+            imgWidth: 240,
+            color: '#033598',
+            data: [{
+                    value: 1,
+                    count: 15,
+                    title: '生物与现代农业'
+                },
+                {
+                    value: 2,
+                    count: 15,
+                    title: '新材料'
+                },
+                {
+                    value: 3,
+                    count: 15,
+                    title: '先进制造与自动化'
+                },
+                {
+                    value: 4,
+                    count: 15,
+                    title: '信息技术'
+                },
+                {
+                    value: 5,
+                    count: 15,
+                    title: '其他'
+                },
+            ]
+        });
+        var progress = 0;
+
+        function animate() {
+            //dosomething
+            circle.draw(progress);
+            progress++
+            window.requestAnimationFrame(animate);
+        }
+        animate();
+    }
+</script>
+
+</html>

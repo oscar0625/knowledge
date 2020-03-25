@@ -1,0 +1,16 @@
+{
+  "name": "gulp",
+  "version": "1.0.0",
+  "description": "使用指南",
+  "private": true,
+  "main": "gulpfile.js",
+  "scripts": {
+    "build": "gulp"
+  },
+  "author": "oscar",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-uglify": "^3.0.2"
+  }
+}

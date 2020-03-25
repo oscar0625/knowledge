@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>textarea自动高度</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        textarea {
+            box-sizing: border-box;
+            width: 200px;
+            height: 122px;
+            padding: 20px 10px;
+            border: 1px solid red;
+            line-height: 30px;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <textarea name="" ></textarea>
+</body>
+
+<script>
+    /**
+     * 文本框根据输入内容自适应高度 textarea必须是 content-box (标准盒)否则会有错
+     * @param                {HTMLElement}           输入框元素
+     * @param                {Boolean}               是否开启随着输入滚动滚动条功能(可选)
+     * @param                {Number}                设置最大高度(可选)
+     */
+    function autoTextarea(elem,isScroll,maxHeight) {
+
+        elem.style.resize = 'none';
+        elem.style.overflowY = 'auto'; 
+
+        var addEvent = function (type, callback) {
+                elem.addEventListener ?
+                    elem.addEventListener(type, callback, false) :
+                    elem.attachEvent('on' + type, callback);
+            },
+            computedStyle = function (prop) {
+                var cs;
+                if (window.getComputedStyle) {
+                    cs = window.getComputedStyle(elem, null);
+                    return cs.getPropertyValue(prop);
+                } else {
+                    //兼容ie8操作 currentStyle
+                    cs = elem.currentStyle;
+                    return cs[prop]
+                }
+            },
+            //盒模型
+            boxSizing=computedStyle('box-sizing'),
+            elemPadding = parseInt(computedStyle('padding-top')) + parseInt(computedStyle('padding-bottom')), //textarea的padding
+            elemBorder=parseInt(computedStyle('border-top')) + parseInt(computedStyle('border-bottom')),    //textarea的border
+            offset=boxSizing==='border-box'?elemPadding+elemBorder:0,    //偏移量 标准盒0 怪异盒elemPadding+elemBorder
+            initContentHeight =parseInt(computedStyle('height'))-offset, //textarea初始内容高度
+
+            lastContentHeight =initContentHeight, //上一次内容高度 给scroll用
+            scroll=function(contentHeight){  //随着输入滚动滚动条功能
+                var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                //当前内容高度和上一次内容高度差值
+                scrollTop+=contentHeight-lastContentHeight;
+                document.body.scrollTop = scrollTop;
+                document.documentElement.scrollTop = scrollTop;
+                lastContentHeight=contentHeight;
+            },
+
+            change = function () {
+                //每次都先将textarea变为初始内容高度 很重要
+                elem.style.height = initContentHeight+offset+ 'px';
+
+                //当前内容的高度
+                var contentHeight = elem.scrollHeight - elemPadding;
+                // console.log(contentHeight);
+                if (contentHeight > initContentHeight) {
+                    if (maxHeight && contentHeight > maxHeight) {
+                        contentHeight = maxHeight;
+                        elem.style.overflowY = 'auto';
+                    } else {
+                        elem.style.overflowY = 'hidden'; //很重要 否则可能会多出一行
+                    }
+
+                    elem.style.height = contentHeight+offset+ 'px';
+
+                    if(isScroll){
+                        scroll(contentHeight)
+                    }
+                };
+            };
+        //绑定事件
+        addEvent('propertychange', change);
+        addEvent('input', change);
+        addEvent('focus', change);
+
+        //初始化一次
+        change();
+    }
+</script>
+<script>
+    var textarea = document.getElementsByTagName('textarea')[0];
+    //使用前最好要保证 textarea的内容高度正好可以容纳整数行的内容 比如正好容纳3行 
+    autoTextarea(textarea);
+</script>
+
+</html>
