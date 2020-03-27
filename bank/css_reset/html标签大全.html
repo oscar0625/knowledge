@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>css</title>
+    <link rel="stylesheet" href="./normalize.css">
+    <style>
+        body {
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 布局-->
+    <header>头部</header>
+    <footer>底部</footer>
+    <nav>导航</nav>
+    <aside>侧边栏</aside>
+    <main>主要内容</main>
+    <article>定义文章</article>
+    <section>某一单元</section>
+    <hr>
+
+    <!-- 链接 -->
+    <a href="">链接</a>
+    <button>按钮</button>
+    <hr>
+
+    <!-- 列表 -->
+    <ul>
+        <li>计算机</li>
+        <li>计算机</li>
+    </ul>
+    <ol>
+        <li>计算机</li>
+        <li>计算机</li>
+    </ol>
+    <dl>
+        <dt>计算机</dt>
+        <dd>用来计算的仪器 ... ...</dd>
+    </dl>
+    <hr>
+
+    <!-- 文本 -->
+    <h1>一级标题</h1>
+    <h2>二级标题</h2>
+    <h3>三级标题</h3>
+    <h4>四级标题</h4>
+    <h5>五级标题</h5>
+    <h6>六级标题</h6>
+    <p>这是段落。</p>
+    <span>定义文档中的节</span>
+    <i>倾斜</i>
+    <b>加粗</b>
+    <mark>milk</mark>
+    <del>删除</del>
+    <q>这是一段引用的文字</q>
+    <small>较小的文字</small>
+    <sub>1</sub>
+    <sup>2</sup>
+    <hr>
+    <em>强调倾斜</em>
+    <strong>更强调加粗</strong>
+    <hr>
+
+    <!-- 可替换元素 -->
+    <img src="horse.jpg" alt="horse.jpg">
+    <video width="320" height="240" controls="controls">
+        <source src="forrest_gump.mp4" type="video/mp4" />
+        <source src="forrest_gump.ogg" type="video/ogg" />
+        Your browser does not support the video element.
+    </video>
+    <audio controls>
+        <source src="horse.ogg" type="audio/ogg">
+        <source src="horse.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <hr>
+
+    <!-- 表单 input也是可替换元素-->
+    <form action="">
+        <label for="username">
+            <input type="text" id="username" name="username" placeholder="名字">
+        </label>
+        <select>
+            <optgroup label="Swedish Cars">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+            </optgroup>
+            <optgroup label="German Cars">
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </optgroup>
+        </select>
+        <textarea name="des" cols="30" rows="10" placeholder="内容"></textarea>
+        <input type="button" value="按钮">
+    </form>
+    <hr>
+
+    <!-- 不常用 -->
+    <bdo dir="rtl">这是一段颠倒的文字</bdo>
+    <!-- 进度条 -->
+    <progress value="22" max="100"></progress>
+    <progress></progress>
+    <!-- 定义页面中所有链接的默认地址或默认目标。 -->
+    <base href="http://www.w3school.com.cn/i/" target="_blank" />
+
+</body>
+<script>
+    // 不推荐使用下划线用户会把它混淆为一个超链接！ins u 标签
+    // pre标签的一个常见应用就是用来表示计算机的源代码 在normalize会设置为等宽字体
+</script>
+
+</html>

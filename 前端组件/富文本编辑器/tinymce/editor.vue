@@ -23,6 +23,7 @@ import "tinymce/plugins/paste";
 import "tinymce/plugins/preview";
 import "tinymce/plugins/fullscreen";
 import "tinymce/plugins/wordcount";
+//需要自己下载行高插件http://tinymce.ax-z.cn/more-plugins/lineheight.php
 import "tinymce/plugins/lineheight";
 
 export default {

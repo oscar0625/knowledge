@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>vertical-align</title>
+</head>
+
+<body>
+    <div style="background: green;">
+        <span >1</span>
+        <img src="http://aishow.ckzone.cn/images/wardenInspecearth.png">
+        <span style="display: inline-block;width:50px;height: 50px;"></span>
+        <!-- <span style="display: inline-block;">
+            <span>123</span>
+            <div>456</div>
+            <span style="display: inline-block;width:50px;height: 50px;"></span>
+            <div style="width:50px;height: 50px;">
+                789
+            </div>
+        </span>
+        <span style="display: inline-block;">
+            <span>123</span>
+            <div style="width:50px;height: 50px;"></div>
+            <div style="width:50px;height: 50px;overflow: hidden;"></div>
+            <div style="width:50px;height: 50px;"></div>
+        </span> -->
+    </div>
+</body>
+<script>
+    //1.作用
+    //  vertical-align是用来设置行内元素对齐方式的。
+    //  vertical-align起作用是有前提条件的，这个前提条件就是：只能应用于display属性值为inline、inline-block、inline-table另加一个table-cell的元素。
+    //  在css中，有些css属性是会改变元素的display值的，例如float和position: absolute，一旦设置了这两个属性之一，元素的display值就是变为block，因此，vertical-align也就失去了作用。
+
+    //2.基线相关 
+    //  baseline基线的位置并不是固定的
+    //      元素中是inline元素，里面是文本内容（或者嵌套几层inline元素后最里面是文本），基线是文本的下边缘位置。
+    //      元素是img，基线就是img的下边缘(包括margin)。
+    //      元素是inline-block元素，由于里面内容不确定比较复杂
+    //          如果元素中没有内容，基线就是该元素的下边缘(包括margin)。
+    //          如果元素中有内容，该元素dom中 最后一个 行内元素（排除块级元素）的下边缘位置是基线。
+    //                 特殊情况：该元素dom中 最后一个 overflow不是visible的元素的下边缘(包括margin)是基线。       
+
+    //3.属性相关
+    //  a.具体的长度值：是正值基线就向上移动，如果是负值基线向下移动。  
+    //  b.百分比值：正负情况和长度值一样，需要知道的值是相对于行高（line-height）的百分比。
+    //  c.top：元素的顶边和行内最高元素的顶边对齐
+    //  d.bottom：元素的底边和行的底边对齐。
+    //  e.middle：元素上下边的中心点和行基线向上1/2x的高度位置对齐。
+    //            middle并不是我们理解的居中，而是近似。而且会受字体大小的影响偏移。
+    //  f.text-top：元素顶边和父级的内容区域顶边对齐
+    //  g.text-bottom：元素底部和父级的内容区域底部对齐
+</script>
+
+</html>
