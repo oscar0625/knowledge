@@ -13,31 +13,56 @@
 </body>
 <script>
     //http://alloyteam.github.io/CodeGuide/
-    
-    //1.html属性顺序
-    //class id, name data-*
-    //src, for, type, href, value
-    //title, alt role, aria-*
 
+    //一、命名规范
+    //项目名 目录名 文件名(html,css,js,img) html属性名 用小写字母加下划线 例：my_project_name
+    //有复数结构时，要采用复数命名法。例：scripts, styles, images, data_models
+
+    //二、html
+    //1.不要在自动闭合标签结尾处使用斜线（HTML5 规范 指出他们是可选的）
+    //2.html属性顺序
+    //  class id, name data-*
+    //  src, for, type, href, value maxlength
+    //  placeholder title, alt 
+    //  role, aria-*
+    //  required, readonly, disabled
+    //3.boolean属性指不需要声明取值的属性，XHTML需要每个属性声明取值，但是HTML5并不需要；
+    //  boolean属性的存在表示取值为true，不存在则表示取值为false。
+    //  例：<input type="text" disabled>
+    //4.在JS文件中生成标签让内容变得更难查找，更难编辑，性能更差。应该尽量避免这种情况的出现。
+
+
+    //三、css
+    //1.命名
+    //  类名使用小写字母，以中划线分隔
+    //  id采用驼峰式命名
+    //  scss中的变量、函数、混合采用驼峰式命名
     //2.css声明顺序
-    // 定位（positioning）
-    // 盒模型（box model）
-    // 排版（Typographic） font..
-    // 可见（Visual ） background..
-    // 其他 Misc opacity..
+    //  display visibility float clear overflow
+    //  定位（positioning） position top right bottom left z-index
+    //  盒模型（box model）margin border padding width height
+    //  排版（Typographic） font line-height text-align vertical-align
+    //  可见（Visual ）color background
+    //  其他 opacity transform transition  animation
 
-    //3.js命名规范
-    // https://juejin.im/entry/599d433cf265da24797b5c66
-    // 变量/函数小驼峰 类大驼峰 常量全部大写（使用大写字母和下划线来组合命名）
-    // 变量/常量/类名前缀是名词 函数名前缀为动词
-    // 常见动词约定
-    // can	判断是否可执行某个动作(权限)	函数返回一个布尔值。true：可执行；false：不可执行
-    // has	判断是否含有某个值	函数返回一个布尔值。true：含有此值；false：不含有此值
-    // is	判断是否为某个值	函数返回一个布尔值。true：为某个值；false：不为某个值
-    // get	获取某个值	函数返回一个非布尔值
-    // set	设置某个值	无返回值、返回是否设置成功或者返回链式对象
-    // load	加载某些数据	无返回值或者返回是否加载完成的结果
-    // handle 事件
+    //四、js
+    //1.js命名规范
+    //  https://juejin.im/entry/599d433cf265da24797b5c66
+    //  变量/函数小驼峰 类大驼峰 常量全部大写（使用大写字母和下划线来组合命名）
+    //  变量/常量/类名前缀是名词 函数名前缀为动词
+    //  常见动词约定
+    //      can	判断是否可执行某个动作(权限)	函数返回一个布尔值。true：可执行；false：不可执行
+    //      has	判断是否含有某个值	函数返回一个布尔值。true：含有此值；false：不含有此值
+    //      is	判断是否为某个值	函数返回一个布尔值。true：为某个值；false：不为某个值
+    //      get	获取某个值	函数返回一个非布尔值
+    //      set	设置某个值	无返回值、返回是否设置成功或者返回链式对象
+    //      load	加载某些数据	无返回值或者返回是否加载完成的结果
+    //      handle 事件
+    //  'ID'在变量名中全大写 'URL'在变量名中全大写
+    //  jquery对象必须以'$'开头命名
+    //2.文档注释 见jsdoc
+    //3.永远不要直接使用undefined进行变量判断； 
+    //  使用typeof和字符串'undefined'对变量进行判断。 typeof person === 'undefined'
 </script>
 
 </html>

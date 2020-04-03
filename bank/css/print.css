@@ -1,0 +1,67 @@
+/*
+ * 可以优化打印出的网页更适合浏览，并且加快打印速度，节省打印机耗材。
+ *      修复打印时的背景和文字颜色
+ *      删除所有的阴影效果
+ *      标注超链接，并显示URL链接
+ */
+@media print {
+    @page {
+        margin: 0.5cm;
+    }
+
+    * {
+        background: transparent !important;
+        color: #282828 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: 0 !important;
+        -ms-filter: 0 !important;
+    }
+
+    a:link,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " ("attr(href) ")";
+        font-size: .9em;
+    }
+
+    abbr[title]:after {
+        content: " ("attr(title) ")";
+    }
+
+    img {
+        max-width: 100%;
+        border: 0
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    pre,
+    blockquote,
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+}

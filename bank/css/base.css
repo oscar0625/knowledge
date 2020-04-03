@@ -1,0 +1,84 @@
+/*
+ * 1. dt 默认没边距
+ * 2. li 默认没边距
+ * 3. code 默认没边距
+ * 4. th,td 默认padding:1px
+ */
+body,
+dl,
+dd,
+/* 1 */
+ul,
+ol,
+/*2*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+/*3*/
+form,
+fieldset,
+legend,
+input,
+textarea,
+optgroup,
+p,
+blockquote,
+figure,
+hr,
+menu,
+dir,
+thead,
+tbody,
+tfoot,
+th,
+td
+
+/*4*/
+    {
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * 定义全局字体
+ */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+        "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei",
+        sans-serif;
+}
+
+/**
+ * 去掉a标签下划线
+ */
+a {
+    text-decoration: none;
+}
+
+/**
+ * 去掉列表前的标识
+ */
+ol,
+ul {
+    list-style: none;
+}
+
+/*
+ * 移除单元格间距让其边重合 
+ */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*
+ * 统一引用标记
+ */
+q:before,
+q:after {
+    content: '';
+}

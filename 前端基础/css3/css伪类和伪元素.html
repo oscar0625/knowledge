@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>css伪类和伪元素</title>
+    <style>
+        /* css伪类 */
+        a:visited {
+            /* 选择所有访问过的链接 */
+        }
+
+        a:active {
+            /* 选择正在活动链接 */
+        }
+
+        a:hover {
+            /* 把鼠标放在链接上的状态 */
+        }
+
+        input:focus {
+            /* 选择元素输入后具有焦点 */
+        }
+
+        div:focus-within {
+            /* 当 <div> 的某个后代获得焦点时，匹配 <div> */
+        }
+
+        input:checked {
+            /* 选择所有选中的表单元素 */
+        }
+
+        input:disabled {
+            /* 选择所有禁用的表单元素 */
+        }
+
+        p:empty {
+            /* 选择所有没有子元素的p元素 */
+        }
+
+        p:first-child {}
+
+        p:last-child {}
+
+        p:nth-child(2) {}
+
+        :not(p) {}
+
+        p:lang(it) {
+            /* lang 向带有指定 lang 属性开始的元素添加样式。 */
+        }
+        /* 伪元素 */
+        ::after{}
+        ::before{}
+        ::placeholder{}
+        ::selection{}
+    </style>
+</head>
+
+<body>
+</body>
+
+</html>
