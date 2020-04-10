@@ -9,13 +9,46 @@
     <object id="AuthIE" name="AuthIE" width="0px" height="0px" codebase="DogAuth.CAB"
         classid="CLSID:05C384B0-F45D-46DB-9055-C72DC76176E3" style="visibility: hidden">
     </object>
+    <embed id="AuthNoIE" type="application/x-dogauth" width=0 height=0 hidden="true"></embed>
 </head>
 
 <body>
-    <div>
-        <input type="text" id="username" name="username" readonly="readonly" />
-        <input type="passwoprd" id="password" name="password" maxlength="32" />
+    <%-- 登陆 --%>
+    <%-- <div>
+        <input type="text" id="username" name="username" />
+        <input type="password" id="password" name="password" maxlength="32" />
         <input type="submit" value="登陆" id="submit" />
+        <div>
+            当前用户登陆状态：
+            <h1></h1>
+        </div>
+        <div>
+            操作状态：
+            <p></p>
+        </div>
+    </div> --%>
+
+    <%-- 注册 --%>
+    <%-- <div>
+        <input type="text" id="username" name="username" />
+        <input type="password" id="password1" name="password1" maxlength="32" />
+        <input type="password" id="password2" name="password2" maxlength="32" />
+        <input type="submit" value="注册" id="register" />
+        <div>
+            当前用户登陆状态：
+            <h1></h1>
+        </div>
+        <div>
+            操作状态：
+            <p></p>
+        </div>
+    </div> --%>
+    <%-- 修改密码 --%>
+    <div>
+        <input type="password" id="password0" name="password0" maxlength="32" />
+        <input type="password" id="password1" name="password1" maxlength="32" />
+        <input type="password" id="password2" name="password2" maxlength="32" />
+        <input type="submit" value="修改密码" id="changePwd" />
         <div>
             当前用户登陆状态：
             <h1></h1>
@@ -29,7 +62,7 @@
 <script src="https://cdn.bootcss.com/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="test.js"></script>
 <script language="javascript" type="text/javascript">
-    var main = {
+    var changePwd = {
         //写入关于用户的提示信息
         htmlUserNotice: function (message) {
             document.querySelector('h1').innerText = message;
@@ -38,7 +71,6 @@
         htmlLoginNotice: function (message) {
             document.querySelector('p').innerText = message;
         },
-
         //superDog是否插上 默认true没有插上
         dogNotPresent: true,
         //权限对象
@@ -55,42 +87,13 @@
         createAuthObj: function () {
             this.authObj = superDog.getAuthObject();
         },
-
         //ie
-        //打开superDog
-        openDog: function () {
-            //打开超级狗 返回值用来判断成功的状态
-            var authObj = this.authObj,
-                isOpen = authObj.Open(this.scope, this.authCode),
-                code, message = "";
-            //如果isOpen是0 证明打开了超级狗
-            if (isOpen == 0) {
-                this.dogNotPresent = false;
-                //获取用户名 返回值用来判断成功的状态
-                code = authObj.GetUserName();
-                //如果code值是0 证明成功获取用户名
-                if (code == 0) {
-                    document.getElementById("username").value = authObj.UserNameStr;
-                } else {
-                    message = superDog.reportStatus(code)
-                }
-            } else {
-                this.dogNotPresent = true;
-                message = superDog.reportStatus(isOpen);
-            }
-            this.htmlUserNotice(message);
-            //Execute the check again after 2 seconds
-            setTimeout(function () {
-                this.openDog();
-            }.bind(this), 2000);
-        },
-        //点击ie登陆
-        handleIeLogin: function () {
+        handleIeChangePwd: function () {
             var self = this,
+                oldPwd = document.getElementById("password0").value,
+                newPwd = document.getElementById("password1").value,
                 authObj = this.authObj,
-                pwd = document.getElementById("password").value,
-                status,
-                dogID, digest;
+                status;
             //是否打开supperDog
             status = authObj.Open(this.scope, this.authCode);
             if (status != 0) {
@@ -98,37 +101,21 @@
                 this.htmlLoginNotice(superDog.reportStatus(status));
                 return false;
             }
-            //验证密码
-            status = authObj.VerifyUserPin(pwd);
+            //验证一个新的超级狗必须
+            status = authObj.VerifyUserPin(oldPwd);
             if (status != 0) {
                 authObj.Close();
                 this.htmlLoginNotice(superDog.reportStatus(status));
                 return false;
             }
-            //获取DogID
-            status = authObj.GetDogID();
-            if (status != 0) {
-                authObj.Close();
+            //修改密码
+            status = authObj.ChangeUserPin(newPwd);
+            if (status == 0) {
+                alert("Your password has been changed successfully!");
+            } else {
                 this.htmlLoginNotice(superDog.reportStatus(status));
-                return false;
             }
-            dogID = authObj.DogIdStr;
-            //获取challenge
-            this.loadChallenge(function (challenge) {
-                //获取digest
-                status = authObj.GetDigest(challenge);
-                if (status != 0) {
-                    authObj.Close();
-                    this.htmlLoginNotice(superDog.reportStatus(status));
-                    return false;
-                }
-                digest = authObj.DigestStr;
-                //发送给服务器验证    
-                self.loadAuth(dogID, digest);
-                //最后关闭
-                authObj.Close();
-            });
-
+            authObj.Close();
         },
         //chrome和firefox
         //监听
@@ -138,34 +125,27 @@
                 if (event.data.type == "SNTL_FROM_HOST") {
                     var ReturnText = event.data.text,
                         message;
-                    //获取用户名
+                    console.log(ReturnText);
                     if ("GetUserNameEx" == ReturnText.InvokeMethod) {
-                        //成功获取到用户名
+                        //获取用户名
                         if (ReturnText.Status == 0) {
                             self.dogNotPresent = false;
-                            message = ""
-                            document.getElementById("username").value = ReturnText.UserNameStr;
+                            message = "";
                         } else {
                             self.dogNotPresent = true;
+                            self.nameInDog = "";
                             message = superDog.reportStatus(parseInt(ReturnText.Status))
-                            document.getElementById("username").value = "";
                         }
                         self.htmlUserNotice(message);
-                    }
-                    //点击登陆后的验证
-                    else if ("GetDigestEx" == ReturnText.InvokeMethod) {
-                        //密码经过superDog验证成功后
+                    } else if ("ChangeUserPinEx" == ReturnText.InvokeMethod) {
+                        //验证旧口令是否通过
                         if (ReturnText.Status == 0) {
-                            var dogID = ReturnText.DogIdStr,
-                                digest = ReturnText.DigestStr;
-                            //发送给服务器验证    
-                            self.loadAuth(dogID, digest)
+                            alert("Your password has been changed successfully!");
                         } else {
                             self.htmlLoginNotice(superDog.reportStatus(parseInt(ReturnText.Status)));
                         }
                     }
                 }
-                return;
             }, false);
         },
         //从超级狗中读取用户名
@@ -176,57 +156,17 @@
                 this.getUser();
             }.bind(this), 2000);
         },
-        //点击Chrome登陆
-        handleChromeLogin: function () {
+        handleChromeChangePwd: function () {
             var self = this,
-                pwd = document.getElementById("password").value;
+                oldPwd = document.getElementById("password0").value,
+                newPwd = document.getElementById("password1").value;
             //如果没有插上supperDog
             if (this.dogNotPresent) {
                 return false;
             }
-            this.loadChallenge(function (challenge) {
-                self.authObj.GetDigestEx(self.scope, self.authCode, pwd, challenge);
-            });
+            //代码调用本机应用的 ChangeUserPinEx (Scope,AuthCode, oldPIN, newPIN) 方法，本机应用如果验证旧口令通过
+            this.authObj.ChangeUserPinEx(this.scope, this.authCode, oldPwd, newPwd);
         },
-
-        //获取服务端随机生成的挑战数据
-        loadChallenge: function (callback) {
-            $.ajax({
-                url: "./Config.aspx?func=getChallenge",
-                type: "get",
-                success: function (res) {
-                    var challenge = res;
-                    //挑战数据格式错误
-                    if (challenge.toString().length < 32) {
-                        return this.htmlLoginNotice(superDog.reportStatus(918));
-                    }
-                    callback(challenge);
-                }
-            })
-        },
-        //把从本机应用获取的 DogID 和加密的挑战数据发送给服务端。服务端的 verifyDigest()方法对数据进行比对。
-        loadAuth: function (dogID, digest) {
-            var self = this;
-            $.ajax({
-                url: "./Config.aspx?func=Authentication",
-                type: "get",
-                data: {
-                    dogID: dogID,
-                    digest: digest
-                },
-                success: function (res) {
-                    var message = "";
-                    //服务器返回的状态码为 0 成功
-                    if (res == 0) {
-                        console.log(res)
-                    } else {
-                        message = superDog.reportStatus(res);
-                    }
-                    self.htmlLoginNotice(message);
-                }
-            })
-        },
-
         bin: function () {
             var self = this;
             this.createAuthCode();
@@ -236,20 +176,19 @@
             if ((navigator.userAgent.indexOf("Chrome") > 0) || (navigator.userAgent.indexOf("Firefox") > 0)) {
                 this.onMessage();
                 this.getUser();
-                document.querySelector('#submit').onclick = function () {
-                    self.handleChromeLogin();
+                document.querySelector('#changePwd').onclick = function () {
+                    self.handleChromeChangePwd();
                 }
             }
             //ie
             else {
-                this.openDog();
-                document.querySelector('#submit').onclick = function () {
-                    self.handleIeLogin();
+                document.querySelector('#changePwd').onclick = function () {
+                    self.handleIeChangePwd();
                 }
             }
         }
     };
-    main.bin();
+    changePwd.bin();
 </script>
 
 </html>

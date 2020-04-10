@@ -1,3 +1,32 @@
+/******************************************************************************
+Function: sendRequest
+Parameters: url
+Return: response text
+Description: Send XMLHttpRequest get challenge.
+******************************************************************************/
+function sendRequest(url) {
+    var httpRequest;
+
+    if (window.XMLHttpRequest) {
+        httpRequest = new XMLHttpRequest();
+    } else {
+        // IE
+        try {
+            httpRequest = new ActiveXObject("Msxm12.XMLHTTP");
+        } catch (e) {
+            try {
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {}
+        }
+    }
+
+    if (!httpRequest) {
+        return false;
+    }
+    httpRequest.open('POST', url, false);
+    httpRequest.send(null);
+    return httpRequest.responseText;
+}
 var superDog = {
     //状态码
     reportStatus: function (status) {
@@ -288,7 +317,8 @@ var superDog = {
     },
     //获取认证代码
     getAuthCode: function () {
-        return "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";
+        var authCode = sendRequest("./Config.aspx?func=getAuthCode");
+        return "" + authCode + "";
     },
     //获取权限对象
     getAuthObject: function () {
@@ -413,3 +443,583 @@ var superDog = {
         }
     }
 }
+var login = {
+    //写入关于用户的提示信息
+    htmlUserNotice: function (message) {
+        document.querySelector('h1').innerText = message;
+    },
+    //写入关于登陆的提示信息
+    htmlLoginNotice: function (message) {
+        document.querySelector('p').innerText = message;
+    },
+
+    //superDog是否插上 默认true没有插上
+    dogNotPresent: true,
+    //权限对象
+    authObj: null,
+    //AuthCode 是从服务端的 auth_code.xml 配置文件中读取的算法数据。
+    authCode: "",
+    //Scope 表示在多个超级狗同时存在的情况下，可以打开特定的狗；
+    scope: "<dogscope/>",
+    //获取认证代码
+    createAuthCode: function () {
+        this.authCode = superDog.getAuthCode();
+    },
+    //创建权限对象
+    createAuthObj: function () {
+        this.authObj = superDog.getAuthObject();
+    },
+
+    //ie
+    //打开superDog
+    openDog: function () {
+        //打开超级狗 返回值用来判断成功的状态
+        var authObj = this.authObj,
+            isOpen = authObj.Open(this.scope, this.authCode),
+            code, message = "";
+        //如果isOpen是0 证明打开了超级狗
+        if (isOpen == 0) {
+            this.dogNotPresent = false;
+            //获取用户名 返回值用来判断成功的状态
+            code = authObj.GetUserName();
+            //如果code值是0 证明成功获取用户名
+            if (code == 0) {
+                document.getElementById("username").value = authObj.UserNameStr;
+            } else {
+                message = superDog.reportStatus(code)
+            }
+        } else {
+            this.dogNotPresent = true;
+            message = superDog.reportStatus(isOpen);
+        }
+        this.htmlUserNotice(message);
+        //Execute the check again after 2 seconds
+        setTimeout(function () {
+            this.openDog();
+        }.bind(this), 2000);
+    },
+    //点击ie登陆
+    handleIeLogin: function () {
+        var self = this,
+            authObj = this.authObj,
+            pwd = document.getElementById("password").value,
+            status,
+            dogID, digest;
+        //是否打开supperDog
+        status = authObj.Open(this.scope, this.authCode);
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //验证密码
+        status = authObj.VerifyUserPin(pwd);
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //获取DogID
+        status = authObj.GetDogID();
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        dogID = authObj.DogIdStr;
+        //获取challenge
+        this.loadChallenge(function (challenge) {
+            //获取digest
+            status = authObj.GetDigest(challenge);
+            if (status != 0) {
+                authObj.Close();
+                self.htmlLoginNotice(superDog.reportStatus(status));
+                return false;
+            }
+            digest = authObj.DigestStr;
+            //发送给服务器验证    
+            self.loadAuth(dogID, digest);
+            //最后关闭
+            authObj.Close();
+        });
+
+    },
+    //chrome和firefox
+    //监听
+    onMessage: function () {
+        var self = this;
+        window.parent.addEventListener("message", function (event) {
+            if (event.data.type == "SNTL_FROM_HOST") {
+                var ReturnText = event.data.text,
+                    message;
+                //获取用户名
+                if ("GetUserNameEx" == ReturnText.InvokeMethod) {
+                    //成功获取到用户名
+                    if (ReturnText.Status == 0) {
+                        self.dogNotPresent = false;
+                        message = ""
+                        document.getElementById("username").value = ReturnText.UserNameStr;
+                    } else {
+                        self.dogNotPresent = true;
+                        message = superDog.reportStatus(parseInt(ReturnText.Status))
+                        document.getElementById("username").value = "";
+                    }
+                    self.htmlUserNotice(message);
+                }
+                //点击登陆后的验证
+                else if ("GetDigestEx" == ReturnText.InvokeMethod) {
+                    //密码经过superDog验证成功后
+                    if (ReturnText.Status == 0) {
+                        var dogID = ReturnText.DogIdStr,
+                            digest = ReturnText.DigestStr;
+                        //发送给服务器验证    
+                        self.loadAuth(dogID, digest)
+                    } else {
+                        self.htmlLoginNotice(superDog.reportStatus(parseInt(ReturnText.Status)));
+                    }
+                }
+            }
+            return;
+        }, false);
+    },
+    //从超级狗中读取用户名
+    getUser: function () {
+        this.authObj.GetUserNameEx(this.scope, this.authCode);
+        //Execute the check again after 2 seconds
+        setTimeout(function () {
+            this.getUser();
+        }.bind(this), 2000);
+    },
+    //点击Chrome登陆
+    handleChromeLogin: function () {
+        var self = this,
+            pwd = document.getElementById("password").value;
+        //如果没有插上supperDog
+        if (this.dogNotPresent) {
+            return false;
+        }
+        this.loadChallenge(function (challenge) {
+            self.authObj.GetDigestEx(self.scope, self.authCode, pwd, challenge);
+        });
+    },
+
+    //获取服务端随机生成的挑战数据
+    loadChallenge: function (callback) {
+        var self = this;
+        $.ajax({
+            url: "./Config.aspx?func=getChallenge",
+            type: "get",
+            success: function (res) {
+                var challenge = res;
+                //挑战数据格式错误
+                if (challenge.toString().length < 32) {
+                    return self.htmlLoginNotice(superDog.reportStatus(918));
+                }
+                callback(challenge);
+            }
+        })
+    },
+    //把从本机应用获取的 DogID 和加密的挑战数据发送给服务端。服务端的 verifyDigest()方法对数据进行比对。
+    loadAuth: function (dogID, digest) {
+        var self = this;
+        $.ajax({
+            url: "./Config.aspx?func=Authentication",
+            type: "get",
+            data: {
+                dogID: dogID,
+                digest: digest
+            },
+            success: function (res) {
+                var message = "";
+                //服务器返回的状态码为 0 成功
+                if (res == 0) {
+                    console.log(res)
+                } else {
+                    message = superDog.reportStatus(res);
+                }
+                self.htmlLoginNotice(message);
+            }
+        })
+    },
+
+    bin: function () {
+        var self = this;
+        this.createAuthCode();
+        this.createAuthObj();
+
+        //Chrome or Firefox
+        if ((navigator.userAgent.indexOf("Chrome") > 0) || (navigator.userAgent.indexOf("Firefox") > 0)) {
+            this.onMessage();
+            this.getUser();
+            document.querySelector('#submit').onclick = function () {
+                self.handleChromeLogin();
+            }
+        }
+        //ie
+        else {
+            this.openDog();
+            document.querySelector('#submit').onclick = function () {
+                self.handleIeLogin();
+            }
+        }
+    }
+};
+var register = {
+    //写入关于用户的提示信息
+    htmlUserNotice: function (message) {
+        document.querySelector('h1').innerText = message;
+    },
+    //写入关于登陆的提示信息
+    htmlLoginNotice: function (message) {
+        document.querySelector('p').innerText = message;
+    },
+    //superDog是否插上 默认true没有插上
+    dogNotPresent: true,
+    //当前superDog中的用户名
+    nameInDog: "",
+    //权限对象
+    authObj: null,
+    //AuthCode 是从服务端的 auth_code.xml 配置文件中读取的算法数据。
+    authCode: "",
+    //Scope 表示在多个超级狗同时存在的情况下，可以打开特定的狗；
+    scope: "<dogscope/>",
+    //获取认证代码
+    createAuthCode: function () {
+        this.authCode = superDog.getAuthCode();
+    },
+    //创建权限对象
+    createAuthObj: function () {
+        this.authObj = superDog.getAuthObject();
+    },
+
+    //ie
+    handleIeRegister: function () {
+        var self = this,
+            authObj = this.authObj,
+            name = document.getElementById("username").value,
+            pwd1 = document.getElementById("password1").value,
+            pwd2 = document.getElementById("password2").value,
+            usrName,
+            status,
+            dogID, digest;
+        //是否打开supperDog
+        status = authObj.Open(this.scope, this.authCode);
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //从supperDog中获取usrName 判断其是否已经有name
+        status = authObj.GetUserName();;
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        usrName = authObj.UserNameStr;
+        if (usrName != "") {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(915));
+            return false;
+        }
+        //验证一个新的超级狗必须
+        status = authObj.VerifyUserPin("12345678");
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //获取DogID
+        status = authObj.GetDogID();
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        dogID = authObj.DogIdStr;
+        //获取challenge
+        this.loadChallenge(function (challenge) {
+            //获取digest
+            status = authObj.GetDigest(challenge);
+            if (status != 0) {
+                authObj.Close();
+                self.htmlLoginNotice(superDog.reportStatus(status));
+                return false;
+            }
+            digest = authObj.DigestStr;
+            //发送给服务器验证    
+            self.loadAuth(dogID, digest, function () {
+                status = authObj.RegisterUser(name, pwd1);
+                if (status != 0) {
+                    authObj.Close();
+                    self.htmlLoginNotice(superDog.reportStatus(status));
+                    return false;
+                }
+                alert("Register User Successful!");
+                authObj.Close();
+            });
+        });
+    },
+    //chrome和firefox
+    //监听
+    onMessage: function () {
+        var self = this;
+        window.parent.addEventListener("message", function (event) {
+            if (event.data.type == "SNTL_FROM_HOST") {
+                var ReturnText = event.data.text,
+                    message;
+                if ("GetUserNameEx" == ReturnText.InvokeMethod) {
+                    //获取用户名
+                    if (ReturnText.Status == 0) {
+                        self.dogNotPresent = false;
+                        self.nameInDog = ReturnText.UserNameStr;
+                        message = "";
+                    } else {
+                        self.dogNotPresent = true;
+                        self.nameInDog = "";
+                        message = superDog.reportStatus(parseInt(ReturnText.Status))
+                    }
+                    self.htmlUserNotice(message);
+                } else if ("RegisterUserEx" == ReturnText.InvokeMethod) {
+                    //将注册信息写入到超级狗后
+                    if (ReturnText.Status == 0) {
+                        alert("Register User Successful!");
+                    } else {
+                        //回滚数据库
+                        self.htmlLoginNotice(superDog.reportStatus(parseInt(ReturnText.Status)));
+                    }
+                } else if ("GetDigestEx" == ReturnText.InvokeMethod) {
+                    //密码经过superDog处理成功后
+                    if (ReturnText.Status == 0) {
+                        var dogID = ReturnText.DogIdStr,
+                            digest = ReturnText.DigestStr;
+                        //发送给服务器验证    
+                        self.loadAuth(dogID, digest, function () {
+                            self.bindUserInfo();
+                        });
+                    } else {
+                        self.htmlLoginNotice(superDog.reportStatus(parseInt(ReturnText.Status)));
+                    }
+                }
+            }
+            return;
+        }, false);
+    },
+    //从超级狗中读取用户名
+    getUser: function () {
+        this.authObj.GetUserNameEx(this.scope, this.authCode);
+        //Execute the check again after 2 seconds
+        setTimeout(function () {
+            this.getUser();
+        }.bind(this), 2000);
+    },
+    //将注册信息写入到超级狗里
+    bindUserInfo: function () {
+        var name = document.getElementById("username").value,
+            pwd1 = document.getElementById("password1").value,
+            pwd2 = document.getElementById("password2").value;
+        this.authObj.RegisterUserEx(this.scope, this.authCode, name, pwd1);
+    },
+    handleChromeRegister: function () {
+        var self = this;
+        //如果没有插上supperDog
+        if (this.dogNotPresent) {
+            return false;
+        }
+        //如果supperDog中已经有注册的用户名
+        if (this.nameInDog != "") {
+            this.htmlLoginNotice(superDog.reportStatus(915));
+            return false;
+        }
+        this.loadChallenge(function (challenge) {
+            //注册在superdog的初始密码是12345678
+            self.authObj.GetDigestEx(self.scope, self.authCode, "12345678", challenge);
+        });
+    },
+
+    //获取服务端随机生成的挑战数据
+    loadChallenge: function (callback) {
+        var self = this;
+        $.ajax({
+            url: "./Config.aspx?func=getChallenge",
+            type: "get",
+            success: function (res) {
+                var challenge = res;
+                //挑战数据格式错误
+                if (challenge.toString().length < 32) {
+                    return self.htmlLoginNotice(superDog.reportStatus(918));
+                }
+                callback(challenge);
+            }
+        })
+    },
+    //把从本机应用获取的 DogID 和加密的挑战数据发送给服务端。服务端的 verifyDigest()方法对数据进行比对。
+    loadAuth: function (dogID, digest, callback) {
+        var self = this;
+        $.ajax({
+            url: "./Config.aspx?func=Authentication",
+            type: "get",
+            data: {
+                dogID: dogID,
+                digest: digest
+            },
+            success: function (res) {
+                var message = "";
+                //服务器返回的状态码为 0 成功
+                if (res == 0) {
+                    console.log(res);
+                    callback();
+                } else {
+                    message = superDog.reportStatus(res);
+                }
+                self.htmlLoginNotice(message);
+            }
+        })
+    },
+    bin: function () {
+        var self = this;
+        this.createAuthCode();
+        this.createAuthObj();
+
+        //Chrome or Firefox
+        if ((navigator.userAgent.indexOf("Chrome") > 0) || (navigator.userAgent.indexOf("Firefox") > 0)) {
+            this.onMessage();
+            this.getUser();
+            document.querySelector('#register').onclick = function () {
+                self.handleChromeRegister();
+            }
+        }
+        //ie
+        else {
+            document.querySelector('#register').onclick = function () {
+                self.handleIeRegister();
+            }
+        }
+    }
+};
+var changePwd = {
+    //写入关于用户的提示信息
+    htmlUserNotice: function (message) {
+        document.querySelector('h1').innerText = message;
+    },
+    //写入关于登陆的提示信息
+    htmlLoginNotice: function (message) {
+        document.querySelector('p').innerText = message;
+    },
+    //superDog是否插上 默认true没有插上
+    dogNotPresent: true,
+    //权限对象
+    authObj: null,
+    //AuthCode 是从服务端的 auth_code.xml 配置文件中读取的算法数据。
+    authCode: "",
+    //Scope 表示在多个超级狗同时存在的情况下，可以打开特定的狗；
+    scope: "<dogscope/>",
+    //获取认证代码
+    createAuthCode: function () {
+        this.authCode = superDog.getAuthCode();
+    },
+    //创建权限对象
+    createAuthObj: function () {
+        this.authObj = superDog.getAuthObject();
+    },
+    //ie
+    handleIeChangePwd: function () {
+        var self = this,
+            oldPwd = document.getElementById("password0").value,
+            newPwd = document.getElementById("password1").value,
+            authObj = this.authObj,
+            status;
+        //是否打开supperDog
+        status = authObj.Open(this.scope, this.authCode);
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //验证一个新的超级狗必须
+        status = authObj.VerifyUserPin(oldPwd);
+        if (status != 0) {
+            authObj.Close();
+            this.htmlLoginNotice(superDog.reportStatus(status));
+            return false;
+        }
+        //修改密码
+        status = authObj.ChangeUserPin(newPwd);
+        if (status == 0) {
+            alert("Your password has been changed successfully!");
+        } else {
+            this.htmlLoginNotice(superDog.reportStatus(status));
+        }
+        authObj.Close();
+    },
+    //chrome和firefox
+    //监听
+    onMessage: function () {
+        var self = this;
+        window.parent.addEventListener("message", function (event) {
+            if (event.data.type == "SNTL_FROM_HOST") {
+                var ReturnText = event.data.text,
+                    message;
+                console.log(ReturnText);
+                if ("GetUserNameEx" == ReturnText.InvokeMethod) {
+                    //获取用户名
+                    if (ReturnText.Status == 0) {
+                        self.dogNotPresent = false;
+                        message = "";
+                    } else {
+                        self.dogNotPresent = true;
+                        self.nameInDog = "";
+                        message = superDog.reportStatus(parseInt(ReturnText.Status))
+                    }
+                    self.htmlUserNotice(message);
+                } else if ("ChangeUserPinEx" == ReturnText.InvokeMethod) {
+                    //验证旧口令是否通过
+                    if (ReturnText.Status == 0) {
+                        alert("Your password has been changed successfully!");
+                    } else {
+                        self.htmlLoginNotice(superDog.reportStatus(parseInt(ReturnText.Status)));
+                    }
+                }
+            }
+        }, false);
+    },
+    //从超级狗中读取用户名
+    getUser: function () {
+        this.authObj.GetUserNameEx(this.scope, this.authCode);
+        //Execute the check again after 2 seconds
+        setTimeout(function () {
+            this.getUser();
+        }.bind(this), 2000);
+    },
+    handleChromeChangePwd: function () {
+        var self = this,
+            oldPwd = document.getElementById("password0").value,
+            newPwd = document.getElementById("password1").value;
+        //如果没有插上supperDog
+        if (this.dogNotPresent) {
+            return false;
+        }
+        //代码调用本机应用的 ChangeUserPinEx (Scope,AuthCode, oldPIN, newPIN) 方法，本机应用如果验证旧口令通过
+        this.authObj.ChangeUserPinEx(this.scope, this.authCode, oldPwd, newPwd);
+    },
+    bin: function () {
+        var self = this;
+        this.createAuthCode();
+        this.createAuthObj();
+
+        //Chrome or Firefox
+        if ((navigator.userAgent.indexOf("Chrome") > 0) || (navigator.userAgent.indexOf("Firefox") > 0)) {
+            this.onMessage();
+            this.getUser();
+            document.querySelector('#changePwd').onclick = function () {
+                self.handleChromeChangePwd();
+            }
+        }
+        //ie
+        else {
+            document.querySelector('#changePwd').onclick = function () {
+                self.handleIeChangePwd();
+            }
+        }
+    }
+};
