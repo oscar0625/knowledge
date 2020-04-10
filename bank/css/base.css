@@ -54,9 +54,11 @@ body {
 
 /**
  * 去掉a标签下划线
+ * 去掉a标签的颜色
  */
 a {
     text-decoration: none;
+	color: inherit;
 }
 
 /**
