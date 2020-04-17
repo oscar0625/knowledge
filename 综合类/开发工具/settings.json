@@ -9,7 +9,6 @@
     },
     //解决内存爆满
     "search.followSymlinks": false,
-    "search.location": "sidebar",
     //搜索排除某个文件
     "search.exclude": {
         "**/obj": true,

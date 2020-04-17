@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>2d</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="height:100vh;background: url('./example/img/home_bg.png') left top #f9f9f9;" id="target"></div>
+</body>
+<script>
+    //方法
+    function isDom(obj) {
+        return (typeof HTMLElement === 'object') ?
+            (obj instanceof HTMLElement) :
+            (obj && typeof obj === 'object' && (obj.nodeType === 1 || obj.nodeType === 9) && typeof obj.nodeName ===
+                'string');
+    };
+
+    function throttle(fn, delay, time) {
+        var timer,
+            previous;
+        return function () {
+            var current = new Date(),
+                context = this,
+                args = arguments;
+            //如果时间间隔大于等于指定的时间 或 第一次则必须执行
+            if ((!previous) || current - previous >= time) {
+                fn.apply(context, args);
+                previous = current;
+            } else {
+                //否则 延时执行
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    fn.apply(context, args);
+                }, delay);
+            }
+        }
+    }
+
+    function random(min, max) {
+        if (arguments.length < 2) {
+            max = min;
+            min = 0;
+        }
+
+        if (min > max) {
+            var hold = max;
+            max = min;
+            min = hold;
+        }
+
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    //注：使用上面这个函数，需要给Canvas元素的position设为absolute。
+    function getEventPosition(ev) {
+        var x, y;
+        if (ev.layerX || ev.layerX == 0) {
+            x = ev.layerX;
+            y = ev.layerY;
+        } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+            x = ev.offsetX;
+            y = ev.offsetY;
+        }
+        return {
+            x: x,
+            y: y
+        };
+    }
+
+    /**
+     ** 加法函数，用来得到精确的加法结果
+     ** 说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
+     ** 调用：accAdd(arg1,arg2)
+     ** 返回值：arg1加上arg2的精确结果
+     **/
+    function accAdd(arg1, arg2) {
+        var r1, r2, m, c;
+        try {
+            r1 = arg1.toString().split(".")[1].length;
+        } catch (e) {
+            r1 = 0;
+        }
+        try {
+            r2 = arg2.toString().split(".")[1].length;
+        } catch (e) {
+            r2 = 0;
+        }
+        c = Math.abs(r1 - r2);
+        m = Math.pow(10, Math.max(r1, r2));
+        if (c > 0) {
+            var cm = Math.pow(10, c);
+            if (r1 > r2) {
+                arg1 = Number(arg1.toString().replace(".", ""));
+                arg2 = Number(arg2.toString().replace(".", "")) * cm;
+            } else {
+                arg1 = Number(arg1.toString().replace(".", "")) * cm;
+                arg2 = Number(arg2.toString().replace(".", ""));
+            }
+        } else {
+            arg1 = Number(arg1.toString().replace(".", ""));
+            arg2 = Number(arg2.toString().replace(".", ""));
+        }
+        return (arg1 + arg2) / m;
+    }
+
+    //小球所在的环境
+    function Environment(option) {
+        option = Object.assign({
+            colorList: ["#000"],
+            delayRange: [3, 5],
+            radius: 6
+        }, option);
+
+        if (!isDom(option.ele)) {
+            throw new Error('ele参数应为一个dom元素');
+        }
+        this.option = option;
+        this.ele = option.ele;
+
+        //创建canvas添加入dom
+        this.container = document.createElement('div');
+        this.canvas = document.createElement('canvas');
+        this.width = this.canvas.width = this.ele.clientWidth;
+        this.height = this.canvas.height = this.ele.clientHeight;
+        this.container.style = "position: relative; overflow: hidden;width:" + this.width + "px; height:" + this
+            .height + "px;"
+        this.canvas.style = "position: absolute;left: 0px; top: 0px;;width:" + this.width + "px; height:" + this
+            .height + "px;"
+        this.container.appendChild(this.canvas);
+        this.ele.appendChild(this.container);
+
+        //绘图对象
+        this.cvs = this.canvas.getContext('2d');
+
+        //监听窗口变化
+        window.addEventListener('resize', throttle(function () {
+            this._resize()
+        }.bind(this), 500, 1000));
+
+        //添加鼠标移入效果
+        this._hover();
+
+        //创建球
+        this.contentIndex = 0;
+        this.contents = this._addContentIndex(this.option.contentList);
+        this.balls = this._createBalls(this.contents);
+    }
+    Environment.prototype._hover = function () {
+        Environment.mouseMove = null;
+        Environment.mouseMoveCallback = function (bool) {
+            if (bool) {
+                this.container.style = "cursor: pointer;"
+            } else {
+                this.container.style = "cursor: default;"
+            }
+        }.bind(this);
+        this.canvas.addEventListener('mousemove', function (e) {
+            Environment.mouseMove = getEventPosition(e);
+        }.bind(this))
+    }
+    Environment.prototype._resize = function () {
+        this.width = this.canvas.width = this.ele.clientWidth;
+        this.height = this.canvas.height = this.ele.clientHeight;
+        this.container.style = "position: relative; overflow: hidden;width:" + this.width + "px; height:" + this
+            .height + "px;"
+        this.canvas.style = "position: absolute;left: 0px; top: 0px;;width:" + this.width + "px; height:" + this
+            .height + "px;"
+        //重新创建球
+        return this.balls = this._createBalls(this.contents);
+    }
+    Environment.prototype._createBalls = function (obj) {
+        var res = {};
+        Object.keys(obj).map(function (key) {
+            var ball = new Ball({
+                cvs: this.cvs,
+                content: obj[key],
+                width: this.width,
+                height: this.height,
+                radius: this.option.radius,
+                delayRange: this.option.delayRange,
+                colorList: this.option.colorList,
+                clearBall: function () {
+                    delete this.contents[key];
+                    delete this.balls[key];
+                }.bind(this)
+            });
+            return res[key] = ball;
+        }.bind(this))
+        return res;
+    }
+    Environment.prototype._addContentIndex = function (list) {
+        var res = {};
+        list.map(function (item) {
+            res[this.contentIndex] = item;
+            return this.contentIndex++;
+        }.bind(this));
+        return res
+    }
+    Environment.prototype.addContent = function (list) {
+        if (!Array.isArray(list)) {
+            throw new Error('参数应为一个数组');
+        }
+        var contents = this._addContentIndex(list);
+        //添加球push
+        this.contents = Object.assign(contents, this.contents);
+        this.balls = Object.assign(this._createBalls(contents), this.balls);
+        return this
+    }
+    Environment.prototype.draw = function () {
+        //清空画布
+        this.cvs.clearRect(0, 0, this.width, this.height);
+        Object.keys(this.balls).map(function (key) {
+            return this.balls[key].draw().change();
+        }.bind(this))
+        return this
+    }
+    Environment.prototype.on = function (type, callback) {
+        //点击事件
+        if (type === "click") {
+            Environment.mouseClick = null;
+            Environment.mouseClickCallback = callback;
+            this.canvas.addEventListener('click', function (e) {
+                Environment.mouseClick = getEventPosition(e);
+            }.bind(this))
+        }
+    }
+
+    //小球
+    function Ball(params) {
+        this.width = params.width;
+        this.height = params.height;
+        this.cvs = params.cvs;
+        this.content = params.content;
+        this.radius = params.radius;
+        this.clearBall = params.clearBall;
+        this.color = params.colorList[random(params.colorList.length - 1)];
+
+        //x,y相关
+        this.x = random(this.width / 4, this.width / 4 * 3);
+        this.y = random(this.height / 4, this.height / 4 * 3);
+        this.xSpeed = random(0, 8) / 10;
+        this.ySpeed = random(0, 8) / 10;
+        if (this.xSpeed === 0 && this.ySpeed === 0) {
+            random(0, 1) > 0.5 ? this.xSpeed = 0.5 : this.ySpeed = 0.5;
+        }
+
+        //x轴运动方向
+        this.xDirection = this.x - this.width / 2 > 0 ? 1 : -1;
+        //y轴运动方向
+        this.yDirection = this.y - this.height / 2 > 0 ? 1 : -1;
+
+        //opacity相关
+        this.type = "toShow";
+        this.opacity = 0;
+        this.opacitySpeed = 0.01;
+        //初始设定要停留的帧数
+        this.stayFrameNumber = random(params.delayRange[0] * 60, params.delayRange[1] * 60);
+        this.frameNumber = 0;
+    }
+    //绘制
+    Ball.prototype._drawText = function () {
+        if (this.content.name) {
+            var fontsize = 12,
+                w;
+            this.cvs.beginPath();
+            this.cvs.save();
+            this.cvs.font = fontsize + 'px/' + 12 + 'px Microsoft Yahei';
+            this.cvs.fillStyle = '#000';
+            this.cvs.fillText(this.content.name, accAdd(this.x, this.radius + fontsize / 2), this.y + 4);
+            //创建包围文字的矩形路径 以添加点击事件
+            w = this.cvs.measureText(this.content.name).width;
+            this.cvs.rect(accAdd(this.x, this.radius), accAdd(this.y, -fontsize), w + fontsize, fontsize * 2);
+            // this.cvs.stroke();
+            //鼠标点击
+            if (Environment.mouseClick && this.cvs.isPointInPath(Environment.mouseClick.x, Environment.mouseClick
+                    .y)) {
+                Environment.mouseClickCallback(this.content)
+                Environment.mouseClick = null;
+            }
+            //鼠标hover
+            if (Environment.mouseMove) {
+                if (this.cvs.isPointInPath(Environment.mouseMove.x, Environment.mouseMove.y)) {
+                    Environment.mouseMoveCallback(true);
+                    Environment.mouseMove = null;
+                } else {
+                    Environment.mouseMoveCallback(false);
+                }
+            }
+
+            this.cvs.restore();
+        }
+    }
+    Ball.prototype._drawBall = function () {
+        this.cvs.beginPath();
+        this.cvs.save();
+        this.cvs.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, true);
+        this.cvs.shadowBlur = this.radius;
+        this.cvs.shadowColor = this.color + '1)';
+        var radialGradient = this.cvs.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 1.5);
+        radialGradient.addColorStop(0, this.color + '1)');
+        radialGradient.addColorStop(0.5, this.color + '0.5)');
+        radialGradient.addColorStop(1, this.color + '0)');
+        this.cvs.fillStyle = radialGradient;
+        this.cvs.fill();
+        this.cvs.restore();
+    }
+    Ball.prototype.draw = function () {
+        this.cvs.globalAlpha = this.opacity;
+
+        //画圆球
+        this._drawBall()
+
+        //写文字
+        this._drawText()
+
+        //是否清除当前小球
+        if (this.type === "toHide" && this.opacity === 0) {
+            this.clearBall();
+        }
+        return this
+    }
+    //下一帧的轨迹改变
+    Ball.prototype.change = function () {
+        //改变x,y
+        this.x = accAdd(this.x, (this.xSpeed) * this.xDirection);
+        this.y = accAdd(this.y, (this.ySpeed) * this.yDirection);
+
+        //改变opacity
+        if (this.frameNumber > this.stayFrameNumber) {
+            this.type = "toHide";
+        }
+        switch (this.type) {
+            case "toShow":
+                this.opacity = this.opacity >= 1 ? 1 : accAdd(this.opacity, this.opacitySpeed)
+                break;
+            case "toHide":
+                this.opacity = this.opacity <= 0 ? 0 : accAdd(this.opacity, -this.opacitySpeed)
+                break;
+        }
+        this.frameNumber++;
+        return this
+    }
+
+    var create = {
+        init: function () {
+            //实例化
+            var uni = new Environment({
+                    ele: document.getElementById('target'),
+                    contentList: [{
+                        name: ""
+                    }, {
+                        name: ""
+                    }, {
+                        name: ""
+                    }, {
+                        name: ""
+                    }, {
+                        name: ""
+                    }, {
+                        name: "无人机"
+                    }, {
+                        name: "无人机"
+                    }, {
+                        name: "无人机"
+                    }, {
+                        name: "无人机"
+                    }, {
+                        name: "无人机"
+                    }],
+                    colorList: ["rgba(179,249,172,", "rgba(3,196,252,", "rgba(250,183,1,",
+                        "rgba(3,114,252,"
+                    ],
+                    delayRange: [3, 5],
+                    radius: 6
+                }),
+                num = 0,
+                animation = function () {
+                    window.requestAnimationFrame(animation);
+                    num++;
+                    if (num % 180 === 0) {
+                        //添加数据
+                        uni.addContent([{
+                            name: ""
+                        }, {
+                            name: ""
+                        }, {
+                            name: ""
+                        }, {
+                            name: "无人机"
+                        }, {
+                            name: "无人机"
+                        }, {
+                            name: "无人机"
+                        }])
+                    }
+                    uni.draw();
+                };
+            //动画    
+            animation();
+            //点击事件
+            uni.on('click', function (res) {
+                console.log(res);
+            })
+        }
+    }
+    create.init()
+</script>
+
+</html>
