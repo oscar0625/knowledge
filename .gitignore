@@ -3,3 +3,5 @@ node_modules
 # Editor directories and files
 .idea
 .vscode
+
+数据可视化/echarts/map_bank/docs

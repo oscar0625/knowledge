@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <title>scatterGL</title>
+    <style>
+        #container {
+            width: 1664px;
+            height: 768px;
+        }
+
+        body {
+            background: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="../script/echarts.js"></script>
+<script src="../script/echarts-gl.js"></script>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom),
+        remParam = 1;
+
+    var areas = [
+        "万州区",
+        "涪陵区",
+        "渝中区",
+        "大渡口区",
+        "江北区",
+        "沙坪坝区",
+        "九龙坡区",
+        "南岸区",
+        "北碚区",
+        "綦江区",
+        "大足区",
+        "渝北区",
+        "巴南区",
+        "黔江区",
+        "长寿区",
+        "江津区",
+        "合川区",
+        "永川区",
+        "南川区",
+        "璧山区",
+        "铜梁区",
+        "潼南区",
+        "荣昌区",
+        "开州区"
+    ];
+    var colors = ['#04bffc', '#edac5d', '#8beece', '#f9495a', '#01b94b', '#1c8cff']
+    var types = ['创新型企业', '参J潜力企业', '高新技术企业', '**资质企业', '上市企业', '军工企业'];
+    var data = [
+        [0, 0, 5],
+        [0, 1, 1],
+        [0, 2, 0],
+        [0, 3, 0],
+        [0, 4, 0],
+        [0, 5, 0],
+        [0, 6, 0],
+        [0, 7, 0],
+        [0, 8, 0],
+        [0, 9, 0],
+        [0, 10, 0],
+        [0, 11, 2],
+        [0, 12, 4],
+        [0, 13, 1],
+        [0, 14, 1],
+        [0, 15, 3],
+        [0, 16, 4],
+        [0, 17, 6],
+        [0, 18, 4],
+        [0, 19, 4],
+        [0, 20, 3],
+        [0, 21, 3],
+        [0, 22, 2],
+        [0, 23, 5],
+        [1, 0, 7],
+        [1, 1, 0],
+        [1, 2, 0],
+        [1, 3, 0],
+        [1, 4, 0],
+        [1, 5, 0],
+        [1, 6, 0],
+        [1, 7, 0],
+        [1, 8, 0],
+        [1, 9, 0],
+        [1, 10, 5],
+        [1, 11, 2],
+        [1, 12, 2],
+        [1, 13, 6],
+        [1, 14, 9],
+        [1, 15, 11],
+        [1, 16, 6],
+        [1, 17, 7],
+        [1, 18, 8],
+        [1, 19, 12],
+        [1, 20, 5],
+        [1, 21, 5],
+        [1, 22, 7],
+        [1, 23, 2],
+        [2, 0, 1],
+        [2, 1, 1],
+        [2, 2, 0],
+        [2, 3, 0],
+        [2, 4, 0],
+        [2, 5, 0],
+        [2, 6, 0],
+        [2, 7, 0],
+        [2, 8, 0],
+        [2, 9, 0],
+        [2, 10, 3],
+        [2, 11, 2],
+        [2, 12, 1],
+        [2, 13, 9],
+        [2, 14, 8],
+        [2, 15, 10],
+        [2, 16, 6],
+        [2, 17, 5],
+        [2, 18, 5],
+        [2, 19, 5],
+        [2, 20, 7],
+        [2, 21, 4],
+        [2, 22, 2],
+        [2, 23, 4],
+        [3, 0, 7],
+        [3, 1, 3],
+        [3, 2, 0],
+        [3, 3, 0],
+        [3, 4, 0],
+        [3, 5, 0],
+        [3, 6, 0],
+        [3, 7, 0],
+        [3, 8, 1],
+        [3, 9, 0],
+        [3, 10, 5],
+        [3, 11, 4],
+        [3, 12, 7],
+        [3, 13, 14],
+        [3, 14, 13],
+        [3, 15, 12],
+        [3, 16, 9],
+        [3, 17, 5],
+        [3, 18, 5],
+        [3, 19, 10],
+        [3, 20, 6],
+        [3, 21, 4],
+        [3, 22, 4],
+        [3, 23, 1],
+        [4, 0, 1],
+        [4, 1, 3],
+        [4, 2, 0],
+        [4, 3, 0],
+        [4, 4, 0],
+        [4, 5, 1],
+        [4, 6, 0],
+        [4, 7, 0],
+        [4, 8, 0],
+        [4, 9, 2],
+        [4, 10, 4],
+        [4, 11, 4],
+        [4, 12, 2],
+        [4, 13, 4],
+        [4, 14, 4],
+        [4, 15, 14],
+        [4, 16, 12],
+        [4, 17, 1],
+        [4, 18, 8],
+        [4, 19, 5],
+        [4, 20, 3],
+        [4, 21, 7],
+        [4, 22, 3],
+        [4, 23, 0],
+        [5, 0, 2],
+        [5, 1, 1],
+        [5, 2, 0],
+        [5, 3, 3],
+        [5, 4, 0],
+        [5, 5, 0],
+        [5, 6, 0],
+        [5, 7, 0],
+        [5, 8, 2],
+        [5, 9, 0],
+        [5, 10, 4],
+        [5, 11, 1],
+        [5, 12, 5],
+        [5, 13, 10],
+        [5, 14, 5],
+        [5, 15, 7],
+        [5, 16, 11],
+        [5, 17, 6],
+        [5, 18, 0],
+        [5, 19, 5],
+        [5, 20, 3],
+        [5, 21, 4],
+        [5, 22, 2],
+        [5, 23, 0],
+    ].map(function (item) {
+        var areasIndex = item[1],
+            typesIndex = item[0];
+        return {
+            name: areas[areasIndex] + ' ' + types[typesIndex],
+            value: [areasIndex, typesIndex, item[2]],
+            itemStyle: {
+                color: colors[typesIndex]
+            }
+        }
+    });
+    console.log(data);
+
+    option = {
+        tooltip: {},
+        grid3D: {
+            boxWidth: 400,
+            boxHeight: 200,
+            boxDepth: 100,
+            viewControl: {
+                alpha: 15,
+                beta: 30,
+                center:[50,-30,0],
+                distance: 330,
+                //旋转操作的灵敏度，值越大越灵敏。支持使用数组分别设置横向和纵向的旋转灵敏度。设置为0后无法旋转。
+                // rotateSensitivity: 0,
+                //缩放操作的灵敏度，值越大越灵敏。默认为1。设置为0后无法缩放。
+                // zoomSensitivity: 1,
+                // minDistance: 100,
+                // maxDistance: 300,
+            },
+            light: {
+                main: {
+                    intensity: 1.2,
+                    shadow: true,
+                },
+                ambient: {
+                    intensity: 0.3
+                }
+            },
+            axisLine: {
+                lineStyle: {
+                    color: "#fff"
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: "#fff",
+                    opacity: 0.5
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            axisPointer: {
+                show: false
+            }
+        },
+        xAxis3D: {
+            name: false,
+            type: 'category',
+            data: areas,
+            axisLabel: {
+                interval: 0,
+                textStyle: {
+                    fontFamily: "Microsoft YaHei",
+                    fontSize: 12 * remParam,
+                    lineHeight: 20 * remParam
+                }
+            }
+        },
+        yAxis3D: {
+            name: false,
+            type: 'category',
+            data: types,
+            axisLabel: {
+                interval: 0,
+                textStyle: {
+                    fontFamily: "Microsoft YaHei",
+                    fontSize: 12 * remParam,
+                    lineHeight: 20 * remParam
+                }
+            }
+        },
+        zAxis3D: {
+            name: false,
+            type: 'value',
+            axisPointer: {
+                show: true,
+                lineStyle: {
+                    color: "#fff",
+                    opacity: 0.5
+                },
+                label: {
+                    textStyle: {
+                        fontSize: 12 * remParam,
+                    }
+                }
+            },
+        },
+        series: [{
+            name: "区域优质企业",
+            type: 'bar3D',
+            shading: 'lambert',
+            label: {
+                normal: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                normal: {
+                    opacity: 0.8
+                }
+            },
+            data: data,
+        }]
+    }
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    };
+</script>
+
+</html>
