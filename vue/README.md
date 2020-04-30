@@ -52,13 +52,12 @@ Vue CLI 自带的环境变量
     //访问
     process.env.VUE_APP_SECRET
 ```
-
 ## 4.其他
 ```
     构建一个多页应用    https://cli.vuejs.org/zh/config/#pages
 ```
 
-# 二、vue语法
+# 二、vue指令
 ## 1.插值  
 ### 1.1 文本插值
 支持变量 表达式( 但只支持简单的单个表达式 如三目运算，同样支持Math 和 Date) 函数
@@ -317,7 +316,7 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     }
 ```
 
-# 四、组件
+# 四、vue组件
 ## 1.组件的注册
 ```
      components:{ MyComponents }
@@ -334,12 +333,25 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     //核心 is属性   v-bind:is="组件名"  就会加载那个组件
     <component v-bind:is="MyComponents"></component>
 ```
-## 4.组件缓存
+## 4.插槽 slot
+使用插槽分发内容 作用：父向子传递内容,内容可也是变量也可以是组件
+### 4.1父单个插槽  父里面只有一个元素
 ```
-    //keep-alive：把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。
-    <keep-alive>
-        <component v-bind:is="MyComponents"></component>
-    </keep-alive>
+    父 : <child> {{message}}</child>
+    子 : <slot></slot>   //显示就是message变量的内容
+    注:除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃。
+```
+### 4.2父多个插槽 父里面有多个元素
+```
+    父: <child>                             
+            <p slot="header">1</p>                
+            <p slot="content">2</p>              
+            <p slot="footer">3</p>                
+        </child>
+    子：    
+    <slot name="header"></slot>
+    <slot name="content"></slot>
+    <slot name="footer"></slot>
 ```
 ## 5.组件通信
 组件设计初衷就是要配合使用的，最常见的就是形成父子组件的关系：组件 A 在它的模板中使用了组件 B。它们之间必然需要相互通信
@@ -514,32 +526,13 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     }
 ```
 ### 5.5 $parent/$children 和 $ref
-### 5.6非父子组件的通信
+### 5.6 非父子组件的通信
 父子孙 $attrs/$listeners
-父子孙... 5.7 provider/inject
-任何级别vuex
-## 6.插槽 slot
-使用插槽分发内容 作用：父向子传递内容,内容可也是变量也可以是组件
-### 6.1父单个插槽  父里面只有一个元素
-```
-    父 : <child> {{message}}</child>
-    子 : <slot></slot>   //显示就是message变量的内容
-    注:除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃。
-```
-### 6.2父多个插槽 父里面有多个元素
-```
-    父: <child>                             
-            <p slot="header">1</p>                
-            <p slot="content">2</p>              
-            <p slot="footer">3</p>                
-        </child>
-    子：    
-    <slot name="header"></slot>
-    <slot name="content"></slot>
-    <slot name="footer"></slot>
-```
+父子孙... 
+### 5.7 provider/inject
+### 5.8 任何级别vuex
 
-# 五、路由 vue-router
+# 五、vue-router路由 
 $route:路由信息对象，只读对象 如获取路由参时：vm.$route.params vm.$route.query
 $router:路由操作对象 ，只写对象 如跳转路由时： this.$router.push()
 ## 1.路由匹配规则的定义
@@ -606,7 +599,8 @@ html
     <router-link to="/home/he">嵌套路由</router-link>
 
     //命名方式 to是对象
-    <router-link :to="{ name: 'register', params: { name: 'oscar' } }">命名方式</router-link>
+    <router-link :to="{ name: 'register', params: { name: 'oscar' }, query: { name: 'oscar' } }">命名方式</router-link>
+    <router-link :to="{ path: 'register', query: { name: 'oscar' } }">命名方式</router-link>
 ```
 js
 ```
@@ -692,8 +686,7 @@ js
         beforeRouteEnter (to, from, next) {
             // 这些守卫与全局前置守卫的方法参数是一样的。
             // 在渲染该组件的对应路由被 confirm 前调用
-            // 不！能！获取组件实例 `this`
-            // 因为当守卫执行前，组件实例还没被创建
+            // 不！能！获取组件实例 `this`  因为当守卫执行前，组件实例还没被创建
         },
         beforeRouteUpdate (to, from, next) {
             // 这些守卫与全局前置守卫的方法参数是一样的。
@@ -701,8 +694,26 @@ js
             // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
             // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。不会触发生命周期，而这个钩子就会在这个情况下被调用。
             // 可以访问组件实例 `this`
+        },
+        beforeRouteLeave (to, from, next) {
+            // 导航离开该组件的对应路由时调用
+            // 可以访问组件实例 `this`
         }
     }
+```
+完整的路由导航解析流程(不包括其他生命周期)：
+```
+    触发进入其他路由。
+    调用要离开路由的组件守卫beforeRouteLeave
+    调用局前置守卫：beforeEach
+    在重用的组件里调用 beforeRouteUpdate
+    调用路由独享守卫 beforeEnter。
+    解析异步路由组件。
+    在将要进入的路由组件中调用beforeRouteEnter
+    调用全局解析守卫 beforeResolve
+    导航被确认。
+    调用全局后置钩子的 afterEach 钩子。
+    执行beforeRouteEnter 守卫中传给 next 的回调函数
 ```
 ## 7.其他
 ### 7.1 数据获取方式 
@@ -731,7 +742,53 @@ js
     })
 ```
 
-# 六、其他
+# 六、生命周期
+## 1.介绍
+大部分生命周期并不会用到，这里提一下几点：
+```
+    1 created
+        ajax请求最好放在created里面，因为此时已经可以访问this了，请求到数据就可以直接放在data里面。
+    2 mounted
+        关于dom的操作要放在mounted里面，在mounted前面访问dom会是undefined。
+    3 每次进入/离开组件都要做一些事情，用什么钩子
+        不缓存：
+            进入的时候可以用created和mounted钩子，离开的时候用 beforeDestroy 和 destroyed 钩子,beforeDestroy可以访问this，destroyed不可以访问this。
+        缓存：
+            缓存了组件之后，再次进入组件不会触发 beforeCreate 、created 、beforeMount 、 mounted ，如果你想每次进入组件都做一些事情的话，你可以放在 activated 进入缓存组件的钩子中。
+            同理：离开缓存组件的时候， beforeDestroy 和 destroyed 并不会触发，可以使用  deactivated 离开缓存组件的钩子来代替。
+```
+## 2.keep-alive
+缓存避免重新渲染
+在被keep-alive包含的组件/路由中，会多出两个生命周期的钩子:activated 与 deactivated。
+``` 
+    //1.缓存动态组件：把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。
+    <keep-alive>
+        <component v-bind:is="MyComponents"></component>
+    </keep-alive>
+    //2.缓存路由组件：
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
+```
+## 3.触发钩子的完整顺序
+将路由导航、keep-alive、和组件生命周期钩子结合起来的，触发顺序，假设是从a组件离开，第一次进入b组件：
+```
+    beforeRouteLeave:路由组件的组件离开路由前钩子，可取消路由离开。
+    beforeEach: 路由全局前置守卫，可用于登录验证、全局路由loading等。
+    beforeEnter: 路由独享守卫
+    beforeRouteEnter: 路由组件的组件进入路由前钩子。
+    beforeResolve:路由全局解析守卫
+    afterEach:路由全局后置钩子
+    beforeCreate:组件生命周期，不能访问this。
+    created:组件生命周期，可以访问this，不能访问dom。
+    beforeMount:组件生命周期
+    deactivated: 离开缓存组件a，或者触发a的beforeDestroy和destroyed组件销毁钩子。
+    mounted:访问/操作dom。
+    activated:进入缓存组件，进入a的嵌套子组件(如果有的话)。
+    执行beforeRouteEnter回调函数next。
+```
+
+# 七、综合
 ## 1.过滤器
 Vue.filter( id, [definition] )
 ```
@@ -760,7 +817,45 @@ Vue.filter( id, [definition] )
     mixins: [myMixin]
 ```
 混入也可以进行全局注册。使用时格外小心！
-## 3.ref
+## 3.自定义指令
+```
+    //普通参数指令
+    <div id="hook-arguments-example" v-demo:foo.a.b="123"></div>
+    Vue.directive('demo', {
+        //只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+        //不知道元素的高度
+        bind: function (el, binding, vnode) {
+            var s = JSON.stringify
+            el.innerHTML =
+            'name: '       + s(binding.name) + '<br>' +
+            'value: '      + s(binding.value) + '<br>' +
+            'expression: ' + s(binding.expression) + '<br>' +
+            'argument: '   + s(binding.arg) + '<br>' +
+            'modifiers: '  + s(binding.modifiers) + '<br>' +
+            'vnode keys: ' + Object.keys(vnode).join(', ')
+        },
+        //被绑定元素插入父节点时调用
+        inserted:function{},
+        //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
+        update:function{}
+    })
+    //动态指令参数
+    <p v-pin:[direction]="200">I am pinned onto the page at 200px to the left.</p>
+    Vue.directive('pin', {
+        bind: function (el, binding, vnode) {
+            el.style.position = 'fixed'
+            var s = (binding.arg == 'left' ? 'left' : 'top')
+            el.style[s] = binding.value + 'px'
+        }
+    })    
+    //函数简写 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
+    <div v-demo="{ color: 'white', text: 'hello!' }"></div>
+    Vue.directive('demo', function (el, binding) {
+        console.log(binding.value.color) // => "white"
+        console.log(binding.value.text)  // => "hello!"
+    })
+```
+## 4.ref
 ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。
 ```
     <template>
@@ -782,7 +877,7 @@ ref 被用来给元素或子组件注册引用信息。引用信息将会注册�
         }
     }    
 ```  
-## 4.自定义事件
+## 5.自定义事件
 ```
     //事件的定义
     vm.$emit( eventName, […args] )
@@ -804,10 +899,11 @@ ref 被用来给元素或子组件注册引用信息。引用信息将会注册�
     如果只提供了事件，则移除该事件所有的监听器；
     如果同时提供了事件与回调，则只移除这个回调的监听器
 ```
-## 5.axios
+## 6.axios
 见 axios.js
 
-# 七、注意点
+
+# 八、注意点
 ## 1.响应式系统检测数据改变后更新
 ```
     //数组
@@ -881,17 +977,19 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
     <img :src="require('./assets/images/03.jpg')" alt=""> 
     <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
 ```
+## 5.定时器清理问题
+```
+    在组件中添加的定时器  一定要在组件移除的生命周期中添加清理机制
+```
 
-# 八、待续
-## 自定义指令
-https://cn.vuejs.org/v2/guide/custom-directive.html
+# 九、elementUI
+```
+elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
+```
+
+# 待续
 ## 过渡效果
 https://cn.vuejs.org/v2/guide/transitions.html
 ## 状态管理
 ## 服务端渲染
-## 生命周期
-
-# 九 elementUI
-```
-elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
-```
+## 插件和开发插件
