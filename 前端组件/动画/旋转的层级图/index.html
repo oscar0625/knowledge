@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>title</title>
+    <style>
+        body {
+            min-width: 1200px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .box {
+            background: url("./img/bg2.jpg") no-repeat;
+            background-size: 100% 100%;
+        }
+
+        #container {
+            position: relative;
+            width: 1200px;
+            height: 769px;
+            margin: 0 auto;
+            background: url("./img/bg.png") no-repeat;
+            background-size: 100% 100%;
+        }
+
+        span {
+            position: absolute;
+            left: 580px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        
+        .center{
+            top: 215px;
+            left: 50.5%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: #05fcf3;
+        }
+        .left{
+            top: 223px;
+            left: 40%;
+            transform: translateX(-50%);
+            font-size: 20px;
+        }
+        .right{
+            top: 223px;
+            left: 61%;
+            transform: translateX(-50%);
+            font-size: 20px;
+        }
+        
+        .inside {
+            top: 400px;
+        }
+
+        .middle {
+            top: 532px;
+        }
+
+        .outside {
+            top: 642px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div id="container">
+            <span class="center">无人机</span>
+            <span class="left">航拍</span>
+            <span class="right">航测</span>
+
+            <span class="inside">无人机1</span>
+            <span class="inside">无人机2</span>
+            <span class="inside">无人机3</span>
+            <span class="inside">无人机4</span>
+            <!-- <span class="inside">无人机5</span>
+            <span class="inside">无人机6</span> -->
+            <span class="middle">人工智能1</span>
+            <span class="middle">人工智能2</span>
+            <span class="middle">人工智能3</span>
+            <span class="middle">人工智能4</span>
+            <span class="middle">人工智能5</span>
+            <span class="middle">人工智能6</span>
+            <!-- <span class="middle">人工智能7</span>
+            <span class="middle">人工智能8</span>
+            <span class="middle">人工智能9</span> -->
+            <span class="outside">自动驾驶1</span>
+            <span class="outside">自动驾驶2</span>
+            <span class="outside">自动驾驶3</span>
+            <span class="outside">自动驾驶4</span>
+            <span class="outside">自动驾驶5</span>
+            <span class="outside">自动驾驶6</span>
+            <span class="outside">自动驾驶7</span>
+            <span class="outside">自动驾驶8</span>
+            <!-- <span class="outside">自动驾驶9</span>
+            <span class="outside">自动驾驶10</span>
+            <span class="outside">自动驾驶11</span>
+            <span class="outside">自动驾驶12</span> -->
+        </div>
+    </div>
+</body>
+<script>
+    // 创建translate3d x y z的值
+    function createTranslate(radius, angle, rate) {
+        let x, y, z;
+        x = Math.sin(angle * Math.PI / 180) * radius;
+        z = (1 - Math.cos(angle * Math.PI / 180)) * radius;
+        switch (angle) {
+            case (90):
+                x = radius;
+                z = radius;
+                break;
+            case (180):
+                x = 0;
+                z = 2 * radius;
+                break;
+            case (270):
+                x = -radius;
+                z = radius;
+                break;
+            case (360):
+                x = 0;
+                z = 0;
+                break;
+        }
+        y = z * rate;
+        return {
+            x,
+            y,
+            z
+        }
+    }
+
+    // 创建运动轨迹数组
+    function createTrail(radius, rate) {
+        let arr = [];
+        for (let index = 1; index <= 360; index++) {
+            let {
+                x,
+                y,
+                z
+            } = createTranslate(radius, index, rate);
+            arr.push(`translate3d(${0 - x}px, ${0 - y}px, ${0 - z}px )`)
+        }
+        return arr;
+    }
+
+    // 运动行为函数
+    function motion(points, trail) {
+        var trailIndex = 0;
+        return function () {
+            points.map((item, index, cur) => {
+                item.style.transform = trail[(trailIndex + Math.ceil(index * 360 / cur.length)) % 360];
+            })
+            trailIndex++;
+            // //保留的思考过程
+            // //内圈
+            // insidePoint.map((item, index) => {
+            //     item.style.transform = insideTrail[(insideTrailIndex + index * 90) % 360];
+            // })
+            // insideTrailIndex++;
+            // //中圈
+            // middlePoint.map((item, index) => {
+            //     item.style.transform = middLeTrail[(middLeTrailIndex + index * 60) % 360];
+            // })
+            // middLeTrailIndex++;
+            // //外圈
+            // outsidePoint.map((item, index) => {
+            //     item.style.transform = outsideTrail[(outsideTrailIndex + index * 45) % 360];
+            // })
+            // outsideTrailIndex++;
+        }
+    }
+
+    let
+        //内中外轨迹
+        insideTrail = createTrail(260, 0.45),
+        middLeTrail = createTrail(430, 0.45),
+        outsideTrail = createTrail(540, 0.45),
+        //内中外的点
+        insidePoint = [...document.querySelectorAll(".inside")],
+        middlePoint = [...document.querySelectorAll(".middle")],
+        outsidePoint = [...document.querySelectorAll(".outside")],
+        //内中外的运动行为
+        insideMotion = motion(insidePoint, insideTrail),
+        middleMotion = motion(middlePoint, middLeTrail),
+        outsideMotion = motion(outsidePoint, outsideTrail),
+        //帧数限制
+        frameNumber = 0;
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        if (frameNumber % 4 === 0) {
+            insideMotion();
+            middleMotion();
+            outsideMotion();
+        }
+
+        frameNumber++;
+    }
+    animate();
+</script>
+
+</html>

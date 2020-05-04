@@ -71,6 +71,8 @@
 
 .fn-text-justify {
     text-align: justify !important;
+    text-justify: distribute;
+    /* 兼容ie,firefox */
 }
 
 /**
