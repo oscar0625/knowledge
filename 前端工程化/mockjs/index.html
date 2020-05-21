@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
     <meta charset="UTF-8">
     <title>mockJS</title>
 </head>
+
 <body>
 </body>
 
@@ -12,18 +14,55 @@
 </script>
 <script src="script/require.js"></script>
 <script>
+    //https://github.com/nuysoft/Mock/wiki
+
+    // 一、 安装
+    // npm install --save-d mockjs
+
+    // 二、语法规范
+    // https://github.com/nuysoft/Mock/wiki/Syntax-Specification
+    // http://mockjs.com/examples.html#Basic
+    // 1.数据模板定义规范 
+    //     数据模板中的每个属性由 3 部分构成：属性名、生成规则、属性值 'name|rule': value
+    // 2.数据占位符定义规范
+    //     @cparagraph (min, max)  @csentence (min, max) @ctitle (min, max) @cword (min, max) 语句（从长到端）
+    //     @cfirst @clast @cname 姓名
+    //     @date 日期 @time 时间 @datetime 日期+时间 @now 当前日期时间
+    //     @image ('200x100') 图片地址 @dataImage ('200x100') 图片base64
+    //     @province @city @county 地区
+    //     @color @rgb @rgba颜色 
+    //     @range (0,10) [0,1,2,3,4,5,6,7,8,9]
+    //     @guid  @id 全局唯一标识符id
+    //     @boolean 布尔值
+    //     @ip @email
+
+    // 三、方法
+    //  1. 根据数据模板生成模拟数据。
+    //      Mock.mock( rurl?, rtype?, template|function( options ) )
+    //  2. Mock.Random 是一个工具类，用于生成各种随机数据。 用于数字占位符定义
+            var Random = Mock.Random
+            Random.email()
+            // => "n.clark@miller.io"
+            Mock.mock('@email')
+            // => "y.lee@lewis.org"
+            Mock.mock( { email: '@email' } )
+            // => { email: "v.lewis@hall.gov" }
+    //  3. 校验真实数据 data 是否与数据模板 template 匹配。  
+            Mock.valid( template, data )
+
     require.config({
         // 设置根目录
-        baseUrl:'./',
+        baseUrl: './',
         // 设置别名
-        paths:{
-            jq:'script/jquery-1.7.2.min',  //不带js后缀
+        paths: {
+            jq: 'script/jquery-1.7.2.min', //不带js后缀
             mock: 'http://mockjs.com/dist/mock',
-            index:'index',
-            demo:'demo',
+            index: 'index',
+            demo: 'demo',
         }
     });
     require(['index']);
     require(['demo']);
 </script>
+
 </html>

@@ -565,6 +565,7 @@ $router:路由操作对象 ，只写对象 如跳转路由时： this.$router.pu
                     }, 
                     {
                         path: 'me',
+                        path: '/me',        //要注意如果是这样写，以 / 开头的嵌套路径会被当作根路径。 这让你充分的使用嵌套组件而无须设置嵌套的路径。
                         name: 'me',
                         component: me,
                         alias: "/me"       
@@ -986,6 +987,21 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
 ```
 elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
 ```
+## 1.el-scrollbar
+```
+    element-ui的滚动条组件el-scrollbar（官方没有）
+    <div style="height:600px;">
+        <el-scrollbar style="height:100%">
+            <div style="width:700px;height:700px;border:solid;" >
+            ....... blabla.....
+            </div>
+        </el-scrollbar>
+    </div>
+    在使用时要设置外层容器高度。并且要设置el-scrollbar 的高度为100%
+    .el-scrollbar__wrap{
+        overflow-x: hidden;
+    }
+```
 
 # 待续
 ## 过渡效果
@@ -993,3 +1009,4 @@ https://cn.vuejs.org/v2/guide/transitions.html
 ## 状态管理
 ## 服务端渲染
 ## 插件和开发插件
+## 渲染函数 & JSX

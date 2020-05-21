@@ -25,8 +25,10 @@
     // 将tinymce包放在 public 文件夹下
 
     // 2.初始化
+    // 直接引入editor.vue
+    // 或者重新配置
     // 在页面中引入以下文件
-    //      import tinymce from "tinymce/tinymce";
+    //      import "tinymce/tinymce";
     //      import "tinymce/themes/silver/theme";
     //      import Editor from "@tinymce/tinymce-vue";
     //  tinymce-vue 是一个组件，需要在 components 中注册，然后直接使用
@@ -35,7 +37,6 @@
     //     }
     //      <editor id="tinymceEditor" :init="tinymceInit" v-model="content"></editor>
     //  配置编辑器
-    //  见 editor.vue
 
     // 3.自定义插件
     // https://juejin.im/post/5d8437c96fb9a06b25491f23
