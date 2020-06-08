@@ -525,11 +525,29 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     }
     }
 ```
-### 5.5 $parent/$children 和 $ref
-### 5.6 非父子组件的通信
+### 5.5依赖注入provider/inject
+```
+    // 父级组件提供
+    var Provider = {
+        provide: function () {
+            return {
+                getMap: this.getMap
+            }
+        }
+    }
+    // 子组件注入
+    var Child = {
+        inject: ['getMap'],
+        created () {
+            this.getMap();
+        }
+        // ...
+    }
+```
+### 5.6$parent/$children 和 $ref
+### 5.7 非父子组件的通信
 父子孙 $attrs/$listeners
 父子孙... 
-### 5.7 provider/inject
 ### 5.8 任何级别vuex
 
 # 五、vue-router路由 
@@ -602,6 +620,9 @@ html
     //命名方式 to是对象
     <router-link :to="{ name: 'register', params: { name: 'oscar' }, query: { name: 'oscar' } }">命名方式</router-link>
     <router-link :to="{ path: 'register', query: { name: 'oscar' } }">命名方式</router-link>
+
+    //在新窗口打开
+    <router-link target="_blank"  :to="{ path: 'register', query: { name: 'oscar' } }">新页面打开home页</router-link>
 ```
 js
 ```
@@ -617,8 +638,15 @@ js
         },
         redirectByName(name, params, query) {
             this.$router.push({ name, params, query });
+        },
+        //在新窗口打开
+        redirectByPathBlank(path, query) {
+            let routeUrl = this.$router.resolve({ path, query });
+            window.open(routeUrl.href, "_blank");
         }
     }
+
+
 ```
 ## 3.路由的视图
 ```
