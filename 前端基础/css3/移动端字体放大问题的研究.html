@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>title</title>
+    <style>
+        body {
+            -webkit-text-size-adjust: 100% !important;
+        }
+    </style>
+</head>
+
+<body>
+</body>
+<script>
+    //https://juejin.im/post/59f678d7f265da43333dabb7
+    //https://www.jianshu.com/p/b62e081fd53f    
+    //解决方法：
+    //1.元素单独设置width或height或max-height；
+    //推荐{max-height：100%;}，因为内容显示一般不会固定高和宽。
+    //2.给元素设置 -webkit-text-size-adjust: none;
+    //可禁用Text Autosizer，这个属性还能使得我们在移动端使用小于12px的字体。此属性在桌面版中无效。
+</script>
+
+</html>

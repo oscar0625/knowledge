@@ -32,21 +32,44 @@ const instance = axios.create({
 instance.defaults.headers.post["Content-Type"] =
   "application/json;charset=UTF-8";
 
-// 请求拦截器
+//取消请求
+const CancelToken = axios.CancelToken;
+//将正在请求的地址存储起来
+const pending = new Map();
+const removePending = config => {
+  const { method, url, baseURL } = config,
+    reg = new RegExp(baseURL, "i"),
+    key = `${url.replace(reg, "")}&${method}`;
+  pending.delete(key);
+};
+// 阻止重复请求同一接口
+const preventRepeatRequest = (config, c) => {
+  const { method, url, baseURL } = config,
+    reg = new RegExp(baseURL, "i"),
+    key = `${url.replace(reg, "")}&${method}`;
+  if (pending.has(key)) {
+    c();
+  } else {
+    pending.set(key, c);
+  }
+};
+
+//请求拦截器
 instance.interceptors.request.use(
   config => {
     //添加时间戳
-    if (config.method == "post") {
-      config.data = {
-        ...config.data,
-        _t: Date.parse(new Date()) / 1000
-      };
-    } else if (config.method == "get") {
+    if (config.method == "get") {
       config.params = {
         ...config.params,
         _t: Date.parse(new Date()) / 1000
       };
     }
+    // 阻止重复请求同一接口
+    config.cancelToken =
+      config.cancelToken ||
+      new CancelToken(c => {
+        preventRepeatRequest(config, c);
+      });
     // 登录流程控制中，根据本地是否存在token判断用户的登录情况
     // 但是即使token存在，也有可能token是过期的，所以在每次的请求头中携带token
     // 后台根据携带的token判断用户的登录情况，并返回给我们对应的状态码
@@ -65,19 +88,17 @@ instance.interceptors.request.use(
 //响应拦截器
 instance.interceptors.response.use(
   response => {
+    // 请求完成后删除pending
+    removePending(response.config);
     if (response.status === 200) {
-      //正确 对响应数据做点什么
-      if (response.data.code === 0) {
-        return response.data;
-      }
       //第二种登陆失效的情况
-      else if (response.data.code === 1003) {
+      if (response.data.code === 1003) {
         tip(response.data.message);
         router.push("/");
         return Promise.reject(response.data);
       } else {
-        tip("未知异常请联系管理员");
-        return Promise.reject(response.data);
+        //正确 对响应数据做点什么
+        return response.data;
       }
     } else {
       // eslint-disable-next-line no-console
@@ -86,7 +107,9 @@ instance.interceptors.response.use(
     }
   },
   error => {
-    const { response, message } = error;
+    const { config, response, message } = error;
+    // 请求完成后删除pending
+    config && removePending(config);
     if (response) {
       // 有response 状态码判断
       switch (response.status) {
@@ -101,11 +124,21 @@ instance.interceptors.response.use(
           tip(message);
       }
     } else {
-      //没有response 超时等情况
-      tip(message);
+      //没有response 超时 断网 取消请求等情况
+      if (message) {
+        tip(message);
+      }
     }
     return Promise.reject(error);
   }
 );
 
 export default instance;
+
+// 取消所有正在请求的接口 并清空pending （在路由跳转时调用）
+export const clearPending = () => {
+  for (let cancel of pending.values()) {
+    cancel();
+  }
+  pending.clear();
+};
