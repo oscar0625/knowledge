@@ -1031,10 +1031,30 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
     }
 ```
 
+# 十、服务端渲染
+## 1.为什么使用服务器端渲染 (SSR)
+```
+    更好的 SEO，由于搜索引擎爬虫抓取工具可以直接查看完全渲染的页面。
+    更快的内容到达时间 (time-to-content)，特别是对于缓慢的网络情况或运行缓慢的设备。(由于资源请求量大，造成网站首屏加载缓慢，不利于用户体验。)
+```
+```
+    ? Project name: my-demo
+    ? Programming language: JavaScript
+    ? Package manager: Npm
+    ? UI framework: Element
+    ? Nuxt.js modules: Axios
+    ? Linting tools: ESLint
+    ? Testing framework: Jest
+    ? Rendering mode: Universal (SSR / SSG)
+    ? Deployment target: Server (Node.js hosting)
+    ? Development tools: jsconfig.json (Recommended for VS Code)
+```
+
+
+
 # 待续
 ## 过渡效果
 https://cn.vuejs.org/v2/guide/transitions.html
 ## 状态管理
-## 服务端渲染
 ## 插件和开发插件
 ## 渲染函数 & JSX
