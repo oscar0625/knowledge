@@ -353,6 +353,14 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     <slot name="content"></slot>
     <slot name="footer"></slot>
 ```
+### 4.3作用域插槽
+```
+    <slot-example>
+        <template slot="default" slot-scope="slotProps">
+            {{ slotProps.msg }}
+        </template>
+    </slot-example>
+```
 ## 5.组件通信
 组件设计初衷就是要配合使用的，最常见的就是形成父子组件的关系：组件 A 在它的模板中使用了组件 B。它们之间必然需要相互通信
 

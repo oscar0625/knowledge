@@ -22,6 +22,12 @@
 import { videoPlayer } from "vue-video-player";
 import "video.js/dist/video-js.css";
 import "vue-video-player/src/custom-theme.css";
+/*
+ * vue-video-player
+ * see https://github.com/surmon-china/vue-video-player
+ * 
+ */
+
 export default {
   name: "videoPlaying",
   data() {
