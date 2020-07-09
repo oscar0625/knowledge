@@ -36,7 +36,7 @@ const preventRepeatRequest = (config, c) => {
 
 export default function ({ app, $axios, redirect }) {
   // 公共基础配置
-  $axios.defaults.timeout = 10000;
+  // $axios.defaults.timeout = 10000;
   $axios.defaults.responseType = "json"; // default
   // 设置Content-Type 默认情况下，axios将JavaScript对象序列化为JSON。
   $axios.setHeader("Content-Type", "application/json;charset=UTF-8", ["post"]);

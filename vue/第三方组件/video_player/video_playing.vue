@@ -25,7 +25,12 @@ import "vue-video-player/src/custom-theme.css";
 /*
  * vue-video-player
  * see https://github.com/surmon-china/vue-video-player
- * 
+ *     https://docs.videojs.com/tutorial-options.html
+ *     https://docs.videojs.com/tutorial-vue.html
+ * 一、尺寸设置方式
+ *      1. width height 固定尺寸
+ *      2. fluid: true  当true时，player将拥有流体大小，将按视频原始比例缩放以适应其容器。 width height 将无效
+ *      3. aspectRatio: "16:9"  设置视频为固定比例（例如"16:9"或"4:3"），将按此比例缩放以适应其容器。 width height fluid 将无效
  */
 
 export default {
@@ -33,13 +38,15 @@ export default {
   data() {
     return {
       playerOptions: {
+        // width: 300,
+        // height: 150,
+        // fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。width height 将无效
+        aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
         autoplay: false, // 如果为true,浏览器准备好时开始回放。
         muted: false, // 默认情况下将会消除任何音频。
         loop: false, // 是否视频一结束就重新开始。
         language: "zh-CN",
         playbackRates: [0.5, 1.0, 1.5, 2.0], // 可选的播放速度
-        aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
         sources: [
           {
