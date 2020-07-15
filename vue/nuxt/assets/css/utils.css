@@ -1,0 +1,99 @@
+/**
+ * 闭合浮动
+ */
+.fn-clear:before,
+.fn-clear:after {
+    content: "";
+    display: table;
+}
+
+.fn-clear:after {
+    clear: both;
+}
+
+.fn-clear {
+    *zoom: 1;
+}
+
+/**
+  * 设置左右浮动
+  */
+.fn-left,
+.fn-right {
+    display: inline;
+}
+
+.fn-left {
+    float: left;
+}
+
+.fn-right {
+    float: right;
+}
+
+/**
+ * 元素隐藏
+ */
+.fn-hide {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/**
+ * 元素隐藏显示
+ */
+.fn-block {
+    display: block !important;
+}
+
+.fn-inline {
+    display: inline !important;
+}
+
+.fn-inline-block {
+    display: inline-block !important;
+}
+
+/**
+ * 文本对齐方式，左中右两端
+ */
+.fn-text-left {
+    text-align: left !important;
+}
+
+.fn-text-center {
+    text-align: center !important;
+}
+
+.fn-text-right {
+    text-align: right !important;
+}
+
+.fn-text-justify {
+    text-align: justify !important;
+}
+
+/**
+ * 文字溢出显示省略号
+ * 1. Opera 9-10.6
+ * 2. Chrome 21+ bug https://bugs.webkit.org/show_bug.cgi?id=121902
+ */
+.fn-text-ellipsis {
+    display: block;
+    text-align: left;
+    /* 2 */
+    word-wrap: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    /* 1 */
+    text-overflow: ellipsis;
+}
+
+/**
+ * 文本强制换行
+ */
+.fn-text-break {
+    white-space: normal;
+    word-wrap: break-word;
+}
