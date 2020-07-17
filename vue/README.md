@@ -938,7 +938,8 @@ ref 被用来给元素或子组件注册引用信息。引用信息将会注册�
 ```
 ## 6.axios
 见 axios.js
-
+## 7.服务端渲染
+见 nuxt
 
 # 八、注意点
 ## 1.响应式系统检测数据改变后更新
@@ -1039,30 +1040,112 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
     }
 ```
 
-# 十、服务端渲染
-## 1.为什么使用服务器端渲染 (SSR)
+# 十、过渡效果
+Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用过渡效果。
+## 单个节点过渡
 ```
-    更好的 SEO，由于搜索引擎爬虫抓取工具可以直接查看完全渲染的页面。
-    更快的内容到达时间 (time-to-content)，特别是对于缓慢的网络情况或运行缓慢的设备。(由于资源请求量大，造成网站首屏加载缓慢，不利于用户体验。)
+    当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：  
+        自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名。
+        如果过渡组件提供了 JavaScript 钩子函数，这些钩子函数将在恰当的时机被调用。
+        如果没有找到 JavaScript 钩子并且也没有检测到 CSS 过渡/动画，DOM 操作 (插入/删除) 在下一帧中立即执行。
 ```
+### 默认的过渡的类名 
 ```
-    ? Project name: my-demo
-    ? Programming language: JavaScript
-    ? Package manager: Npm
-    ? UI framework: Element
-    ? Nuxt.js modules: Axios
-    ? Linting tools: ESLint
-    ? Testing framework: Jest
-    ? Rendering mode: Universal (SSR / SSG)
-    ? Deployment target: Server (Node.js hosting)
-    ? Development tools: jsconfig.json (Recommended for VS Code)
+    在进入/离开的过渡中，会有 6 个 class 切换。
+    进入 
+        v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+        v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+        v-enter-to：定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。
+    离开（同进入）
+        v-leave 
+        v-leave-active
+        v-leave-to
 ```
+### 自定义过渡的类名
+我们可以通过以下 attribute 来自定义过渡类名：他们的优先级高于普通的类名，这对于 Vue 的过渡系统和其他第三方 CSS 动画库，如 Animate.css 结合使用十分有用。
+```
+    enter-class
+    enter-active-class
+    enter-to-class (2.1.8+)
+    leave-class
+    leave-active-class
+    leave-to-class (2.1.8+)
+    <!-- animateCss -->
+    <transition
+        name="custom-classes-transition"
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+    >
+        <p v-if="show">hello</p>
+    </transition>
+```
+### JavaScript 钩子
+可以在 attribute 中声明 JavaScript 钩子 这对于 Vue 的过渡系统和其他第三方 JS 动画库，如 Velocity.js animate.js 结合使用十分有用。
+```
+    <transition
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+        v-bind:css="false"
+    ></transition>
+    methods: {
+        beforeEnter: function (el) {
+            el.style.opacity = 0
+            el.style.transformOrigin = 'left'
+        },
+        enter: function (el, done) {
+            Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+            Velocity(el, { fontSize: '1em' }, { complete: done })
+        },
+        leave: function (el, done) {
+        Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+            Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+            Velocity(el, {
+                rotateZ: '45deg',
+                translateY: '30px',
+                translateX: '30px',
+                opacity: 0
+            }, { complete: done })
+        }
+    }
+    注意：当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。
+    推荐对于仅使用 JavaScript 过渡的元素添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
+```
+## 同一时间只渲染多个节点中的一个节点的过渡
+### 过渡模式
+transition默认的过渡模式 - 进入和离开同时发生。
+```
+    <transition name="fade" mode="out-in">
+        <!-- ... the buttons ... -->
+    </transition>
 
-
+    in-out：新元素先进行过渡，完成之后当前元素过渡离开。
+    out-in：当前元素先进行过渡，完成之后新元素过渡进入。
+```
+### 多个元素的过渡
+对于原生标签可以使用 v-if/v-else
+``` 
+    给在transition组件中的多个元素设置 key 是一个更好的实践。
+    <transition name="fade" mode="out-in">
+      <button v-if="isEditing" key="save" @click="isEditing = !isEditing">
+        Save
+      </button>
+      <button v-else key="edit" @click="isEditing = !isEditing">
+        Edit
+      </button>
+    </transition>
+```
+### 多个组件的过渡
+多个组件的过渡简单很多 - 我们不需要使用 key attribute。相反，我们只需要使用动态组件：
+```
+    <transition name="component-fade" mode="out-in">
+        <component v-bind:is="view"></component>
+    </transition>
+```
+## 列表过渡
+transition-group组件 不介绍 看文档
 
 # 待续
-## 过渡效果
-https://cn.vuejs.org/v2/guide/transitions.html
 ## 状态管理
 ## 插件和开发插件
 ## 渲染函数 & JSX

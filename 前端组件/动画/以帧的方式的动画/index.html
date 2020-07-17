@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <title>以帧的方式的动画</title>
+  <style>
+    body {
+      background: #282f42;
+    }
+
+    .anm-frame {
+      width: 305px;
+      height: 322px;
+      animation: anm_frame 2.5s steps(75, end) infinite;
+      background-image: url("./anm.png");
+      background-repeat: no-repeat;
+    }
+
+    @keyframes anm_frame {
+      from {
+        background-position: 0 0
+      }
+
+      to {
+        background-position: -22875px 0
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="anm-frame"></div>
+</body>
+<script>
+  /**
+   * animation-timing-function 除了几种常用方式(linear,ease,cubic-bezier(n,n,n,n))之外，还有个一实用的函数 steps
+   * 这个函数叫做阶梯函数，这个函数能够起到定格动画的效果。以帧的方式过渡。
+   * steps(number_of_steps, direction)
+   *    number_of_steps ：阶梯数（必须是一个正整数），他将动画的总时长按照阶梯数等距划分
+   *    direction ：可选值为start或end，默认end，也可以不写；
+   *                start表示动画的第一帧会被立即执行,直接从第二帧开始，然后以第一帧结束；
+   *                end则表示动画从第一帧开始到正常结束；
+   */
+
+</script>
+
+</html>
