@@ -28,22 +28,21 @@ import "tinymce/plugins/lineheight";
 
 export default {
   name: "tinymceEditor",
-  props: ["value"],
+  props: ["value", "imgUploadUrl"],
   data() {
     let handleImgUpload = (blobInfo, success, failure) => {
       let formData = new FormData();
       formData.append("File", blobInfo.blob());
       myAxios
-        .post("/api/activity/uploadimg", formData, {
+        .post(this.imgUploadUrl, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
         })
         .then(res => {
-          if (res.Code === 0) {
-            success(process.env.VUE_APP_DEV_IMGUPLOADDOMAIN + res.UrlList[0]);
+          if (res.code === 0) {
+            success(res.url);
           } else {
-            this.$message.error(res.Message);
             failure("error");
           }
         })
