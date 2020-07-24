@@ -68,7 +68,7 @@ export default {
         autoplay,
         loop,
         effect,
-        onlyExternal: true
+        onlyExternal: true //完全禁止拖动
       }
     };
   },
