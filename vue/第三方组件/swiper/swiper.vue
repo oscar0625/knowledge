@@ -19,6 +19,9 @@ import "swiper/css/swiper.css";
  * see https://www.swiper.com.cn/api/
  *     https://github.com/surmon-china/vue-awesome-swiper
  *     https://github.surmon.me/vue-awesome-swiper/
+ * 兼容ie11
+ *     "vue-awesome-swiper": "^3.1.3",
+ *     "swiper": "^4.5.1",
  */
 
 export default {
@@ -54,7 +57,7 @@ export default {
           clickable: true
         },
         on: {
-          slideChange: () => {
+          slideChangeTransitionStart: () => {
             console.log(this.swiper.activeIndex);
           }
         }

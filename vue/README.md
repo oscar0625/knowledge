@@ -1143,7 +1143,18 @@ transition默认的过渡模式 - 进入和离开同时发生。
     </transition>
 ```
 ## 列表过渡
-transition-group组件 不介绍 看文档
+transition-group组件具体看文档
+```
+    <transition-group name="fade" tag="ul">
+      <li
+        v-for="(item, index) in list"
+        :key="item.name"
+        v-show="index === currentIndex" 
+      >
+        {{index}}
+      </li>
+    </transition-group>
+```
 
 # 待续
 ## 状态管理

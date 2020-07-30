@@ -1,15 +1,15 @@
 <template>
   <div>
     <client-only>
-      <full-page ref="fullpage" :options="options">
+      <full-page ref="myFullpage" :options="options">
         <div class="section">
-          <button class="next" @click="fullpage.api.moveSectionDown()">
+          <button class="next" @click="myFullpage.api.moveSectionDown()">
             Next
           </button>
           Section 1
         </div>
         <div class="section">
-          <button class="prev" @click="fullpage.api.moveSectionUp()">
+          <button class="prev" @click="myFullpage.api.moveSectionUp()">
             Prev
           </button>
           Section 2
@@ -51,14 +51,17 @@ export default {
     };
   },
   computed: {
-    fullpage() {
-      return this.$refs.fullpage;
+    myFullpage() {
+      return this.$refs.myFullpage;
     }
   },
+  mounted() {
+    this.delayInit();
+  },
   methods: {
-    // 延迟初始化
-    delayeInit() {
-      this.fullpage.init();
+    // 延迟初始化 <full-page ref="fullpage" :options="options" :skip-init="true">
+    delayInit() {
+      this.myFullpage.init();
     }
   }
 };

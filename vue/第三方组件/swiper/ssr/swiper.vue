@@ -2,7 +2,6 @@
   <div class="mySwiper">
     <div
       v-swiper:mySwiper="swiperOptions"
-      @slide-change-transition-start="onSwiperSlideChangeTransitionStart"
     >
       <div class="swiper-wrapper">
         <div
@@ -68,7 +67,12 @@ export default {
         autoplay,
         loop,
         effect,
-        onlyExternal: true //完全禁止拖动
+        onlyExternal: true, //完全禁止拖动
+        on: {
+          slideChangeTransitionStart: () => {
+            this.onSwiperSlideChangeTransitionStart();
+          }
+        }
       }
     };
   },
