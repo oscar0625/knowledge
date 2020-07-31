@@ -215,6 +215,65 @@ https://axios.nuxtjs.org/
         将nuxt.config.js中的mode更改为spa。
         $ npm run build
 ```
+## 部署到服务端过程
+https://segmentfault.com/a/1190000014450967
+https://segmentfault.com/a/1190000012774650
+```
+    0.首先配置nginx服务器
+    1.在本地打包
+        npm run build 打包应用
+    2.将打包后的文件上传到服务器
+        .nuxt
+        static
+        nuxt.config.js
+        package.json    --port 8150  自定义端口
+        pm2start.js （如果采用pm2管理需要 见下面）
+    3.在服务器上部署运行
+        npm install 安装依赖
+        npm start 运行nuxt服务渲染 （也可采用pm2管理）
+```
+
+## pm2
+### 创建pm2start.js
+```
+    npm install node-cmd --save
+
+    in pm2start.js
+        const cmd = require("node-cmd");
+        cmd.run("npm run start");
+```
+### 指令
+```
+    安装
+    npm install pm2 -g
+
+    启动
+    pm2 start pm2start.js --name "my-nuxt" #my-nuxt为PM2进程名称
+
+    查看进程
+    pm2 list
+    pm2 show 0 或者 # pm2 info 0         #查看进程详细信息，0为PM2进程id 
+
+    重启
+    pm2 restart all                      #重启PM2列表中所有的进程
+    pm2 restart 0                        #重启PM2列表中进程为0的进程
+    重载
+    pm2 reload all                       #重载PM2列表中所有的进程
+    pm2 reload 0                         #重载PM2列表中进程为0的进程
+
+    停止
+    pm2 stop all                         #停止PM2列表中所有的进程
+    pm2 stop 0                           #停止PM2列表中进程为0的进程
+    删除
+    pm2 delete all                       #删除PM2列表中所有的进程
+    pm2 delete 0                         #删除PM2列表中进程为0的进程
+
+    输出问题
+    pm2 logs APP-NAME
+
+    升级PM2
+    npm install pm2@lastest -g           #安装最新的PM2版本
+```
 
 # 常见问题的解决方案
 ## 1.在服务端没有window document  
@@ -223,6 +282,3 @@ https://axios.nuxtjs.org/
 由于是服务端渲染，所以不支持组件的keep-alive，那自然activated、deactivated这两个生命周期也没了
 ## 3.服务器端获取 cookie
 cookie-universal-nuxt
-
-# 待续
-pm2

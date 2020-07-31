@@ -1,16 +1,18 @@
-const DOMAIN = "http://47.94.205.149:8018";
-const DEV_DOMAIN = "http://47.94.205.149:8018";
+const DOMAIN = "http://47.94.205.149:8049";
+const DEV_DOMAIN = "http://47.94.205.149:8049";
+const LOGIN_DOMAIN = "http://47.94.205.149:8345";
 export default {
   /*
    ** 配置全局的 CSS 文件、模块、库。
    ** https://www.nuxtjs.cn/api/configuration-css
    */
   css: [
+    "@/assets/scss/element-variables.scss",
+    "animate.css",
     "@/assets/css/normalize.css",
     "@/assets/css/base.css",
     "@/assets/css/utils.css",
-    "@/assets/css/public.css",
-    "element-ui/lib/theme-chalk/index.css"
+    "@/assets/css/public.css"
   ],
   /*
    ** 配置环境变量
@@ -62,7 +64,7 @@ export default {
     },
     // 登录模块的接口地址
     "/loginApi/": {
-      target: "http://47.94.205.149:8345",
+      target: LOGIN_DOMAIN,
       changeOrigin: true,
       pathRewrite: {
         "^/loginApi/": ""
@@ -89,8 +91,10 @@ export default {
     { src: "@/plugins/router", ssr: true },
     // { src: "@/plugins/mockjs", ssr: true },
     { src: "@/mixins", ssr: true },
-    { src: "@/plugins/nuxt-swiper-plugin.js", ssr: true },
-    { src: "@/plugins/nuxt-video-player-plugin.js", ssr: false }
+    { src: "@/plugins/anime", ssr: false },
+    { src: "@/plugins/nuxt-fullpage", ssr: false },
+    { src: "@/plugins/nuxt-swiper-plugin", ssr: false },
+    { src: "@/plugins/nuxt-video-player-plugin", ssr: false }
   ],
 
   /*
@@ -129,13 +133,13 @@ export default {
    ** https://www.nuxtjs.cn/api/configuration-server
    */
   server: {
-    port: 8008 // default: 3000
+    port: 8080 // default: 3000
   },
   /*
    ** 自动导入您的组件
    ** See https://nuxtjs.org/api/configuration-components
    */
-  components: true,
+  components: false,
   /*
    ** 配置自定义webpack。
    ** https://www.nuxtjs.cn/api/configuration-build

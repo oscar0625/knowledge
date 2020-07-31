@@ -1,6 +1,6 @@
 import Vue from "vue";
-import "swiper/css/swiper.css";
-import VueAwesomeSwiper from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.css";
+import VueAwesomeSwiper from "vue-awesome-swiper/dist/ssr";
 
-// { src: "@/plugins/nuxt-swiper-plugin.js", ssr: true },
+// { src: "@/plugins/nuxt-swiper-plugin.js", ssr: false },
 Vue.use(VueAwesomeSwiper);
