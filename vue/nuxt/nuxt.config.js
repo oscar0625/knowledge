@@ -28,10 +28,13 @@ export default {
    */
   router: {
     middleware: [],
+    // 仅在html5历史记录模式下可用 默认为无滚动行为 返回false以防止滚动
     scrollBehavior(to, from, savedPosition) {
       if (savedPosition) {
+        // savedPosition仅可用于popstate导航。
         return savedPosition;
       } else {
+        // 否则返回到顶部
         return { x: 0, y: 0 };
       }
     }
@@ -91,6 +94,7 @@ export default {
     { src: "@/plugins/router", ssr: true },
     // { src: "@/plugins/mockjs", ssr: true },
     { src: "@/mixins", ssr: true },
+    { src: "@/mixins/index_client", ssr: false },
     { src: "@/plugins/anime", ssr: false },
     { src: "@/plugins/nuxt-fullpage", ssr: false },
     { src: "@/plugins/nuxt-swiper-plugin", ssr: false },
@@ -115,7 +119,7 @@ export default {
    ** https://www.nuxtjs.cn/api/configuration-loading
    */
   loading: {
-    color: "#0379fe",
+    color: "#f23f47",
     height: "2px"
   },
   /*
@@ -145,7 +149,14 @@ export default {
    ** https://www.nuxtjs.cn/api/configuration-build
    */
   build: {
-    transpile: [/^element-ui/]
+    transpile: [/^element-ui/],
+    babel: {
+      presets() {
+        return [
+          [require.resolve("@nuxt/babel-preset-app"), { useBuiltIns: "usage" }]
+        ];
+      }
+    }
   },
   /*
    ** Nuxt.js dev-modules

@@ -52,7 +52,37 @@ Vue CLI 自带的环境变量
     //访问
     process.env.VUE_APP_SECRET
 ```
-## 4.其他
+## 4.浏览器兼容性
+### browserslist
+```
+    指定了项目的目标浏览器的范围。这个值会被 @babel/preset-env 和 Autoprefixer 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
+```
+### Polyfill
+```
+    默认情况下,vue会把 useBuiltIns: 'usage' 传递给 @babel/preset-env，这样它会根据源代码中出现的语言特性自动检测需要的 polyfill。
+    这确保了最终包里 polyfill 数量的最小化。然而，这也意味着如果其中一个依赖需要特殊的 polyfill，默认情况下 Babel 无法将其检测出来。
+    如果有依赖需要 polyfill，你有几种选择：
+    1.如果该依赖基于一个目标环境不支持的 ES 版本撰写: 将其添加到 vue.config.js 中的 transpileDependencies 选项。这会为该依赖同时开启语法转换和根据使用情况检测 polyfill。
+    2.如果该依赖交付了 ES5 代码并显式地列出了需要的 polyfill: 你可以使用 @vue/babel-preset-app 的 polyfills 选项预包含所需要的 polyfill。
+    (我们推荐以这种方式添加 polyfill 而不是在源代码中直接导入它们，因为如果这里列出的 polyfill 在 browserslist 的目标中不需要，则它会被自动排除)
+    // babel.config.js
+    module.exports = {
+        presets: [
+            ['@vue/app', {
+                polyfills: [
+                    'es.promise',
+                    'es.symbol'
+                ]
+            }]
+        ]
+    }
+    3.如果该依赖交付 ES5 代码，但使用了 ES6+ 特性且没有显式地列出需要的 polyfill (例如 Vuetify)：
+    请使用 useBuiltIns: 'entry' 然后在入口文件添加 import 'core-js/stable'; import 'regenerator-runtime/runtime';。
+    这会根据 browserslist 目标导入所有 polyfill，这样你就不用再担心依赖的 polyfill 问题了，但是因为包含了一些没有用到的 polyfill 所以最终的包大小可能会增加。
+```
+
+
+## 5.其他
 ```
     构建一个多页应用    https://cli.vuejs.org/zh/config/#pages
 ```
@@ -1156,6 +1186,16 @@ transition-group组件具体看文档
     </transition-group>
 ```
 
+# 十一、vue-loader
+## Scoped CSS
+当 style 标签有 scoped 属性时，它的 CSS 只作用于当前组件中的元素。
+```
+    深度作用选择器  如果你希望 scoped 样式中的一个选择器能够作用得“更深”，例如影响子组件，你可以使用 >>> 操作符：
+    <style scoped>
+        .a >>> .b {}
+    </style>
+    有些像 Sass 之类的预处理器无法正确解析 >>>。这种情况下你可以使用 /deep/ 操作符取而代之
+```
 # 待续
 ## 状态管理
 ## 插件和开发插件

@@ -6,9 +6,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var Person =
-/*#__PURE__*/
-function () {
+var Person = /*#__PURE__*/function () {
   //实例属性的新写法
   function Person(header, footer) {
     (0, _classCallCheck2.default)(this, Person);

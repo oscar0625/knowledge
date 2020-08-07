@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <title>平滑滚动</title>
+  <style>
+    body {
+      height: 6000px;
+    }
+
+    div {
+      position: absolute;
+      top: 1000px;
+      background: red;
+      width: 50px;
+      height: 50px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="d1"></div>
+</body>
+<script>
+  // https://www.zhangxinxu.com/wordpress/2018/10/scroll-behavior-scrollintoview-%e5%b9%b3%e6%bb%91%e6%bb%9a%e5%8a%a8/
+
+  // 以下平滑滚动效果 ie11不支持
+  // 一、CSS scroll-behavior 让元素平滑滚动  (谨慎使用在 html, body 会影响其他)
+  //  凡是需要平滑滚动的地方都加一句 scroll-behavior:smooth 就好了！ 
+  //  html, body { scroll-behavior:smooth; } 
+
+  // 二、JS scrollIntoView
+  //  元素的scrollIntoView()方法，通过触发滚动父容器，让元素进入视区。
+  //   target.scrollIntoView({
+  //     behavior: "smooth"
+  //   });
+
+  // 三、平滑滚动兼容ie
+  //  如果浏览器版本不支持平滑滚动
+  if (typeof window.getComputedStyle(document.body).scrollBehavior == 'undefined') {
+    // 传统的JS平滑滚动处理代码
+    var scrollSmoothTo = function (position) {
+      // 当前滚动高度
+      var currentTop = document.documentElement.scrollTop || document.body.scrollTop;
+      // 滚动step方法
+      var step = function () {
+        // 距离目标滚动距离
+        var distance = position - currentTop;
+        // 目标滚动位置
+        currentTop = currentTop + distance / 5;
+        if (Math.abs(distance) < 1) {
+          window.scrollTo(0, position);
+        } else {
+          window.scrollTo(0, currentTop);
+          requestAnimationFrame(step);
+        }
+      };
+      step();
+    };
+
+  }
+
+  // 四、JS scrollTo 
+  //  scrollTo()表示滚到到指定的位置
+  //  既能作用于windows对象，表示窗体滚动；又可以作用于普通Element元素，表示元素滚动。
+  //  注意：scrollTo 在ie下不支持用在Element上 但支持用在window上(但不支持option选项 不能平滑滚动)
+  //   window.scrollTo(0, 0)
+  //   window.scrollTo({
+  //       top: 10,
+  //       left: 20,
+  //       behavior: 'smooth'
+  //   });
+
+  document.getElementById('d1').onclick = function () {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+</script>
+
+</html>

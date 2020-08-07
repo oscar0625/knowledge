@@ -22,8 +22,7 @@ var oscarDetection = {
     browser: {
         //移动/pc终端浏览器版本信息 
         versions: function () {
-            var userAgent = window.navigator.userAgent, //取得浏览器的userAgent字符串
-                app = window.navigator.appVersion;
+            var userAgent = window.navigator.userAgent; //取得浏览器的userAgent字符串
             return {
                 //判断浏览器内核
                 trident: userAgent.indexOf('Trident') > -1, //IE内核

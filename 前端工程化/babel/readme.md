@@ -8,7 +8,13 @@ npm install --save @babel/polyfill
 @babel/core 核心库
 @babel/cli  CLI 命令行工具
 @babel/preset-env 插件和预设（preset）
-@babel/polyfill  polyfill垫片
+@babel/polyfill  垫片
+```
+    从Babel 7.4.0开始，不推荐使用此软件包，而直接包括core-js/stable（包括regenerator-runtime/runtimepolyfill ECMAScript功能）和（需要使用转译的生成器函数）
+    import "core-js/stable";
+    import "regenerator-runtime/runtime";
+```
+
 
 # 二、配置
 ## 1 babel.config.js
@@ -53,28 +59,37 @@ https://babeljs.io/docs/en/babel-preset-env
 ```
     > 1%
     last 2 versions
-    not ie <= 8
+    not ie <= 9
 ```
 ## 2. useBuiltIns
-https://blog.hhking.cn/2019/04/02/babel-v7-update/
+https://www.babeljs.cn/docs/babel-preset-env#usebuiltins
 此选项配置如何@babel/preset-env处理polyfill
+
 ```
     useBuiltIns: false (默认) 
+
+    此时不对 polyfill 做操作。如果引入则无视配置的浏览器兼容，引入所有的 polyfill。
 ```
-此时不对 polyfill 做操作。如果引入 @babel/polyfill，则无视配置的浏览器兼容，引入所有的 polyfill。
 ```
     useBuiltIns: "entry",
-    corejs: 2
+    corejs: 3 
+    //注意：这里需要指定 corejs3 版本 
+    //npm install core-js@3 --save
+
+    根据配置的浏览器兼容，引入浏览器不兼容的 polyfill。
+    需要在入口文件手动添加 会自动根据 browserslist 替换成浏览器不兼容的所有 polyfill。
+    import "core-js/stable";
+    import "regenerator-runtime/runtime";
 ```
-根据配置的浏览器兼容，引入浏览器不兼容的 polyfill。需要在入口文件手动添加 import '@babel/polyfill'，会自动根据 browserslist 替换成浏览器不兼容的所有 polyfill。
-注意：这里需要指定 corejs 的版本, 如果 "corejs": 3, 则@babel/polyfill被废弃需要更改为新的方式 见https://babeljs.io/docs/en/babel-polyfill
 ```
     useBuiltIns: "usage",
-    corejs: 2
-    //但是这么有一个问题，会引入大量相同的辅助函数，使用插件 @babel/plugin-transform-runtime 这个插件是用来复用辅助函数。
+    corejs: { version: 3, proposals: true }
+    //注意：这里需要指定 corejs3 版本 
+    //npm install core-js@3 --save
+    //proposals: true 需要先下载插件 @babel/plugin-transform-runtime 这个插件是用来复用辅助函数。
+    
+    usage 会根据配置的浏览器兼容，以及你代码中用到的 API 来进行 polyfill，实现了按需添加。
 ```
-usage 会根据配置的浏览器兼容，以及你代码中用到的 API 来进行 polyfill，实现了按需添加。
-注意：这里需要指定 corejs 的版本, 如果 "corejs": 3, 则@babel/polyfill被废弃需要更改为新的方式 见https://babeljs.io/docs/en/babel-polyfill
 
 # 五、原理解析
 https://segmentfault.com/a/1190000013261724
