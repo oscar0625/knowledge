@@ -1,8 +1,11 @@
 <template>
-  <div class="third-page">
+  <div
+    v-lazy:background-image="require(`@/assets/images/home_map_bg.png`)"
+    class="third-page"
+  >
     <div class="section-title">
       <h1>产业数据</h1>
-      <p>SERVICE CAPABILITY</p>
+      <p>INDUSTRY DATABASE</p>
     </div>
     <div id="map" ref="map"></div>
   </div>
@@ -13,8 +16,11 @@ import echarts from "echarts";
 import "echarts/map/js/china";
 /**
  * npm install echarts --save
+ * 1.echarts导致的内存波动解决方案
+ *  离开时销毁掉生成的echarts实例。(echarts.dispose())
  */
 export default {
+  name: "ThirdPage",
   data() {
     return {
       myChart: null,
@@ -24,6 +30,10 @@ export default {
   mounted() {
     this.createOption();
     this.draw({ target: this.$refs.map, option: this.option });
+  },
+  beforeDestroy() {
+    // 销毁
+    this.dispose();
   },
   methods: {
     // 创建option
@@ -266,24 +276,30 @@ export default {
     },
     // 绘制函数
     draw({ target, option }) {
+      // 销毁
+      this.dispose();
+      // 创建实例
+      this.myChart = echarts.init(target);
+      this.myChart.setOption(option, true);
+    },
+    // 销毁函数
+    dispose() {
+      // 如果已经存在销毁
       if (this.myChart) {
         this.myChart.clear();
         this.myChart.dispose();
       }
-      this.myChart = echarts.init(target);
-      this.myChart.setOption(option, true);
     }
   }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 //第三屏
 .third-page {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  background: url("~assets/images/home_map_bg.png") no-repeat;
+  min-width: 1200px;
+  background-position: center center;
   background-size: cover;
   .section-title {
     position: absolute !important;
@@ -300,7 +316,11 @@ export default {
     width: 100%;
     height: 100%;
 
-    .regions-box {
+    /deep/ div {
+      cursor: default !important;
+    }
+
+    /deep/ .regions-box {
       width: 106px;
       height: 60px;
       padding-top: 7px;

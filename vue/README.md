@@ -80,8 +80,6 @@ Vue CLI 自带的环境变量
     请使用 useBuiltIns: 'entry' 然后在入口文件添加 import 'core-js/stable'; import 'regenerator-runtime/runtime';。
     这会根据 browserslist 目标导入所有 polyfill，这样你就不用再担心依赖的 polyfill 问题了，但是因为包含了一些没有用到的 polyfill 所以最终的包大小可能会增加。
 ```
-
-
 ## 5.其他
 ```
     构建一个多页应用    https://cli.vuejs.org/zh/config/#pages
@@ -855,222 +853,7 @@ js
     执行beforeRouteEnter回调函数next。
 ```
 
-# 七、综合
-## 1.过滤器
-Vue.filter( id, [definition] )
-```
-    //全局
-    //全局注册
-    Vue.filter('my-filter', function (value) {})
-    //获取，返回已注册的过滤器
-    var myFilter = Vue.filter('my-filter')
-
-    //局部
-    filters: {
-        myFilter: function (value) {
-        }
-    }
-
-    // 使用
-    <div>{{ message | myFilter }}</div>
-    <div v-bind:id="message | myFilter"></div>
-```
-## 2.混入
-当组件和混入对象（myMixin）含有同名选项时，这些选项将以恰当的方式进行“合并”。
-数据对象在内部会进行递归合并，并在发生冲突时以组件数据优先。
-同名钩子函数将合并为一个数组，因此都将被调用。混入对象的钩子将在组件自身钩子之前调用。
-值为对象的选项，例如 methods、components 和 directives，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
-```
-    mixins: [myMixin]
-```
-混入也可以进行全局注册。使用时格外小心！
-## 3.自定义指令
-```
-    //普通参数指令
-    <div id="hook-arguments-example" v-demo:foo.a.b="123"></div>
-    Vue.directive('demo', {
-        //只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
-        //不知道元素的高度
-        bind: function (el, binding, vnode) {
-            var s = JSON.stringify
-            el.innerHTML =
-            'name: '       + s(binding.name) + '<br>' +
-            'value: '      + s(binding.value) + '<br>' +
-            'expression: ' + s(binding.expression) + '<br>' +
-            'argument: '   + s(binding.arg) + '<br>' +
-            'modifiers: '  + s(binding.modifiers) + '<br>' +
-            'vnode keys: ' + Object.keys(vnode).join(', ')
-        },
-        //被绑定元素插入父节点时调用
-        inserted:function{},
-        //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
-        update:function{}
-    })
-    //动态指令参数
-    <p v-pin:[direction]="200">I am pinned onto the page at 200px to the left.</p>
-    Vue.directive('pin', {
-        bind: function (el, binding, vnode) {
-            el.style.position = 'fixed'
-            var s = (binding.arg == 'left' ? 'left' : 'top')
-            el.style[s] = binding.value + 'px'
-        }
-    })    
-    //函数简写 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
-    <div v-demo="{ color: 'white', text: 'hello!' }"></div>
-    Vue.directive('demo', function (el, binding) {
-        console.log(binding.value.color) // => "white"
-        console.log(binding.value.text)  // => "hello!"
-    })
-```
-## 4.ref
-ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。
-```
-    <template>
-        <div >
-            //加在普通的 DOM 元素上使用，引用指向的就是 DOM 元素
-            <div ref="target">target1</div>
-            <div ref="target">target2</div>     //重复的情况下是最后一个
-            
-            //加在子组件上，引用就指向组件实例
-            <child ref="child"></child>
-        </div>
-    </template>
-    export default{
-        methods:{
-            click(){
-                console.log(this.$refs.target);  //DOM 元素
-                console.log(this.$refs.child);   //组件child
-            }
-        }
-    }    
-```  
-## 5.自定义事件
-```
-    //事件的定义
-    vm.$emit( eventName, […args] )
-    //事件的监听
-    vm.$on( event, callback )
-    //只触发一次的事件监听
-    vm.$once( event, callback )
-
-    //example
-    vm.$emit('test', 'hi')
-    vm.$on('test', function (msg) {
-        console.log(msg)
-    })
-```
-``` 
-    //事件的移除
-    vm.$off( [event, callback] )
-    如果没有提供参数，则移除所有的事件监听器；
-    如果只提供了事件，则移除该事件所有的监听器；
-    如果同时提供了事件与回调，则只移除这个回调的监听器
-```
-## 6.axios
-见 axios.js
-## 7.服务端渲染
-见 nuxt
-
-# 八、注意点
-## 1.响应式系统检测数据改变后更新
-```
-    //数组
-    可以被检测到 -> 对原数组进行改变操作的（有特殊看下面）
-      a.直接给数组重新赋值
-      b.对数组使用这些方法：push()pop()shift()unshift()splice()sort()reverse();
-    不可以
-      a.filter(), concat(), slice() 方法;
-      b.当你利用索引直接设置一个项时，例如：vm.arr[index] = newValue 不可被检测更新到
-        解决：vm.$set(arr,index,value) （当你要对数组的某一项进行修改的时候一定要这么做）
-
-    //对象
-    可以被检测到
-        a.直接给对象重新赋值
-        b.对key值进行修改的时候
-    不可以:
-        Vue 不能检测对象属性的添加或删除：
-        解决：添加 vm.$set(object, key, value)
-              删除 vm.$delete(object, key)    
-
-    理解：对于 数组/对象 的可以/不可以的说明，这里的可以/不可以是指界面层会不会发送重新渲染，即更新界面，
-        对于变量 数组/对象 来说，你修改了一定是修改了，只是暂时没更新到界面上，
-        举个例子，你给对象添加了一个键值对，这个对象是改变了，但是由于 Vue 不能检测对象属性的添加或删除，所以没有更新界面，
-        但如果你同时又把这个对象的一个键值对进行了修改，vue是可以检测到修改的，所以vue要更新，这个时候的更新，会把你新添加的那个键值对也展现出来
-        this.$forceUpdate();//强制重新绘制 
-```
-## 2.v-for与v-if的优先级
-当它们处于同一节点，v-for 的优先级比 v-if 更高. 这意味着 v-if 将分别重复运行于每个 v-for 循环中。 当你想为仅有的一些项渲染节点时，这种优先级的机制会十分有用:
-```
-    <li v-for="x in arr" v-if="x>5">   //渲染的结果为  数组arr中 只有大于5的才会被显示
-        {{ x }}
-    </li>
-```
-而如果你的目的是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素:
-```
-    <ul v-if="arr.length">          //渲染的结果为  数组arr的length不等于 才会显示 才会执行下面的循环
-        <li v-for="x in arr">
-            {{ x }}
-        </li>
-    </ul>
-```
-## 3.key
-Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做除了使 Vue 变得非常快之外，还有其它一些好处。
-```
-    <template v-if="loginType === 'username'">
-        <label>Username</label>
-        <input placeholder="Enter your username">
-    </template>
-    <template v-else>
-        <label>Email</label>
-        <input placeholder="Enter your email address">
-    </template>
-```
-那么在上面的代码中切换 loginType 将不会清除用户已经输入的内容。因为两个模板使用了相同的元素，input不会被替换掉——仅仅是替换了它的 placeholder。
-这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来表达“这两个元素是完全独立的，不要复用它们”。只需添加一个具有唯一值的 key 属性即可：
-```
-    //现在，每次切换时，输入框都将被重新渲染。
-    <template v-if="loginType === 'username'">
-        <label>Username</label>
-        <input placeholder="Enter your username" key="username-input">
-    </template>
-    <template v-else>
-        <label>Email</label>
-        <input placeholder="Enter your email address" key="email-input">
-    </template>
-```
-## 4.引入图片路径的方式
-```
-    <img src="./assets/images/01.jpg" alt=""> 
-
-    <img :src="require('./assets/images/03.jpg')" alt=""> 
-    <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
-```
-## 5.定时器清理问题
-```
-    在组件中添加的定时器  一定要在组件移除的生命周期中添加清理机制
-```
-
-# 九、elementUI
-```
-elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
-```
-## 1.el-scrollbar
-```
-    element-ui的滚动条组件el-scrollbar（官方没有）
-    <div style="height:600px;">
-        <el-scrollbar style="height:100%">
-            <div style="width:700px;height:700px;border:solid;" >
-            ....... blabla.....
-            </div>
-        </el-scrollbar>
-    </div>
-    在使用时要设置外层容器高度。并且要设置el-scrollbar 的高度为100%
-    .el-scrollbar__wrap{
-        overflow-x: hidden;
-    }
-```
-
-# 十、过渡效果
+# 七、过渡效果
 Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用过渡效果。
 ## 单个节点过渡
 ```
@@ -1186,8 +969,123 @@ transition-group组件具体看文档
     </transition-group>
 ```
 
-# 十一、vue-loader
-## Scoped CSS
+# 八、综合
+## 1.过滤器
+Vue.filter( id, [definition] )
+```
+    //全局
+    //全局注册
+    Vue.filter('my-filter', function (value) {})
+    //获取，返回已注册的过滤器
+    var myFilter = Vue.filter('my-filter')
+
+    //局部
+    filters: {
+        myFilter: function (value) {
+        }
+    }
+
+    // 使用
+    <div>{{ message | myFilter }}</div>
+    <div v-bind:id="message | myFilter"></div>
+```
+## 2.混入
+当组件和混入对象（myMixin）含有同名选项时，这些选项将以恰当的方式进行“合并”。
+数据对象在内部会进行递归合并，并在发生冲突时以组件数据优先。
+同名钩子函数将合并为一个数组，因此都将被调用。混入对象的钩子将在组件自身钩子之前调用。
+值为对象的选项，例如 methods、components 和 directives，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
+```
+    mixins: [myMixin]
+```
+混入也可以进行全局注册。使用时格外小心！
+## 3.自定义指令
+```
+    //普通参数指令
+    <div id="hook-arguments-example" v-demo:foo.a.b="123"></div>
+    Vue.directive('demo', {
+        //只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+        //不知道元素的高度
+        bind: function (el, binding, vnode) {
+            var s = JSON.stringify
+            el.innerHTML =
+            'name: '       + s(binding.name) + '<br>' +
+            'value: '      + s(binding.value) + '<br>' +
+            'expression: ' + s(binding.expression) + '<br>' +
+            'argument: '   + s(binding.arg) + '<br>' +
+            'modifiers: '  + s(binding.modifiers) + '<br>' +
+            'vnode keys: ' + Object.keys(vnode).join(', ')
+        },
+        //被绑定元素插入父节点时调用
+        inserted:function{},
+        //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
+        update:function{}
+    })
+    //动态指令参数
+    <p v-pin:[direction]="200">I am pinned onto the page at 200px to the left.</p>
+    Vue.directive('pin', {
+        bind: function (el, binding, vnode) {
+            el.style.position = 'fixed'
+            var s = (binding.arg == 'left' ? 'left' : 'top')
+            el.style[s] = binding.value + 'px'
+        }
+    })    
+    //函数简写 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
+    <div v-demo="{ color: 'white', text: 'hello!' }"></div>
+    Vue.directive('demo', function (el, binding) {
+        console.log(binding.value.color) // => "white"
+        console.log(binding.value.text)  // => "hello!"
+    })
+```
+## 4.ref
+ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。
+```
+    <template>
+        <div >
+            //加在普通的 DOM 元素上使用，引用指向的就是 DOM 元素
+            <div ref="target">target1</div>
+            <div ref="target">target2</div>     //重复的情况下是最后一个
+            
+            //加在子组件上，引用就指向组件实例
+            <child ref="child"></child>
+        </div>
+    </template>
+    export default{
+        methods:{
+            click(){
+                console.log(this.$refs.target);  //DOM 元素
+                console.log(this.$refs.child);   //组件child
+            }
+        }
+    }    
+```  
+## 5.自定义事件
+```
+    //事件的定义
+    vm.$emit( eventName, […args] )
+    //事件的监听
+    vm.$on( event, callback )
+    //只触发一次的事件监听
+    vm.$once( event, callback )
+
+    //example
+    vm.$emit('test', 'hi')
+    vm.$on('test', function (msg) {
+        console.log(msg)
+    })
+```
+``` 
+    //事件的移除
+    vm.$off( [event, callback] )
+    如果没有提供参数，则移除所有的事件监听器；
+    如果只提供了事件，则移除该事件所有的监听器；
+    如果同时提供了事件与回调，则只移除这个回调的监听器
+```
+## 6.axios
+见 axios.js
+## 7.服务端渲染
+见 nuxt
+## 8.vue-loader
+### Scoped CSS
 当 style 标签有 scoped 属性时，它的 CSS 只作用于当前组件中的元素。
 ```
     深度作用选择器  如果你希望 scoped 样式中的一个选择器能够作用得“更深”，例如影响子组件，你可以使用 >>> 操作符：
@@ -1196,7 +1094,126 @@ transition-group组件具体看文档
     </style>
     有些像 Sass 之类的预处理器无法正确解析 >>>。这种情况下你可以使用 /deep/ 操作符取而代之
 ```
+
+# 九、注意点
+## 1.响应式系统检测数据改变后更新
+```
+    //数组
+    可以被检测到 -> 对原数组进行改变操作的（有特殊看下面）
+      a.直接给数组重新赋值
+      b.对数组使用这些方法：push()pop()shift()unshift()splice()sort()reverse();
+    不可以
+      a.filter(), concat(), slice() 方法;
+      b.当你利用索引直接设置一个项时，例如：vm.arr[index] = newValue 不可被检测更新到
+        解决：vm.$set(arr,index,value) （当你要对数组的某一项进行修改的时候一定要这么做）
+
+    //对象
+    可以被检测到
+        a.直接给对象重新赋值
+        b.对key值进行修改的时候
+    不可以:
+        Vue 不能检测对象属性的添加或删除：
+        解决：添加 vm.$set(object, key, value)
+              删除 vm.$delete(object, key)    
+
+    理解：对于 数组/对象 的可以/不可以的说明，这里的可以/不可以是指界面层会不会发送重新渲染，即更新界面，
+        对于变量 数组/对象 来说，你修改了一定是修改了，只是暂时没更新到界面上，
+        举个例子，你给对象添加了一个键值对，这个对象是改变了，但是由于 Vue 不能检测对象属性的添加或删除，所以没有更新界面，
+        但如果你同时又把这个对象的一个键值对进行了修改，vue是可以检测到修改的，所以vue要更新，这个时候的更新，会把你新添加的那个键值对也展现出来
+        this.$forceUpdate();//强制重新绘制 
+```
+## 2.v-for与v-if的优先级
+当它们处于同一节点，v-for 的优先级比 v-if 更高. 这意味着 v-if 将分别重复运行于每个 v-for 循环中。 当你想为仅有的一些项渲染节点时，这种优先级的机制会十分有用:
+```
+    <li v-for="x in arr" v-if="x>5">   //渲染的结果为  数组arr中 只有大于5的才会被显示
+        {{ x }}
+    </li>
+```
+而如果你的目的是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素:
+```
+    <ul v-if="arr.length">          //渲染的结果为  数组arr的length不等于 才会显示 才会执行下面的循环
+        <li v-for="x in arr">
+            {{ x }}
+        </li>
+    </ul>
+```
+## 3.key
+Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做除了使 Vue 变得非常快之外，还有其它一些好处。
+```
+    <template v-if="loginType === 'username'">
+        <label>Username</label>
+        <input placeholder="Enter your username">
+    </template>
+    <template v-else>
+        <label>Email</label>
+        <input placeholder="Enter your email address">
+    </template>
+```
+那么在上面的代码中切换 loginType 将不会清除用户已经输入的内容。因为两个模板使用了相同的元素，input不会被替换掉——仅仅是替换了它的 placeholder。
+这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来表达“这两个元素是完全独立的，不要复用它们”。只需添加一个具有唯一值的 key 属性即可：
+```
+    //现在，每次切换时，输入框都将被重新渲染。
+    <template v-if="loginType === 'username'">
+        <label>Username</label>
+        <input placeholder="Enter your username" key="username-input">
+    </template>
+    <template v-else>
+        <label>Email</label>
+        <input placeholder="Enter your email address" key="email-input">
+    </template>
+```
+## 4.引入图片路径的方式
+```
+    <img src="./assets/images/01.jpg" alt=""> 
+
+    <img :src="require('./assets/images/03.jpg')" alt=""> 
+    <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
+```
+## 5.Vue 中的内存泄漏问题
+```
+    1.全局变量引起的内存泄漏  
+    2.闭包引起的内存泄漏
+    3.dom清空或删除时事件未清除、监听在window事件没有解绑，导致的内存泄漏
+    4.被遗忘的计时器 setInterval
+    5.使用第三方库创建，没有调用正确的销毁函数
+     如果是使用标准的vue插件 通过全局方法 Vue.use() 则忽略此问题
+     如果使用其他第三方库 在mounted/created钩子中使用了初始化 需要在 beforeDestroy 中做对应销毁处理（否则会有内存泄漏）
+    6.当你需要渲染大量静态内容时，可以通过使用 v-once 创建低开销的静态组件 以确保这些内容只计算一次然后缓存起来
+```
+
+# 十、elementUI
+```
+elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
+```
+## 1.el-scrollbar
+```
+    element-ui的滚动条组件el-scrollbar（官方没有）
+    <div style="height:600px;">
+        <el-scrollbar style="height:100%">
+            <div style="width:700px;height:700px;border:solid;" >
+            ....... blabla.....
+            </div>
+        </el-scrollbar>
+    </div>
+    在使用时要设置外层容器高度。并且要设置el-scrollbar 的高度为100%
+    .el-scrollbar__wrap{
+        overflow-x: hidden;
+    }
+```
+
+
+
+
+
 # 待续
-## 状态管理
 ## 插件和开发插件
+插件几种引入方式
+```
+    1.通过全局方法 Vue.use() 使用 (Vue.use 会自动阻止多次注册相同插件，届时即使多次调用也只会注册一次该插件。) 
+    2.通过全局混入 Vue.mixin() 来添加一些组件选项 
+    3.添加全局资源：指令/过滤器/过渡等。
+    4.添加 Vue 实例方法，通过把它们添加到 Vue.prototype 上实现。(Vue.prototype.$echarts = echarts;) 
+    5.直接在文件中import使用
+```
+## 状态管理
 ## 渲染函数 & JSX

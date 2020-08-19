@@ -29,7 +29,7 @@
  *
  *  常见问题
  *  1.licenseKey报错
- *    去vue-fullpage.js中删掉代码
+ *    去vue-fullpage.js/dist/vue-fullpage.js中删掉代码 搜索 licenseKey
  *  2.创建更小或更大的 section
  *    fp-auto-height
  *  3.懒加载
