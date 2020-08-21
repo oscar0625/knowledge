@@ -1,14 +1,24 @@
 <template>
-  <el-radio-group :value="value" @input="updateValue">
-    <el-radio v-for="(item, key) in list" :key="key" :label="item.value">{{
-      item.name
-    }}</el-radio>
-  </el-radio-group>
+  <el-select
+    :value="value"
+    :placeholder="placeholder"
+    :clearable="!unclearable"
+    style="width: 100%;"
+    @input="updateValue"
+  >
+    <el-option
+      v-for="(item, key) in list"
+      :key="key"
+      :label="item.name"
+      :value="item.value"
+    >
+    </el-option>
+  </el-select>
 </template>
 
 <script>
 export default {
-  name: "EnumerateRadio", // 数据枚举的公共组件 radio方式
+  name: "Enumerate", // 数据枚举的公共组件
   props: {
     url: {
       type: String,
@@ -18,7 +28,14 @@ export default {
       type: [String, Number],
       required: true
     },
-
+    placeholder: {
+      type: String,
+      default: ""
+    },
+    unclearable: {
+      type: Boolean,
+      default: false
+    },
     defaultValue: {
       type: String,
       default: ""
@@ -54,4 +71,4 @@ export default {
 };
 </script>
 
-<style lang="less"></style>
+<style></style>

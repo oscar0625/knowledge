@@ -30,13 +30,44 @@ export default {
     middleware: [],
     // 仅在html5历史记录模式下可用 默认为无滚动行为 返回false以防止滚动
     scrollBehavior(to, from, savedPosition) {
+      let position = false;
+
       if (savedPosition) {
         // savedPosition仅可用于popstate导航。
-        return savedPosition;
+        position = savedPosition;
       } else {
         // 否则返回到顶部
-        return { x: 0, y: 0 };
+        position = { x: 0, y: 0 };
       }
+
+      return new Promise((resolve) => {
+        // wait for the out transition to complete (if necessary)
+        window.$nuxt.$once("triggerScroll", () => {
+          // coords will be used if no selector is provided,
+          // or if the selector didn't match any element.
+          if (to.hash) {
+            let hash = to.hash;
+            // CSS.escape() is not supported with IE and Edge.
+            if (
+              typeof window.CSS !== "undefined" &&
+              typeof window.CSS.escape !== "undefined"
+            ) {
+              hash = "#" + window.CSS.escape(hash.substr(1));
+            }
+            try {
+              if (document.querySelector(hash)) {
+                // scroll to anchor by returning the selector
+                position = { selector: hash };
+              }
+            } catch (e) {
+              console.warn(
+                "Failed to save scroll position. Please add CSS.escape() polyfill (https://github.com/mathiasbynens/CSS.escape)."
+              );
+            }
+          }
+          resolve(position);
+        });
+      });
     }
   },
   /*
@@ -89,12 +120,14 @@ export default {
    */
   plugins: [
     { src: "@/plugins/element-ui", ssr: true },
+    { src: "@/plugins/device", ssr: true },
     { src: "@/plugins/axios", ssr: true },
     { src: "@/api", ssr: true },
     { src: "@/plugins/router", ssr: true },
     // { src: "@/plugins/mockjs", ssr: true },
     { src: "@/mixins", ssr: true },
     { src: "@/mixins/index_client", ssr: false },
+    { src: "@/plugins/lazyload", ssr: false },
     { src: "@/plugins/anime", ssr: false },
     { src: "@/plugins/nuxt-fullpage", ssr: false },
     { src: "@/plugins/nuxt-swiper-plugin", ssr: false },
@@ -108,10 +141,15 @@ export default {
   head: {},
   /*
    ** 设置页面切换过渡效果
+   ** 设置布局切换过渡效果
    ** https://www.nuxtjs.cn/api/configuration-transition
    */
   transition: {
     name: "page",
+    mode: "out-in"
+  },
+  layoutTransition: {
+    name: "layout",
     mode: "out-in"
   },
   /*

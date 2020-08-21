@@ -1,9 +1,11 @@
 import homepage from "./homepage";
+import news from "./news";
 
 export default function ({ $axios }, inject) {
   // 所有请求集合
   const request = {
-    homepage: homepage($axios)
+    homepage: homepage($axios),
+    news: news($axios)
   };
 
   // 请求的方法

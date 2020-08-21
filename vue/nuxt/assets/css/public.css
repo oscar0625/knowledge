@@ -1,32 +1,15 @@
 body {
   min-width: 1200px;
+  font-size: 16px;
   color: #333;
   background: #f8fbff;
 }
+
 :focus {
   outline: none;
 }
 
-/* 过渡效果 */
-.page-enter-active,
-.page-leave-active {
-  transition: opacity .5s;
-}
-
-.page-enter,
-.page-leave-active {
-  opacity: 0;
-}
-/*  <transition name="fade"> 过渡效果*/
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
-/* 容器 */
+/* 版心容器 */
 .wrapper {
   width: 1200px;
   margin: 0 auto;
@@ -69,4 +52,46 @@ body {
 
 .scale-image:hover img {
   transform: scale(1.1);
+}
+
+/* 旋转一圈动画 */
+@keyframes rotate1turn {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* nuxt页面切换过渡效果 */
+.layout-enter-active,
+.layout-leave-active,
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s;
+}
+
+.layout-enter,
+.layout-leave-to,
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
+
+/*  transition组件  name="fade" 过渡效果*/
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 统一设定wowjs使用animatecss动画的过渡时间 */
+.wow {
+  --animate-duration: 1.5s;
 }

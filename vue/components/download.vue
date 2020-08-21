@@ -1,21 +1,26 @@
 <template>
-  <el-button type="primary" @click="download" :loading="loading"
-    >下载文件</el-button
-  >
+  <el-button :type="buttonType" :loading="loading" @click="download">
+    <slot></slot>
+  </el-button>
 </template>
 
 <script>
-import myAxios from "@/utils/request";
 export default {
-  name: "download",
+  name: "Download",
   props: {
     url: {
       type: String,
       required: true
     },
+    buttonType: {
+      type: String,
+      default: "primary"
+    },
     params: {
       type: Object,
-      default: {}
+      default() {
+        return {};
+      }
     },
     fileType: {
       type: String,
@@ -24,12 +29,11 @@ export default {
     },
     fileSuffix: {
       type: String,
-      default:
-        ".xlsx"
+      default: ".txt"
     },
     fileName: {
       type: String,
-      default: "下载文件"
+      default: "文件"
     }
   },
   data() {
@@ -41,11 +45,11 @@ export default {
     download() {
       const { url, params, fileType, fileSuffix, fileName } = this.$props;
       this.loading = true;
-      myAxios
+      this.$axios
         .post(url, params, {
           responseType: "blob"
         })
-        .then(res => {
+        .then((res) => {
           const type = res.type || "";
           if (type.includes(fileType)) {
             const link = document.createElement("a");
@@ -54,8 +58,8 @@ export default {
             link.click();
           }
           if (type.includes("application/json")) {
-            let reader = new FileReader();
-            reader.onload = e => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
               this.$message.error(JSON.parse(e.target.result).message);
             };
             reader.readAsText(res);
@@ -67,4 +71,4 @@ export default {
 };
 </script>
 
-<style lang="less"></style>
+<style></style>

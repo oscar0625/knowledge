@@ -41,14 +41,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 .no-data {
-  background-image: url("../../assets/images/no_data.png");
+  background-image: url("~assets/images/no_data.png");
   background-position: center center;
   background-repeat: no-repeat;
 }
 .no-search-data {
-  background-image: url("../../assets/images/no_search_data.png");
+  background-image: url("~assets/images/no_search_data.png");
   background-position: center center;
   background-repeat: no-repeat;
 }

@@ -38,7 +38,7 @@
 // 404页面
 export default {
   name: "Page404",
-  layout: "onlyContent",
+  layout: "only_content",
   computed: {
     message() {
       return "The webmaster said that you can not enter this page...";

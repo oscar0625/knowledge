@@ -120,9 +120,9 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .image-upload {
-  .el-upload {
+  /deep/ .el-upload {
     position: relative;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -132,7 +132,7 @@ export default {
       border-color: #409eff;
     }
   }
-  .el-icon-plus {
+  /deep/ .el-icon-plus {
     font-size: 30px;
     color: #8c939d;
     width: 148px;
