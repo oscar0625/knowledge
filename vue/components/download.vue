@@ -51,7 +51,7 @@ export default {
         })
         .then((res) => {
           const type = res.type || "";
-          if (type.includes(fileType)) {
+          if (fileType.includes(type)) {
             const link = document.createElement("a");
             link.href = URL.createObjectURL(res);
             link.download = fileName + Date.now() + fileSuffix;
@@ -60,7 +60,12 @@ export default {
           if (type.includes("application/json")) {
             const reader = new FileReader();
             reader.onload = (e) => {
-              this.$message.error(JSON.parse(e.target.result).message);
+              const result = JSON.parse(e.target.result);
+              if (result.code === 1003) {
+                this.redirectByPath("/login", { path: this.$route.path });
+              } else {
+                this.$message.error(result.message);
+              }
             };
             reader.readAsText(res);
           }

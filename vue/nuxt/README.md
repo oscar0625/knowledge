@@ -249,7 +249,7 @@ https://segmentfault.com/a/1190000012774650
 
     启动
     pm2 start pm2start.js --name "my-nuxt" #my-nuxt为PM2进程名称
-
+    
     查看进程
     pm2 list
     pm2 show 0 或者 # pm2 info 0         #查看进程详细信息，0为PM2进程id 
@@ -267,6 +267,9 @@ https://segmentfault.com/a/1190000012774650
     删除
     pm2 delete all                       #删除PM2列表中所有的进程
     pm2 delete 0                         #删除PM2列表中进程为0的进程
+
+    更新
+    pm2 update                           #保存进程，终止PM2并恢复进程
 
     输出问题
     pm2 logs APP-NAME

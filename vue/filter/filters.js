@@ -22,3 +22,8 @@ Vue.filter("dateFilterSpace", function (value) {
   if (typeof value !== "string") return "";
   return value.split(/\s+/)[0];
 });
+// 手机号保密过滤 13888888888 => 138****8888
+Vue.filter("phoneSecretFilter", function (value) {
+  if (typeof value !== "string") return "";
+  return value.slice(0, 3) + "****" + value.slice(7);
+});

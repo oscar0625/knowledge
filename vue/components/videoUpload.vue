@@ -80,8 +80,8 @@ export default {
     },
     // 上传之前验证
     upLoadBefore(file) {
-      const verificationType =
-        this.accept === "video/*" || this.accept.includes(file.type);
+      const verificationType = 
+        file.type.includes("video") || this.accept.includes(file.type);
       const verificationSize = file.size / 1024 / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
         this.$message.error("上传的视频类型有误");

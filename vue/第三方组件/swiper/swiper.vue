@@ -59,6 +59,9 @@ export default {
         on: {
           slideChangeTransitionStart: () => {
             console.log(this.swiper.activeIndex);
+          },
+          tap: () => {
+            console.log(this.swiper.clickedIndex);
           }
         }
       },

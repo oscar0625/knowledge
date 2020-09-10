@@ -100,7 +100,12 @@ export default {
     },
     // 点击切换轮播
     handTabIndex(index) {
-      this.mySwiper.slideTo(index);
+      const { loop } = this.$props;
+      if (loop) {
+        this.mySwiper.slideToLoop(index);
+      } else {
+        this.mySwiper.slideTo(index);
+      }
     },
     // 根据当前视口 计算pRight值
     createPRight() {
