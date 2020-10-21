@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <title>css布局概念-BFC</title>
+</head>
+
+<body>
+</body>
+<script>
+  // BFC、IFC、GFC 和 FFC
+  // 常见的FC有BFC、IFC，还有GFC（网格布局格式化上下文）和FFC（自适应格式化上下文）
+
+  // IFC
+  // IFC(Inline Formatting Contexts)直译为"内联格式化上下文"，IFC的line box（线框）高度由其包含行内元素中最高的实际高度计算而来（不受到竖直方向的padding/margin影响)。
+  // 1.形成条件
+  // 块级元素中仅包含内联级别元素
+  // 2.特性
+  // IFC中的line box一般左右都贴紧整个IFC，但是会因为float元素而扰乱。float元素会位于IFC与与line box之间，使得line box宽度缩短。 
+  // IFC中时不可能有块级元素的，当插入块级元素时（如p中插入div）会产生两个匿名块与div分隔开，即产生两个IFC，每个IFC对外表现为块级元素，与div垂直排列。
+  // 3.作用
+  // 水平居中：当一个块要在环境中水平居中时，设置其为inline-block则会在外层产生IFC，通过text-align则可以使其水平居中。
+  // 垂直居中：创建一个IFC，用其中一个元素撑开父元素的高度，然后设置其vertical-align:middle，其他行内元素则可以在此父元素下垂直居中。
+
+  // BFC
+  // BFC（Block Formatting Context）格式化上下文，是Web页面中盒模型布局的CSS渲染模式，指一个独立的渲染区域或者说是一个隔离的独立容器。
+  // 1.形成条件
+  // 根元素，即HTML元素；
+  // 浮动元素，float 除 none 以外的值； 
+  // 定位元素，position（absolute，fixed）； 
+  // display 的值为inline-block、table-cell、table-caption
+  // overflow 的值不为visible（hidden，auto，scroll）
+  // 2.特性
+  // a. 内部的Box会在垂直方向上一个接一个的放置。
+  // b. Box垂直方向上的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠。（对应作用a）
+  // c. 计算bfc的高度时，浮动元素也参与计算（对应作用b）
+  // d. bfc的区域不会与float的元素区域重叠。（对应作用c）
+  // e. BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。外面也不会影响到里面。
+  // 3.作用
+  // a. 阻止margin重叠:当两个相邻块级子元素分属于不同的BFC时可以阻止margin重叠
+  // 操作方法：给其中一个div外面包一个div，然后通过触发外面这个div的BFC，就可以阻止这两个div的margin重叠
+  // b. 可以包含浮动元素——清除内部浮动
+  // 清除浮动原理：触发父div的BFC属性(几种条件都行，常用的是overflow)，使下面的子div都处在父div的同一个BFC区域之内，此时已成功清除浮动。
+  // c. 可以阻止元素被浮动元素覆盖 
+  //    自适应两栏布局
+  //    <div class="aside" style="float: left; width: 100px; height: 150px; background: #f66;"></div>
+  //    <div class="main" style="overflow: auto; height: 200px; background: #fcc;"></div>
+  //    防止字体环绕
+  //    浮动的盒子会遮盖下面的盒子，但是下面盒子里的文字是不会被遮盖的，文字反而还会环绕浮动的盒子。是因为float当初设计的时候就是为了使文本围绕在浮动对象的周围。
+  //    <div style="float: left; width: 100px; height: 100px; background: #000;">
+  //    </div>
+  //    <div style="width: 200px; background: green;">
+  //      你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+  //      你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+  //      你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好
+  //    </div>
+
+</script>
+
+</html>

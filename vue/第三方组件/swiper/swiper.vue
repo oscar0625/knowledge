@@ -7,6 +7,9 @@
     </swiper-slide>
     <!-- 分页 -->
     <div slot="pagination" class="swiper-pagination"></div>
+    <!-- 前进后退 -->
+    <div slot="button-prev" class="swiper-button-prev"></div>
+    <div slot="button-next" class="swiper-button-next"></div>
   </swiper>
 </template>
 
@@ -58,7 +61,7 @@ export default {
         },
         on: {
           slideChangeTransitionStart: () => {
-            console.log(this.swiper.activeIndex);
+            console.log(this.swiper.realIndex);
           },
           tap: () => {
             console.log(this.swiper.clickedIndex);

@@ -1,6 +1,7 @@
 <template>
   <div class="image-upload">
     <el-upload
+      :class="{ disabled: uploadDisabled }"
       :action="action"
       :headers="{ Authorization }"
       :show-file-list="true"
@@ -55,6 +56,12 @@ export default {
       action: DOMAIN + this.url,
       Authorization: "Bearer " + storage.getSession("token")
     };
+  },
+  computed: {
+    //判读当前图片已经到限制数量
+    uploadDisabled: function() {
+      return this.fileList.length >= this.numLimit;
+    }
   },
   methods: {
     // 触发numLimit
@@ -122,6 +129,10 @@ export default {
 
 <style lang="less" scoped>
 .image-upload {
+  //当前图片已经到限制数量隐藏
+  /deep/ .disabled .el-upload--picture-card {
+    visibility: hidden;
+  }
   /deep/ .el-upload {
     position: relative;
     border: 1px dashed #d9d9d9;

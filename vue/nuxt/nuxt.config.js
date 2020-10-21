@@ -123,7 +123,7 @@ export default {
     { src: "@/plugins/device", ssr: true },
     { src: "@/plugins/axios", ssr: true },
     { src: "@/api", ssr: true },
-    { src: "@/plugins/router", ssr: true },
+    // { src: "@/plugins/router", ssr: true },
     // { src: "@/plugins/mockjs", ssr: true },
     { src: "@/mixins", ssr: true },
     { src: "@/mixins/index_client", ssr: false },

@@ -96,7 +96,8 @@ export default {
     },
     // 轮播切换触发
     onSwiperSlideChangeTransitionStart() {
-      this.swiperIndex = this.mySwiper.activeIndex;
+      const { realIndex = 0 } = this.mySwiper || {};
+      this.swiperIndex = realIndex;
     },
     // 点击切换轮播
     handTabIndex(index) {
