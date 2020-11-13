@@ -7,7 +7,7 @@ export default {
    ** https://www.nuxtjs.cn/api/configuration-css
    */
   css: [
-    "@/assets/scss/element-variables.scss",
+    "@/assets/theme/index.css",
     "animate.css",
     "@/assets/css/normalize.css",
     "@/assets/css/base.css",
