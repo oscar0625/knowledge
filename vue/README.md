@@ -1162,12 +1162,29 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
         <input placeholder="Enter your email address" key="email-input">
     </template>
 ```
-## 4.引入图片路径的方式
-```
-    <img src="./assets/images/01.jpg" alt=""> 
-
-    <img :src="require('./assets/images/03.jpg')" alt=""> 
-    <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
+## 4.vue中静态资源的路径问题
+[参考文章](https://segmentfault.com/a/1190000018472635)
+``` 
+    //静态引用
+    <template>
+        <img src="/src/assets/image/login/title.png" alt="">
+        <img src="./titlea.png" alt="">
+        <img src="@/assets/image/login/title.png" alt="">
+        <img src="~@/assets/image/login/title.png" alt="">
+        <img src="~[npm包名]/xxx/logo.png" alt="">  
+    <style>
+        background-image: url("/src/assets/image/login/title.png");
+        background-image: url("./titlea.png");
+        background-image: url("~@/assets/image/login/bg.png");
+        background-image: url("~[npm包名]/logo.png");
+        注意： 和上面的<template>相比，唯独少了直接用@开头的方式url("@/assett/logo.png")
+    引用变量的方式
+        <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
+        import "@/assets/css/iconfont.css";
+        
+        <style lang="less" scoped>
+            @import "@/assets/css/iconfont.css";
+        </style>
 ```
 ## 5.Vue 中的内存泄漏问题
 ```

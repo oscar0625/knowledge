@@ -175,6 +175,7 @@ export default {
    ** https://www.nuxtjs.cn/api/configuration-server
    */
   server: {
+    host: "0.0.0.0", // default: localhost, 注意发布时还需用localhost否则可能会有错
     port: 8080 // default: 3000
   },
   /*
