@@ -52,7 +52,8 @@
     <link rel="apple-touch-icon-precomposed" href="图片地址" />
     <!-- iOS用rel="apple-touch-icon",android 用rel="apple-touch-icon-precomposed"。这样就能在用户把网页存为书签时，在手机HOME界面创建应用程序样式的图标。-->
     <style>
-
+        /* 禁用iPhone中Safari的字号自动调整 */
+        html { -webkit-text-size-adjust: none; }
         /* 设置HTML5元素为块 */
         article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
         /* 设置图片视频等自适应调整 */

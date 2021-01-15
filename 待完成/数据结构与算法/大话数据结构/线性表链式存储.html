@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>title</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 创建结点
+    class Node {
+        constructor(data) {
+            this.data = data;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
+    // 双向链表
+    class DuLinkList {
+        constructor(...params) {
+            this.head = null; //头指针 指向链表中头结点 初始为null
+            this.tail = null; //尾指针 指向链表中尾结点 初始为null
+            this.length = 0;
+            // 初始化
+            this.init(params);
+        }
+        // 根据给定的数据源 创建一段链表
+        _createLink(arr) {
+            let head = null;
+            let tail = null;
+            let length = 0;
+            arr.map((data, index) => {
+                const node = new Node(data);
+                //第一个结点
+                if (index === 0) {
+                    head = node;
+                } else {
+                    // 生成双向链表：将当前结点的前驱指向尾结点
+                    node.prev = tail;
+                    // 尾插法 将尾结点的后继指向当前结点
+                    tail.next = node;
+                }
+                // 改变尾指针的指向 更新尾结点
+                tail = node;
+                length++;
+            })
+            return {
+                head,
+                tail,
+                length
+            }
+        }
+
+        // 初始化 根据输入的数据参数生成链表
+        init(params) {
+            const {
+                head,
+                tail,
+                length
+            } = this._createLink(params);
+            this.head = head;
+            this.tail = tail;
+            this.length = length;
+        }
+
+        // 输出一个包含所有结点的数组
+        display() {
+            let p = this.head;
+            let arr = [];
+            while (p) {
+                arr.push(p)
+                p = p.next
+            }
+            return arr
+        }
+
+        // 查找 根据索引获取元素 找不到null
+        getElem(i) {
+            // 是否超出范围
+            if (i === undefined || i < 0 || i >= this.length) {
+                return null
+            }
+            let p = this.head;
+            let j = 0;
+            // 循环找到j=i时的p 
+            while (j < i) {
+                p = p.next
+                j++
+            }
+            return p
+        }
+
+        // 查找 根据元素获取索引 找不到-1
+        locateElem(e) {
+            let p = this.head;
+            let j = 0;
+            let i = -1;
+            while (p) {
+                if (p.data === e) {
+                    i = j;
+                    break;
+                }
+                p = p.next
+                j++
+            }
+            return i
+        }
+
+        //连接两个结点
+        _connect(before, after) {
+            before && (before.next = after);
+            after && (after.prev = before);
+        }
+
+        //插入 根据索引值位置 插入输入的所有新元素
+        insert(i, ...params) {
+            // 创建一段链表
+            const {
+                head: partFirst,
+                tail: partLast,
+                length: partLength
+            } = this._createLink(params);
+            // 是否有数据
+            if (!partFirst) {
+                return false
+            }
+            // 查找索引为i的p 
+            let p = this.getElem(i);
+            let before;
+            // 是否可以找到节点
+            if (p) {
+                before = p.prev;
+                // 插入操作
+                this._connect(before, partFirst);
+                this._connect(partLast, p);
+
+            } else {
+                // 如果找不到节点 一律视为push操作
+                before = this.tail;
+                // push操作
+                this._connect(before, partFirst);
+                // 修改尾指针
+                this.tail = partLast;
+
+            }
+            // 如果前驱为null 修改头指针(两种情况 一是 i===0 情况下 二是链表本身为空表)
+            if (before === null) {
+                this.head = partFirst;
+            }
+            this.length += partLength;
+            return true
+        }
+
+        //删除 根据索引值位置 删除的个数 删除
+        delete(i, num) {
+            // 查找索引为i的p 
+            let p = this.getElem(i);
+            // 是否可以找到节点
+            if (!p) {
+                return false
+            }
+            let end = i + num;
+            // 如果end范围错误或超出
+            if (num === undefined || end > this.length) {
+                end = this.length;
+            }
+            let len = end - i;
+            // 保留的前驱后继
+            let before, after;
+            // 循环删除结点
+            while (i < end) {
+                before = p.prev;
+                after = p.next;
+                // 如果前驱后继都不为null
+                if (before !== null && after !== null) {
+                    // 连接p前后的点
+                    this._connect(before, after);
+                } else {
+                    // 如果前驱为null 修改头指针
+                    if (before === null) {
+                        after && (after.prev = null);
+                        this.head = after;
+                    }
+                    // 如果后继为null 修改尾指针
+                    if (after === null) {
+                        before && (before.next = null);
+                        this.tail = before;
+                    }
+                }
+                // 删除p的引用
+                p.prev = null;
+                p.next = null;
+                // 重新赋值给p
+                p = after;
+                i++;
+            }
+            this.length -= len;
+            return true
+        }
+
+        // 是否为空
+        isEmpty() {
+            return this.head === null;
+        }
+
+        // 清空链表
+        clear() {
+            return this.isEmpty() ? true : (this.delete(0));
+        }
+
+        push(){}
+        pop(){}
+        unshift(){}
+        shift(){}
+
+        clone(){}
+        slice(){}
+        concat(){}
+
+        reverse(){}
+        sort(){}
+    }
+
+    var oscar = new DuLinkList(1, 2, 3);
+    console.log(oscar.display());
+    console.log(oscar);
+    // var arr = [1, 2, 3, 4, 5, 6]
+    // arr.splice(800, 0, 1, 2, 3)
+    // console.log(arr);
+</script>
+
+</html>

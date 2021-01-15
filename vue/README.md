@@ -366,28 +366,41 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
 ### 4.1父单个插槽  父里面只有一个元素
 ```
     父 : <child> {{message}}</child>
-    子 : <slot></slot>   //显示就是message变量的内容
+    子 : <slot>后被内容：它只会在没有提供内容的时候被渲染</slot>   //显示就是message变量的内容
     注:除非子组件模板包含至少一个 <slot> 插口，否则父组件的内容将会被丢弃。
 ```
-### 4.2父多个插槽 父里面有多个元素
+### 4.2父多个插槽 父里面有多个元素 具名插槽
 ```
-    父: <child>                             
-            <p slot="header">1</p>                
-            <p slot="content">2</p>              
-            <p slot="footer">3</p>                
+    父: <child>       
+            <template v-slot:header>
+                <h1>Here might be a page title</h1>
+            </template>
+            <template v-slot:default> // 默认 不写也可以
+                <p>A paragraph for the main content.</p>
+            </template>
+            <template v-slot:footer>
+                <p>Here's some contact info</p>
+            </template>             
         </child>
     子：    
     <slot name="header"></slot>
-    <slot name="content"></slot>
+    <slot></slot>   //默认default
     <slot name="footer"></slot>
 ```
 ### 4.3作用域插槽
+默认规则下：父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。  
+在作用域插槽内，父组件可以拿到子组件的数据
 ```
-    <slot-example>
-        <template slot="default" slot-scope="slotProps">
-            {{ slotProps.msg }}
-        </template>
-    </slot-example>
+    父: <child>       
+        <template v-slot:default="slotProps">
+            {{ slotProps.user.firstName }}
+            {{ slotProps.age }}
+        </template> 
+    </child>
+    子：
+    <slot :user="user" :age="18">
+      {{ user.lastName }}
+    </slot>
 ```
 ## 5.组件通信
 组件设计初衷就是要配合使用的，最常见的就是形成父子组件的关系：组件 A 在它的模板中使用了组件 B。它们之间必然需要相互通信
