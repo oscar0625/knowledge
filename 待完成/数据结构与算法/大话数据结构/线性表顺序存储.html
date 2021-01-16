@@ -13,53 +13,67 @@
 
 </body>
 <script>
-    // 线性表顺序存储结构 获得元素操作
-    // L表 i索引
-    function getElem(L, i) {
-        if (L.length === 0 || i < 0 || i > L.length) {
-            return undefined
-        }
-        return L[i]
-    }
+    // 线性表顺序存储结构 在js中为数组实现
+
     // 线性表顺序存储结构 插入操作
-    // L表 i索引 e插入的元素
-    function ListInsert(L, i, e) {
-        let j = L.length;
-        if (i < 0 || i > j) {
-            throw Error("超出线性表范围")
-        }
-        // 最后一个元素到i 分别往后移动一个位置
-        while (j > i) {
-            L[j] = L[j - 1]
-            j--;
+    // i索引 e插入的元素
+    Array.prototype.insert = function (i, e) {
+        let j = this.length;
+        // 如果大于等于数组的长度，i将被设置为数组的长度
+        if (i >= j) {
+            i = j
+        } else {
+            // 如果为负，将从数组末尾开始那么多元素。累加长度
+            while (i < 0 && j > 0) {
+                i += j
+            }
+            // 如果i依然小于0
+            if (i < 0) {
+                return this
+            }
+            // 最后一个元素到i 分别往后移动一个位置
+            while (i < j) {
+                this[j] = this[j - 1]
+                j--;
+            }
         }
         // 插入新元素
-        L[i] = e;
-        return L
+        this[i] = e;
+        return this
     }
+
     // 线性表顺序存储结构 删除操作
-    // L表 i索引
-    function ListDelete(L, i) {
-        let j = L.length - 1,
+    // i索引
+    Array.prototype.delete = function (i) {
+        let j = this.length,
             e;
-        if (j === 0) {
-            throw Error("线性表为空")
+        // 如果大于等于数组的长度
+        if (i >= j) {
+            return e
+        } else {
+            // 如果为负，将从数组末尾开始那么多元素。累加长度
+            while (i < 0 && j > 0) {
+                i += j
+            }
+            // 如果i依然小于0
+            if (i < 0) {
+                return e
+            }
+            // 保留被删除的元素
+            e = this[i]
+            // i到最后一个元素 分别往前移动一个位置
+            while (i < j - 1) {
+                this[i] = this[i + 1]
+                i++;
+            }
+            // 删除
+            this.length--;
+            return e
         }
-        if (i < 0 || i > j) {
-            throw Error("超出线性表范围")
-        }
-        // 保留被删除的元素
-        e = L[i]
-        // i到最后一个元素 分别往前移动一个位置
-        while (i < j) {
-            L[i] = L[i + 1]
-            i++;
-        }
-        // 删除
-        L.length = j
-        return e
     }
     
+    var arr = [1, 2, 3]
+    console.log(arr);
 </script>
 
 </html>
