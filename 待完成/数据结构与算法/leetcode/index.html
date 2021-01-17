@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>剑指offer</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 冒泡排序
+    let sortArr = function (arr) {
+        // 控制循环多少次 最后剩一个不用排 即length - 1
+        for (let j = 0; j < arr.length - 1; j++) {
+            // 最后一个不用比较 已经比较好的不用比较 即length - 1 - j
+            for (let i = 0; i < arr.length - 1 - j; i++) {
+                // 如果前比后大 则交换位置
+                if (arr[i] > arr[i + 1]) {
+                    [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]
+                }
+            }
+        }
+
+        return arr
+    }
+
+    // 二维数组中的查找
+    let findNumberIn2DArray = function (matrix, target) {
+        const n = matrix.length; //行
+        const m = n > 0 ? matrix[0].length : 0; //列
+        // 如果行多
+        if (n >= m) {
+            for (let i = 0; i < m; i++) {
+                // 二分查找
+                let mid, low = 0,
+                    high = n - 1;
+                while (low <= high) {
+                    mid = parseInt((low + high) / 2)
+                    if (matrix[mid][i] < target) {
+                        low = mid + 1
+                    } else if (matrix[mid][i] > target) {
+                        high = mid - 1
+                    } else {
+                        return true
+                    }
+                }
+            }
+        }
+        // 如果列多
+        else {
+            for (let i = 0; i < n; i++) {
+                // 二分查找
+                let mid, low = 0,
+                    high = m - 1;
+                while (low <= high) {
+                    mid = parseInt((low + high) / 2)
+                    if (matrix[i][mid] < target) {
+                        low = mid + 1
+                    } else if (matrix[i][mid] > target) {
+                        high = mid - 1
+                    } else {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    };
+
+    // 矩阵中的路径  
+    let exist = function (board, word) {
+        let iMAX = board.length,
+            jMAX = board[0].length,
+            kMAX = word.length;
+        // 深度优先查找函数    
+        find = (i, j, k) => {
+            // 如果i j越界 
+            if (i < 0 || i >= iMAX || j < 0 || j >= jMAX) {
+                return false
+            }
+            // 如果当前位置不等于word[k]
+            if (board[i][j] !== word.charAt(k)) {
+                return false
+            }
+
+            // 如果已经找完了
+            if (k >= kMAX - 1) {
+                return true
+            }
+            // 否则继续往下找
+            else {
+                // 先标记此位置已经找过 
+                board[i][j] = undefined;
+                // 上下左右查找
+                let res = find(i - 1, j, k + 1) || find(i + 1, j, k + 1) || find(i, j - 1, k + 1) || find(i, j +
+                    1, k + 1);
+                // 回复原本的值
+                board[i][j] = word.charAt(k);
+                return res;
+            }
+        }
+        let res = board.some((row, i) => {
+            return row.some((col, j) => {
+                return find(i, j, 0)
+            })
+        })
+        return res;
+    };
+
+    let movingCount = function (m, n, k) {
+        // 数位之和函数
+        let sum = (num) => {
+                let count = 0;
+                while (num > 0) {
+                    count += num % 10; //累加
+                    num = parseInt(num / 10);
+                }
+                return count
+            },
+            res = new Set(),
+            // 移动函数
+            find = (i, j) => {
+                // 如果i j越界 
+                if (i < 0 || i >= m || j < 0 || j >= n) {
+                    return
+                }
+                // 如果大于k
+                if (sum(i) + sum(j) > k) {
+                    return
+                }
+                // 如果当前点已经走过 
+                if (res.has(`(${i},${j})`)) {
+                    return
+                }
+                // 将当前点的坐标位置添加
+                res.add(`(${i},${j})`)
+                // 从当前点 下右走 (不用向上和向左)
+                find(i + 1, j);
+                find(i, j + 1);
+            }
+        // 从起点开始
+        find(0, 0);
+        return res.size
+    };
+
+    var res = movingCount(100, 100, 20)
+    console.log(res);
+</script>
+
+</html>
