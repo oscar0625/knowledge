@@ -22,8 +22,12 @@ Vue.filter("dateFilterSpace", function (value) {
   if (typeof value !== "string") return "";
   return value.split(/\s+/)[0];
 });
-// 手机号保密过滤 13888888888 => 138****8888
-Vue.filter("phoneSecretFilter", function (value) {
-  if (typeof value !== "string") return "";
-  return value.slice(0, 3) + "****" + value.slice(7);
+/** 将数字四舍五入保留到N位小数
+ * @param {string|number} num 要处理的数字
+ * @param {number} n 保留的小数位数 0-20
+ * @return {string}
+ */
+Vue.filter("keepDecimal", function(num, n) {
+  const times = Math.pow(10, n);
+  return (Math.round(num * times) / times).toFixed(n);
 });

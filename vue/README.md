@@ -1,10 +1,8 @@
 # 一、vue-cli
-https://cli.vuejs.org/zh/guide/
-https://cli.vuejs.org/zh/config/
+https://cli.vuejs.org/zh/
 ## 1.安装Vue Devtools
 在谷歌商店搜索Vue.js devtools安装
 ## 2.快速构建项目
-3.0之后的新版本
 ```
 npm install -g @vue/cli
 vue create my-project
@@ -21,15 +19,9 @@ vue create my-project
 ->yes  // 是否记录一下以便下次继续使用这套配置
 ->commonConfig //通用配置 下次可以直接使用不用再重复上述步骤
 ```
-3.0之前的老版本
-```
-npm install -g vue-cli
-vue init webpack my-vue
-```
 ## 3.环境变量
-Vue CLI 自带的环境变量
+* Vue CLI 自带的环境变量
 ```
-
     判断模式的环境变量
     process.env.NODE_ENV 
         development 模式用于 vue-cli-service serve
@@ -38,7 +30,7 @@ Vue CLI 自带的环境变量
     基础路径的环境变量    
     process.env.BASE_URL
 ```
-自定义环境变量
+* 自定义环境变量
 ```
     //创建 .env文件
     为一个特定模式准备的环境文件的 (例如 .env.production) 将会比一般的环境文件 (例如 .env) 拥有更高的优先级。
@@ -53,37 +45,50 @@ Vue CLI 自带的环境变量
     process.env.VUE_APP_SECRET
 ```
 ## 4.浏览器兼容性
-### browserslist
+* browserslist  
+指定了项目的目标浏览器的范围。这个值会被 @babel/preset-env 和 Autoprefixer 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
+* Polyfill  
+https://cli.vuejs.org/zh/guide/browser-compatibility.html#polyfill
+## 5.处理静态资源
+[参考文章](https://segmentfault.com/a/1190000018472635)
+* 路径方式
+``` 
+    html
+        <img src="/src/assets/image/login/title.png" alt="">
+        <img src="./titlea.png" alt="">
+        <img src="@/assets/image/login/title.png" alt="">
+        <img src="~@/assets/image/login/title.png" alt="">
+        <img src="~[npm包名]/xxx/logo.png" alt="">  
+    css
+        background-image: url("/src/assets/image/login/title.png");
+        background-image: url("./titlea.png");
+        background-image: url("~@/assets/image/login/bg.png");
+        background-image: url("~[npm包名]/logo.png");
+
+        注意：和上面html相比，唯独少了直接用@开头的方式url("@/assett/logo.png")
 ```
-    指定了项目的目标浏览器的范围。这个值会被 @babel/preset-env 和 Autoprefixer 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
+* 导入方式
 ```
-### Polyfill
+    html
+        <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
+    js    
+        import "@/assets/css/iconfont.css";
+    css        
+        @import "~@/assets/css/iconfont.css";
 ```
-    默认情况下,vue会把 useBuiltIns: 'usage' 传递给 @babel/preset-env，这样它会根据源代码中出现的语言特性自动检测需要的 polyfill。
-    这确保了最终包里 polyfill 数量的最小化。然而，这也意味着如果其中一个依赖需要特殊的 polyfill，默认情况下 Babel 无法将其检测出来。
-    如果有依赖需要 polyfill，你有几种选择：
-    1.如果该依赖基于一个目标环境不支持的 ES 版本撰写: 将其添加到 vue.config.js 中的 transpileDependencies 选项。这会为该依赖同时开启语法转换和根据使用情况检测 polyfill。
-    2.如果该依赖交付了 ES5 代码并显式地列出了需要的 polyfill: 你可以使用 @vue/babel-preset-app 的 polyfills 选项预包含所需要的 polyfill。
-    (我们推荐以这种方式添加 polyfill 而不是在源代码中直接导入它们，因为如果这里列出的 polyfill 在 browserslist 的目标中不需要，则它会被自动排除)
-    // babel.config.js
-    module.exports = {
-        presets: [
-            ['@vue/app', {
-                polyfills: [
-                    'es.promise',
-                    'es.symbol'
-                ]
-            }]
-        ]
-    }
-    3.如果该依赖交付 ES5 代码，但使用了 ES6+ 特性且没有显式地列出需要的 polyfill (例如 Vuetify)：
-    请使用 useBuiltIns: 'entry' 然后在入口文件添加 import 'core-js/stable'; import 'regenerator-runtime/runtime';。
-    这会根据 browserslist 目标导入所有 polyfill，这样你就不用再担心依赖的 polyfill 问题了，但是因为包含了一些没有用到的 polyfill 所以最终的包大小可能会增加。
+## 6.vue-loader
+### 6.1Scoped CSS
+当 style 标签有 scoped 属性时，它的 CSS 只作用于当前组件中的元素。
 ```
-## 5.其他
+    深度作用选择器 
+    <style scoped>
+        .a >>> .b {}
+    </style>
+    有些像 Sass 之类的预处理器无法正确解析 >>>。这种情况下你可以使用 /deep/ 操作符取而代之
 ```
-    构建一个多页应用    https://cli.vuejs.org/zh/config/#pages
-```
+## 7.其他
+* 构建一个多页应用  
+https://cli.vuejs.org/zh/config/#pages
 
 # 二、vue指令
 ## 1.插值  
@@ -140,10 +145,10 @@ Vue CLI 自带的环境变量
     }
 ```
 ## 3.事件绑定
-vue封装事件的意义：
-1.无须在 JavaScript 里手动绑定事件，你的 ViewModel 代码可以是非常纯粹的逻辑，和 DOM 完全解耦，更易于测试。
-2.解决不同浏览器之间的兼容问题。
-3.当一个 ViewModel 被销毁时，所有的事件处理器都会自动被删除。你无须担心如何自己清理它们。
+vue封装事件的意义：  
+1.无须在 JavaScript 里手动绑定事件，你的 ViewModel 代码可以是非常纯粹的逻辑，和 DOM 完全解耦，更易于测试。  
+2.解决不同浏览器之间的兼容问题。  
+3.当一个 ViewModel 被销毁时，所有的事件处理器都会自动被删除。你无须担心如何自己清理它们。  
 4.提供了事件绑定修饰符
 ### 3.1 v-on
 ```
@@ -174,11 +179,11 @@ vue封装事件的意义：
         <div @click.ctrl="doSomething">必须先按下ctrl 再点击才有效果</div>
 ```
 ## 4.双向绑定 v-model
-v-model为可输入元素创建双向数据绑定，它会根据元素类型自动选取正确的方式来更新元素。（永远是为了拿到值 好向后台传啊！！！）
+v-model为可输入元素创建双向数据绑定，它会根据元素类型自动选取正确的方式来更新元素。  
 注：v-model 会忽略所有表单元素的 value、checked、selected 特性的初始值。因为它会选择 Vue 实例数据来作为具体的值。你应该通过 JavaScript 在组件的 data 选项中声明初始值。
 ### 4.1 单行和多行文本
 ```
-    <input  type="text" v-model="textValue">
+    <input type="text" v-model="textValue">
     <textarea v-model="textValue"></textarea>
 ```
 ### 4.2 单选框
@@ -228,15 +233,16 @@ v-model为可输入元素创建双向数据绑定，它会根据元素类型自�
 ```
 ## 5.条件渲染和列表渲染
 ### 5.1 v-if 和 v-show
-v-if  true出现/false消失 （操作节点）
-v-show true出现/false消失 （不操作节点，只是简单地切换元素的 CSS 属性 display。）
-如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
+v-if  true出现/false消失（操作节点）  
+v-show true出现/false消失（不操作节点，只是简单地切换元素的 CSS 属性 display。）  
+如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。  
+如果想切换多个元素,此时用一个template元素将这些元素包裹起来，并在上面使用 v-if。最终的渲染结果将不包含template元素。
 ```
     <div v-if="num==0">0</div>
     <div v-else-if="num==1">1</div> (元素必须紧跟在带 v-if 或者 v-else-if 的元素的后面，否则它将不会被识别。)
     <div v-else>2</div> (v-else-if 也必须紧跟在带 v-if 或者 v-else-if 的元素之后。)
 ```
-如果想切换多个元素,此时用一个template元素将这些元素包裹起来，并在上面使用 v-if。最终的渲染结果将不包含template元素。
+
 ### 5.2 v-for
 v-for 用于实现列表渲染，可以使用 item in items 或者 item of items的语法
 ```
@@ -250,12 +256,12 @@ v-for 用于实现列表渲染，可以使用 item in items 或者 item of items
     数字
     <li v-for="item in 5">{{item}}</li>
 ```
-在使用v-for时，最好为每个迭代元素指定key
+在使用v-for时，最好为每个迭代元素指定key  
 类似于 v-if，你也可以利用带有 v-for 的template渲染多个元素。
 
 # 三、vue选项
 ## 1.数据选项 data 
-数据选项(data)，可以接受的类型有对象和函数两种，但是定义一个组件是只能使用函数类型
+数据选项(data)，可以接受的类型有对象和函数两种，但是定义一个组件是只能使用函数类型（因为组件可能被用来创建多个实例。如果 data 仍然是一个纯粹的对象，则所有的实例将共享引用同一个数据对象！）  
 vue会递归的将data中的数据加入响应式系统，所以应将可能在实例中被观察的对象预先在data中声明
 ```
     data(){
@@ -265,7 +271,8 @@ vue会递归的将data中的数据加入响应式系统，所以应将可能在�
     }
 ```
 ## 2.属性选项 props
-props选项可以是数组或者对象类型，用于接收从父组件传递过来的参数并允许开发者为其设置默认值，类型检测和校验规则等
+props选项可以是数组或者对象类型，用于接收从父组件传递过来的参数并允许开发者为其设置默认值，类型检测和校验规则等  
+https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81
 ```
     props: {
         text: String,
@@ -279,7 +286,7 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     }
 ```
 ## 3.方法选项 methods
-用于绑定事件的，绑定事件时调用的时候加不加()都行，加()可以传参
+用于绑定事件的，绑定事件时调用的时候加不加()都行，加()可以传参  
 注意:不应该使用箭头函数来定义method函数。理由是箭头函数绑定了父级作用域的上下文，所以 this 将不会按照期望指向 Vue 实例。
 ```
     methods:{
@@ -290,9 +297,8 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
     }
 ```
 ## 4.计算属性 computed
-用于计算的，调用的时候不能加()，因为内部已经调用完。计算属性:对于任何复杂逻辑，你都应当使用计算属性
-同methods一样，不应该使用箭头函数声明。
-由于计算属性依赖于响应式属性，所以当且仅当响应式属性变化时，计算属性才会被重新计算，而且得到的结果将会被缓存，一直到响应式属性再次被修改
+计算属性:对于任何复杂逻辑，你都应当使用计算属性  
+同methods一样，不应该使用箭头函数声明。  
 ```
     computed:{
         //this指向 vm
@@ -311,17 +317,16 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
         }
     }
 ```
-```
-    methods和computed区别：从某种程度上来说method可以完全代替computed但是有的情况computed有优势;
-        1. methods调用的时候加不加()都行,加()可以传参
-            computed调用的时候一定不加();
-        2. 缓存区别：
-            methods  每当触发重新渲染时，调用方法将总会再次执行函数。（不缓存）
-            computed 是基于它们的依赖进行(缓存)的,只有在它的相关依赖发生改变时才会重新求值
-            如果依赖不改变会立即返回之前的计算结果，而不必再次执行函数(缓存)
-            所以在不改变的情况下只会执行一次，而且上来就会执行，不能于事件用computed，
-            正是由于它的缓存，由于它只根据依赖才改变,所以当大量用此计算结果的时候，性能更好
-```
+methods和computed区别：从某种程度上来说method可以完全代替computed但是有的情况computed有优势;
+* 调用区别
+1. methods调用的时候加不加()都行,加()可以传参
+2. computed调用的时候一定不加();
+* 缓存区别：
+1. methods 每当触发重新渲染时，调用方法将总会再次执行函数。（不缓存）  
+2. computed是基于它们的依赖进行(缓存)的,只有在它的相关依赖发生改变时才会重新求值  
+3. 如果依赖不改变会立即返回之前的计算结果，而不必再次执行函数(缓存)  
+4. 所以在不改变的情况下只会执行一次，而且上来就会执行，不能于事件用computed  
+5. 正是由于它的缓存，由于它只根据依赖才改变,所以当大量用此计算结果的时候，性能更好
 ## 5.侦听属性 watch 
 监听某个变量，在变量被修改时调用
 同methods一样，不应该使用箭头函数声明。
@@ -346,21 +351,30 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
 
 # 四、vue组件
 ## 1.组件的注册
+``` 
+    全局注册
+    Vue.component('my-component-name', { /* ... */ })
+    局部注册
+    components: {
+        'component-a': ComponentA,
+        'component-b': ComponentB
+    }
+    在模块系统中局部注册
+    components:{ MyComponents }
+    基础组件的自动化全局注册
+    见官网配置
 ```
-     components:{ MyComponents }
+## 2.组件引入
 ```
-## 2.普通组件
-注：当你写的html不符合规范的时候，像 ul、ol、table、select 这样的元素里允许包含的元素有限制(比如你在li中写入div是不规范的)，而另一些像 option 这样的元素只能出现在某些特定元素的内部。在使用上面的写法会导致渲染出错。
-```
+    普通组件
     <my-components></my-components > 
     <my-components />
-```
-## 3.动态组件
-让多个组件可以使用同一个挂载点，并动态切换
-```
+    动态组件：让多个组件可以使用同一个挂载点，并动态切换
     //核心 is属性   v-bind:is="组件名"  就会加载那个组件
     <component v-bind:is="MyComponents"></component>
 ```
+## 3.异步组件
+待续
 ## 4.插槽 slot
 使用插槽分发内容 作用：父向子传递内容,内容可也是变量也可以是组件
 ### 4.1父单个插槽  父里面只有一个元素
@@ -383,7 +397,7 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
             </template>             
         </child>
     子：    
-    <slot name="header"></slot>
+    <slot name="header">后备内容</slot>
     <slot></slot>   //默认default
     <slot name="footer"></slot>
 ```
@@ -404,7 +418,6 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
 ```
 ## 5.组件通信
 组件设计初衷就是要配合使用的，最常见的就是形成父子组件的关系：组件 A 在它的模板中使用了组件 B。它们之间必然需要相互通信
-
 ### 5.1父传子down  props方式
 ```
     父：写属性
@@ -593,15 +606,311 @@ props选项可以是数组或者对象类型，用于接收从父组件传递过
         // ...
     }
 ```
-### 5.6$parent/$children 和 $ref
+### 5.6 $parent/$children 和 $ref
 ### 5.7 非父子组件的通信
-父子孙 $attrs/$listeners
+父子孙 $attrs/$listeners  
 父子孙... 
 ### 5.8 任何级别vuex
 
-# 五、vue-router路由 
-$route:路由信息对象，只读对象 如获取路由参时：vm.$route.params vm.$route.query
-$router:路由操作对象 ，只写对象 如跳转路由时： this.$router.push()
+# 五、生命周期
+## 1.介绍
+大部分生命周期并不会用到，这里提一下几点：
+```
+    1 created
+        ajax请求最好放在created里面，因为此时已经可以访问this了，请求到数据就可以直接放在data里面。
+    2 mounted
+        关于dom的操作要放在mounted里面，在mounted前面访问dom会是undefined。
+    3 每次进入/离开组件都要做一些事情，用什么钩子
+        不缓存：
+            进入的时候可以用created和mounted钩子，离开的时候用 beforeDestroy 和 destroyed 钩子,beforeDestroy可以访问this，destroyed不可以访问this。
+        缓存：
+            缓存了组件之后，再次进入组件不会触发 beforeCreate 、created 、beforeMount 、 mounted ，如果你想每次进入组件都做一些事情的话，你可以放在 activated 进入缓存组件的钩子中。
+            同理：离开缓存组件的时候， beforeDestroy 和 destroyed 并不会触发，可以使用  deactivated 离开缓存组件的钩子来代替。
+```
+## 2.keep-alive
+缓存避免重新渲染  
+在被keep-alive包含的组件/路由中，会多出两个生命周期的钩子:activated 与 deactivated。
+``` 
+    //1.缓存动态组件：把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。
+    <keep-alive>
+        <component v-bind:is="MyComponents"></component>
+    </keep-alive>
+    //2.缓存路由组件：
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
+```
+## 3.触发钩子的完整顺序
+将路由导航、keep-alive、和组件生命周期钩子结合起来的，触发顺序，假设是从a组件离开，第一次进入b组件：
+```
+    beforeRouteLeave:路由组件的组件离开路由前钩子，可取消路由离开。
+    beforeEach: 路由全局前置守卫，可用于登录验证、全局路由loading等。
+    beforeEnter: 路由独享守卫
+    beforeRouteEnter: 路由组件的组件进入路由前钩子。
+    beforeResolve:路由全局解析守卫
+    afterEach:路由全局后置钩子
+    beforeCreate:组件生命周期，不能访问this。
+    created:组件生命周期，可以访问this，不能访问dom。
+    beforeMount:组件生命周期
+    deactivated: 离开缓存组件a，或者触发a的beforeDestroy和destroyed组件销毁钩子。
+    mounted:访问/操作dom。
+    activated:进入缓存组件，进入a的嵌套子组件(如果有的话)。
+    执行beforeRouteEnter回调函数next。
+```
+
+# 六、过渡效果
+Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用过渡效果。
+## 1.单个节点过渡
+```
+    当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：  
+        自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名。
+        如果过渡组件提供了 JavaScript 钩子函数，这些钩子函数将在恰当的时机被调用。
+        如果没有找到 JavaScript 钩子并且也没有检测到 CSS 过渡/动画，DOM 操作 (插入/删除) 在下一帧中立即执行。
+    //定制过渡持续时间    
+    <transition :duration="{ enter: 500, leave: 800 }">...</transition>    
+```
+### 1.1默认的过渡的类名 
+```
+    在进入/离开的过渡中，会有 6 个 class 切换。
+    进入 
+        v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+        v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+        v-enter-to：定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。
+    离开（同进入）
+        v-leave 
+        v-leave-active
+        v-leave-to
+```
+### 1.2自定义过渡的类名
+我们可以通过以下 attribute 来自定义过渡类名：他们的优先级高于普通的类名，这对于 Vue 的过渡系统和其他第三方 CSS 动画库，如 Animate.css 结合使用十分有用。
+```
+    enter-class
+    enter-active-class
+    enter-to-class (2.1.8+)
+    leave-class
+    leave-active-class
+    leave-to-class (2.1.8+)
+
+    <!-- animateCss -->
+    <transition
+        name="custom-classes-transition"
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+    >
+        <p v-if="show">hello</p>
+    </transition>
+```
+### 1.3JavaScript 钩子
+可以在 attribute 中声明 JavaScript 钩子 这对于 Vue 的过渡系统和其他第三方 JS 动画库，如 Velocity.js animate.js 结合使用十分有用。
+```
+    <transition
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+        v-bind:css="false"
+    ></transition>
+    methods: {
+        beforeEnter: function (el) {
+            el.style.opacity = 0
+            el.style.transformOrigin = 'left'
+        },
+        enter: function (el, done) {
+            Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+            Velocity(el, { fontSize: '1em' }, { complete: done })
+        },
+        leave: function (el, done) {
+        Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+            Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+            Velocity(el, {
+                rotateZ: '45deg',
+                translateY: '30px',
+                translateX: '30px',
+                opacity: 0
+            }, { complete: done })
+        }
+    }
+    注意：当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。
+    推荐对于仅使用 JavaScript 过渡的元素添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
+```
+### 1.4初始渲染的过渡
+可以通过 appear attribute 设置节点在初始渲染的过渡
+```
+    <transition appear>
+        <!-- ... -->
+    </transition>
+```
+## 2.同一时间只渲染多个节点中的一个节点的过渡
+### 2.1过渡模式
+transition默认的过渡模式 - 进入和离开同时发生。
+```
+    <transition name="fade" mode="out-in">
+        <!-- ... the buttons ... -->
+    </transition>
+
+    in-out：新元素先进行过渡，完成之后当前元素过渡离开。
+    out-in：当前元素先进行过渡，完成之后新元素过渡进入。
+```
+### 2.2多个元素的过渡
+对于原生标签可以使用 v-if/v-else
+``` 
+    给在transition组件中的多个元素设置 key 是一个更好的实践。
+    <transition name="fade" mode="out-in">
+      <button v-if="isEditing" key="save" @click="isEditing = !isEditing">
+        Save
+      </button>
+      <button v-else key="edit" @click="isEditing = !isEditing">
+        Edit
+      </button>
+    </transition>
+```
+### 2.3多个组件的过渡
+多个组件的过渡简单很多 - 我们不需要使用 key attribute。相反，我们只需要使用动态组件：
+```
+    <transition name="component-fade" mode="out-in">
+        <component v-bind:is="view"></component>
+    </transition>
+```
+## 3.列表过渡
+transition-group组件具体看文档
+```
+    <transition-group name="fade" tag="ul">
+      <li
+        v-for="(item, index) in list"
+        :key="item.name"
+        v-show="index === currentIndex" 
+      >
+        {{index}}
+      </li>
+    </transition-group>
+```
+
+# 七、综合
+## 1.混入
+```
+    var mixin={
+        methods: {
+            //路由定向方法
+            redirectByPath(path, query) {
+                this.$router.push({
+                    path,
+                    query
+                });
+            }
+        }
+    }
+    //全局混入
+    Vue.mixin(mixin);
+    //局部
+    new Vue({
+        mixins: [mixin],
+    })
+```
+## 2.过滤器
+```
+    //全局
+    Vue.filter('my-filter', function (value) {})
+    //获取，返回已注册的过滤器
+    var myFilter = Vue.filter('my-filter')
+
+    //局部
+    filters: {
+        myFilter: function (value) {
+        }
+    }
+
+    // 使用
+    <div>{{ message | myFilter }}</div>
+    <div v-bind:id="message | myFilter"></div>
+```
+## 3.自定义指令
+### 3.1普通参数指令
+```
+    <div id="hook-arguments-example" v-demo:foo.a.b="123"></div>
+    Vue.directive('demo', {
+        //只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+        //不知道元素的高度
+        bind: function (el, binding, vnode) {
+            var s = JSON.stringify
+            el.innerHTML =
+            'name: '       + s(binding.name) + '<br>' +
+            'value: '      + s(binding.value) + '<br>' +
+            'expression: ' + s(binding.expression) + '<br>' +
+            'argument: '   + s(binding.arg) + '<br>' +
+            'modifiers: '  + s(binding.modifiers) + '<br>' +
+            'vnode keys: ' + Object.keys(vnode).join(', ')
+        },
+        //被绑定元素插入父节点时调用
+        inserted:function{},
+        //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
+        update:function{}
+    })
+```
+### 3.2动态指令参数
+```
+    <p v-pin:[direction]="200">I am pinned onto the page at 200px to the left.</p>
+    Vue.directive('pin', {
+        bind: function (el, binding, vnode) {
+            el.style.position = 'fixed'
+            var s = (binding.arg == 'left' ? 'left' : 'top')
+            el.style[s] = binding.value + 'px'
+        }
+    })    
+    //函数简写 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
+    <div v-demo="{ color: 'white', text: 'hello!' }"></div>
+    Vue.directive('demo', function (el, binding) {
+        console.log(binding.value.color) // => "white"
+        console.log(binding.value.text)  // => "hello!"
+    })
+```
+## 4.ref
+ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。
+```
+    <template>
+        <div >
+            //加在普通的 DOM 元素上使用，引用指向的就是 DOM 元素
+            <div ref="target">target1</div>
+            <div ref="target">target2</div>     //重复的情况下是最后一个
+            
+            //加在子组件上，引用就指向组件实例
+            <child ref="child"></child>
+        </div>
+    </template>
+    export default{
+        methods:{
+            click(){
+                console.log(this.$refs.target);  //DOM 元素
+                console.log(this.$refs.child);   //组件child
+            }
+        }
+    }    
+```  
+## 5.自定义事件
+```
+    //事件的定义
+    vm.$emit( eventName, […args] )
+    //事件的监听
+    vm.$on( event, callback )
+    //只触发一次的事件监听
+    vm.$once( event, callback )
+
+    //example
+    vm.$emit('test', 'hi')
+    vm.$on('test', function (msg) {
+        console.log(msg)
+    })
+```
+``` 
+    //事件的移除
+    vm.$off( [event, callback] )
+    如果没有提供参数，则移除所有的事件监听器；
+    如果只提供了事件，则移除该事件所有的监听器；
+    如果同时提供了事件与回调，则只移除这个回调的监听器
+```
+
+# 八、vue-router 
+https://router.vuejs.org/zh/guide/#html    
+* $route:路由信息对象，只读对象 如获取路由参时：vm.$route.params vm.$route.query    
+* $router:路由操作对象 ，只写对象 如跳转路由时： vm.$router.push()
 ## 1.路由匹配规则的定义
 ```
     export default new Router({
@@ -694,8 +1003,6 @@ js
             window.open(routeUrl.href, "_blank");
         }
     }
-
-
 ```
 ## 3.路由的视图
 ```
@@ -710,21 +1017,21 @@ js
     const router = new VueRouter({
         routes: [
             {
-            path: '/',
-            components: {
-                default: Foo,
-                a: Bar,
-                b: Baz
-            }
+                path: '/',
+                components: {
+                    default: Foo,
+                    a: Bar,
+                    b: Baz
+                }
             }
         ]
     })
 ```
-## 4.路由的重定向
+## 4.路由的重定向和别名
 ``` 
     const router = new VueRouter({
         routes: [
-            { path: '/a', redirect: '/b' },
+            { path: '/a', redirect: '/b', alias: '/b'},
             { path: '/a', redirect: { name: 'foo' }},
             { path: '/a', redirect: to => {
                 // 方法接收 目标路由 作为参数
@@ -734,7 +1041,13 @@ js
     })
 ```
 ## 5.History 模式
-待续
+https://router.vuejs.org/zh/guide/essentials/history-mode.html
+```
+    const router = new VueRouter({
+        mode: 'history',
+        routes: [...]
+    })
+```
 ## 6.导航守卫
 全局前置守卫
 ```
@@ -794,12 +1107,12 @@ js
     执行beforeRouteEnter 守卫中传给 next 的回调函数
 ```
 ## 7.其他
-### 7.1 数据获取方式 
+### 7.1数据获取方式 
 ```
     https://router.vuejs.org/zh/guide/advanced/data-fetching.html
     解决详情页面id切换不触发路由参数切换的bug
 ```
-### 7.2 滚动行为
+### 7.2滚动行为
 ```
     //就会像浏览器的原生表现那样
     scrollBehavior (to, from, savedPosition) {
@@ -810,7 +1123,7 @@ js
         }
     }
 ```
-## 8.路由懒加载
+### 7.3路由懒加载
 ```
     const Foo = () => import('./Foo.vue');
     const router = new VueRouter({
@@ -819,293 +1132,11 @@ js
         ]
     })
 ```
-
-# 六、生命周期
-## 1.介绍
-大部分生命周期并不会用到，这里提一下几点：
+### 7.4基于路由的动态过渡
 ```
-    1 created
-        ajax请求最好放在created里面，因为此时已经可以访问this了，请求到数据就可以直接放在data里面。
-    2 mounted
-        关于dom的操作要放在mounted里面，在mounted前面访问dom会是undefined。
-    3 每次进入/离开组件都要做一些事情，用什么钩子
-        不缓存：
-            进入的时候可以用created和mounted钩子，离开的时候用 beforeDestroy 和 destroyed 钩子,beforeDestroy可以访问this，destroyed不可以访问this。
-        缓存：
-            缓存了组件之后，再次进入组件不会触发 beforeCreate 、created 、beforeMount 、 mounted ，如果你想每次进入组件都做一些事情的话，你可以放在 activated 进入缓存组件的钩子中。
-            同理：离开缓存组件的时候， beforeDestroy 和 destroyed 并不会触发，可以使用  deactivated 离开缓存组件的钩子来代替。
-```
-## 2.keep-alive
-缓存避免重新渲染
-在被keep-alive包含的组件/路由中，会多出两个生命周期的钩子:activated 与 deactivated。
-``` 
-    //1.缓存动态组件：把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。
-    <keep-alive>
-        <component v-bind:is="MyComponents"></component>
-    </keep-alive>
-    //2.缓存路由组件：
-    <keep-alive>
+    <transition :name="transitionName">
         <router-view></router-view>
-    </keep-alive>
-```
-## 3.触发钩子的完整顺序
-将路由导航、keep-alive、和组件生命周期钩子结合起来的，触发顺序，假设是从a组件离开，第一次进入b组件：
-```
-    beforeRouteLeave:路由组件的组件离开路由前钩子，可取消路由离开。
-    beforeEach: 路由全局前置守卫，可用于登录验证、全局路由loading等。
-    beforeEnter: 路由独享守卫
-    beforeRouteEnter: 路由组件的组件进入路由前钩子。
-    beforeResolve:路由全局解析守卫
-    afterEach:路由全局后置钩子
-    beforeCreate:组件生命周期，不能访问this。
-    created:组件生命周期，可以访问this，不能访问dom。
-    beforeMount:组件生命周期
-    deactivated: 离开缓存组件a，或者触发a的beforeDestroy和destroyed组件销毁钩子。
-    mounted:访问/操作dom。
-    activated:进入缓存组件，进入a的嵌套子组件(如果有的话)。
-    执行beforeRouteEnter回调函数next。
-```
-
-# 七、过渡效果
-Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用过渡效果。
-## 单个节点过渡
-```
-    当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：  
-        自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名。
-        如果过渡组件提供了 JavaScript 钩子函数，这些钩子函数将在恰当的时机被调用。
-        如果没有找到 JavaScript 钩子并且也没有检测到 CSS 过渡/动画，DOM 操作 (插入/删除) 在下一帧中立即执行。
-```
-### 默认的过渡的类名 
-```
-    在进入/离开的过渡中，会有 6 个 class 切换。
-    进入 
-        v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
-        v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
-        v-enter-to：定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。
-    离开（同进入）
-        v-leave 
-        v-leave-active
-        v-leave-to
-```
-### 自定义过渡的类名
-我们可以通过以下 attribute 来自定义过渡类名：他们的优先级高于普通的类名，这对于 Vue 的过渡系统和其他第三方 CSS 动画库，如 Animate.css 结合使用十分有用。
-```
-    enter-class
-    enter-active-class
-    enter-to-class (2.1.8+)
-    leave-class
-    leave-active-class
-    leave-to-class (2.1.8+)
-    <!-- animateCss -->
-    <transition
-        name="custom-classes-transition"
-        enter-active-class="animated tada"
-        leave-active-class="animated bounceOutRight"
-    >
-        <p v-if="show">hello</p>
     </transition>
-```
-### JavaScript 钩子
-可以在 attribute 中声明 JavaScript 钩子 这对于 Vue 的过渡系统和其他第三方 JS 动画库，如 Velocity.js animate.js 结合使用十分有用。
-```
-    <transition
-        v-on:before-enter="beforeEnter"
-        v-on:enter="enter"
-        v-on:leave="leave"
-        v-bind:css="false"
-    ></transition>
-    methods: {
-        beforeEnter: function (el) {
-            el.style.opacity = 0
-            el.style.transformOrigin = 'left'
-        },
-        enter: function (el, done) {
-            Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
-            Velocity(el, { fontSize: '1em' }, { complete: done })
-        },
-        leave: function (el, done) {
-        Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
-            Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
-            Velocity(el, {
-                rotateZ: '45deg',
-                translateY: '30px',
-                translateX: '30px',
-                opacity: 0
-            }, { complete: done })
-        }
-    }
-    注意：当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。
-    推荐对于仅使用 JavaScript 过渡的元素添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
-```
-## 同一时间只渲染多个节点中的一个节点的过渡
-### 过渡模式
-transition默认的过渡模式 - 进入和离开同时发生。
-```
-    <transition name="fade" mode="out-in">
-        <!-- ... the buttons ... -->
-    </transition>
-
-    in-out：新元素先进行过渡，完成之后当前元素过渡离开。
-    out-in：当前元素先进行过渡，完成之后新元素过渡进入。
-```
-### 多个元素的过渡
-对于原生标签可以使用 v-if/v-else
-``` 
-    给在transition组件中的多个元素设置 key 是一个更好的实践。
-    <transition name="fade" mode="out-in">
-      <button v-if="isEditing" key="save" @click="isEditing = !isEditing">
-        Save
-      </button>
-      <button v-else key="edit" @click="isEditing = !isEditing">
-        Edit
-      </button>
-    </transition>
-```
-### 多个组件的过渡
-多个组件的过渡简单很多 - 我们不需要使用 key attribute。相反，我们只需要使用动态组件：
-```
-    <transition name="component-fade" mode="out-in">
-        <component v-bind:is="view"></component>
-    </transition>
-```
-## 列表过渡
-transition-group组件具体看文档
-```
-    <transition-group name="fade" tag="ul">
-      <li
-        v-for="(item, index) in list"
-        :key="item.name"
-        v-show="index === currentIndex" 
-      >
-        {{index}}
-      </li>
-    </transition-group>
-```
-
-# 八、综合
-## 1.过滤器
-Vue.filter( id, [definition] )
-```
-    //全局
-    //全局注册
-    Vue.filter('my-filter', function (value) {})
-    //获取，返回已注册的过滤器
-    var myFilter = Vue.filter('my-filter')
-
-    //局部
-    filters: {
-        myFilter: function (value) {
-        }
-    }
-
-    // 使用
-    <div>{{ message | myFilter }}</div>
-    <div v-bind:id="message | myFilter"></div>
-```
-## 2.混入
-当组件和混入对象（myMixin）含有同名选项时，这些选项将以恰当的方式进行“合并”。
-数据对象在内部会进行递归合并，并在发生冲突时以组件数据优先。
-同名钩子函数将合并为一个数组，因此都将被调用。混入对象的钩子将在组件自身钩子之前调用。
-值为对象的选项，例如 methods、components 和 directives，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。
-```
-    mixins: [myMixin]
-```
-混入也可以进行全局注册。使用时格外小心！
-## 3.自定义指令
-```
-    //普通参数指令
-    <div id="hook-arguments-example" v-demo:foo.a.b="123"></div>
-    Vue.directive('demo', {
-        //只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
-        //不知道元素的高度
-        bind: function (el, binding, vnode) {
-            var s = JSON.stringify
-            el.innerHTML =
-            'name: '       + s(binding.name) + '<br>' +
-            'value: '      + s(binding.value) + '<br>' +
-            'expression: ' + s(binding.expression) + '<br>' +
-            'argument: '   + s(binding.arg) + '<br>' +
-            'modifiers: '  + s(binding.modifiers) + '<br>' +
-            'vnode keys: ' + Object.keys(vnode).join(', ')
-        },
-        //被绑定元素插入父节点时调用
-        inserted:function{},
-        //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
-        update:function{}
-    })
-    //动态指令参数
-    <p v-pin:[direction]="200">I am pinned onto the page at 200px to the left.</p>
-    Vue.directive('pin', {
-        bind: function (el, binding, vnode) {
-            el.style.position = 'fixed'
-            var s = (binding.arg == 'left' ? 'left' : 'top')
-            el.style[s] = binding.value + 'px'
-        }
-    })    
-    //函数简写 在很多时候，你可能想在 bind 和 update 时触发相同行为，而不关心其它的钩子。比如这样写：
-    <div v-demo="{ color: 'white', text: 'hello!' }"></div>
-    Vue.directive('demo', function (el, binding) {
-        console.log(binding.value.color) // => "white"
-        console.log(binding.value.text)  // => "hello!"
-    })
-```
-## 4.ref
-ref 被用来给元素或子组件注册引用信息。引用信息将会注册在父组件的 $refs 对象上。
-```
-    <template>
-        <div >
-            //加在普通的 DOM 元素上使用，引用指向的就是 DOM 元素
-            <div ref="target">target1</div>
-            <div ref="target">target2</div>     //重复的情况下是最后一个
-            
-            //加在子组件上，引用就指向组件实例
-            <child ref="child"></child>
-        </div>
-    </template>
-    export default{
-        methods:{
-            click(){
-                console.log(this.$refs.target);  //DOM 元素
-                console.log(this.$refs.child);   //组件child
-            }
-        }
-    }    
-```  
-## 5.自定义事件
-```
-    //事件的定义
-    vm.$emit( eventName, […args] )
-    //事件的监听
-    vm.$on( event, callback )
-    //只触发一次的事件监听
-    vm.$once( event, callback )
-
-    //example
-    vm.$emit('test', 'hi')
-    vm.$on('test', function (msg) {
-        console.log(msg)
-    })
-```
-``` 
-    //事件的移除
-    vm.$off( [event, callback] )
-    如果没有提供参数，则移除所有的事件监听器；
-    如果只提供了事件，则移除该事件所有的监听器；
-    如果同时提供了事件与回调，则只移除这个回调的监听器
-```
-## 6.axios
-见 axios.js
-## 7.服务端渲染
-见 nuxt
-## 8.vue-loader
-### Scoped CSS
-当 style 标签有 scoped 属性时，它的 CSS 只作用于当前组件中的元素。
-```
-    深度作用选择器  如果你希望 scoped 样式中的一个选择器能够作用得“更深”，例如影响子组件，你可以使用 >>> 操作符：
-    <style scoped>
-        .a >>> .b {}
-    </style>
-    有些像 Sass 之类的预处理器无法正确解析 >>>。这种情况下你可以使用 /deep/ 操作符取而代之
 ```
 
 # 九、注意点
@@ -1175,47 +1206,33 @@ Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从�
         <input placeholder="Enter your email address" key="email-input">
     </template>
 ```
-## 4.vue中静态资源的路径问题
-[参考文章](https://segmentfault.com/a/1190000018472635)
-``` 
-    //静态引用
-    <template>
-        <img src="/src/assets/image/login/title.png" alt="">
-        <img src="./titlea.png" alt="">
-        <img src="@/assets/image/login/title.png" alt="">
-        <img src="~@/assets/image/login/title.png" alt="">
-        <img src="~[npm包名]/xxx/logo.png" alt="">  
-    <style>
-        background-image: url("/src/assets/image/login/title.png");
-        background-image: url("./titlea.png");
-        background-image: url("~@/assets/image/login/bg.png");
-        background-image: url("~[npm包名]/logo.png");
-        注意： 和上面的<template>相比，唯独少了直接用@开头的方式url("@/assett/logo.png")
-    引用变量的方式
-        <img :src="require('./assets/images/'+ this.imgName +'.jpg')" alt=""> 
-        import "@/assets/css/iconfont.css";
-        
-        <style lang="less" scoped>
-            @import "@/assets/css/iconfont.css";
-        </style>
+## 4.Vue 中的内存泄漏问题
+1. 全局变量引起的内存泄漏  
+2. 闭包引起的内存泄漏
+3. dom清空或删除时事件未清除、监听在window事件没有解绑，导致的内存泄漏
+4. 被遗忘的计时器 setInterval
+5. 使用第三方库创建，没有调用正确的销毁函数
+    如果是使用标准的vue插件 通过全局方法 Vue.use() 则忽略此问题
+    如果使用其他第三方库 在mounted/created钩子中使用了初始化 需要在 beforeDestroy 中做对应销毁处理（否则会有内存泄漏）
+6. 当你需要渲染大量静态内容时，可以通过使用 v-once 创建低开销的静态组件 以确保这些内容只计算一次然后缓存起来
 ```
-## 5.Vue 中的内存泄漏问题
-```
-    1.全局变量引起的内存泄漏  
-    2.闭包引起的内存泄漏
-    3.dom清空或删除时事件未清除、监听在window事件没有解绑，导致的内存泄漏
-    4.被遗忘的计时器 setInterval
-    5.使用第三方库创建，没有调用正确的销毁函数
-     如果是使用标准的vue插件 通过全局方法 Vue.use() 则忽略此问题
-     如果使用其他第三方库 在mounted/created钩子中使用了初始化 需要在 beforeDestroy 中做对应销毁处理（否则会有内存泄漏）
-    6.当你需要渲染大量静态内容时，可以通过使用 v-once 创建低开销的静态组件 以确保这些内容只计算一次然后缓存起来
+    attachDatepicker: function (refName) {
+        var picker = new Pikaday({
+        field: this.$refs[refName],
+        format: 'YYYY-MM-DD'
+    })
+    this.$once('hook:beforeDestroy', function () {
+      picker.destroy()
+    })
+  }
 ```
 
-# 十、elementUI
+# 十、elementUI使用注意点
+## 1.问题
 ```
 elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
 ```
-## 1.el-scrollbar
+## 2.el-scrollbar
 ```
     element-ui的滚动条组件el-scrollbar（官方没有）
     <el-scrollbar>
@@ -1230,11 +1247,47 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
     }
 ```
 
+# 十一、Vue测试指南
+https://lmiller1990.github.io/vue-testing-handbook/zh-CN/  
+https://jestjs.io/docs/zh-Hans/api  
+https://vue-test-utils.vuejs.org/zh/guides/#%E8%B5%B7%E6%AD%A5  
+```
+    组件测试 做出断言
+    import { mount } from "@vue/test-utils";
+    import Greeting from "@/components/Greeting.vue";
 
-
-
+    describe("Greeting.vue", () => {
+        test("renders a greeting", () => {
+            const wrapper = mount(Greeting);
+            expect(wrapper.text()).toMatch("Vue and TDD"); //tdd 测试驱动开发
+        });
+    });
+```
+## 1.shallowMount 和 mount
+```
+    import { shallowMount, mount } from "@vue/test-utils";
+    shallowMount 不包括子组件
+    <div>
+      <child-stub></child-stub>
+    </div>
+    mount 所有
+    <div>
+      <div>Child component</div>
+    </div>
+```
+## 2.测试props
+通过在加载一个组件时传递 propsData
+```
+    const wrapper = shallowMount(Parent, {
+        propsData: {
+            msg: "submit",
+            isAdmin: true
+        }
+    });
+```
 
 # 待续
+## 状态管理
 ## 插件和开发插件
 插件几种引入方式
 ```
@@ -1244,5 +1297,4 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
     4.添加 Vue 实例方法，通过把它们添加到 Vue.prototype 上实现。(Vue.prototype.$echarts = echarts;) 
     5.直接在文件中import使用
 ```
-## 状态管理
 ## 渲染函数 & JSX
