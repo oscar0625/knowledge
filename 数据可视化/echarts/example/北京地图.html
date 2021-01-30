@@ -30,7 +30,7 @@
     var myChart = echarts.init(dom);
     var oscar=[];
 
-    $.get('../script/json/chongqing.json', function (geoJson) {
+    $.get('../script/map/json/province/chongqing.json', function (geoJson) {
         echarts.registerMap('chongqing', geoJson);
 
         myChart.setOption({

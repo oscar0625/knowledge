@@ -292,7 +292,7 @@ var map = {
     },
 };
 //获取北京地图
-$.get('./script/json/beijing.json', function (geoJson) {
+$.get('./script/map/json/province/beijing.json', function (geoJson) {
     echarts.registerMap('beijing', geoJson);
     //地图初始获取数据
     map.getData();

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <title>title</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // 朴素的
+    function simple(s, t) {
+        let i = 0,
+            j = 0;
+        while (i < s.length && j < t.length) {
+            if (s.charAt(i) === t.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                i = i - j + 1
+                j = 0;
+            }
+        }
+        // 如果j最后等于t.length 证明查找成功
+        if (j !== 0 && j === t.length) {
+            return i - j
+        } else {
+            return -1
+        }
+    }
+</script>
+
+</html>

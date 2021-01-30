@@ -1210,7 +1210,33 @@ _perfectInherit(RadarChart, Chart, {
     }
 })
 
-//散点图
+/**散点图
+ * @class
+ * @description 散点图
+ * @param {object} option 包含所有参数
+ * @param {string} option.ele 图表容器的id （必填）
+ * @param {number} option.fontSize 图表中字体的大小 （必填）
+ * @param {string} option.fontColor 图表中字体的颜色 默认#fff
+ * @param {array} option.palletColors 图表的调色板，颜色从中依次选取 支持渐变（必填）
+ * @param {object} option.series 参数 除本文档介绍的参数外 支持echart中series的参数扩展 本文档未作介绍（必填）
+ * @param {string} option.series.name 名字（必填）
+ * @param {array} option.data 数据 同series也支持echart中的参数扩展 可以不设置 后续通过.setData设置
+ * @param {string} option.data.name 数据名称（必填）
+ * @param {number} option.data.max 数据最大值（必填）
+ * @param {number} option.data.value 数据值（必填）
+ * @return {object} 创建的实例对象
+ * @example
+ *new ScatterChart({
+    ele: 'gmly',
+    fontSize: litterFS,
+    fontColor: '#fff',
+    palletColors: '#fb5b04',
+    dimension: 2,
+    xAxisLabel: {
+        interval: 0
+    }
+})
+ */
 function ScatterChart(option) {
     Chart.call(this, option);
 }
@@ -1219,25 +1245,30 @@ _perfectInherit(ScatterChart, Chart, {
         var option = this._option,
             basicSize = option.fontSize,
             dimension = option.dimension,
-            max = Math.max.apply(Math, option.data.map(function (item) {
-                return item[dimension]
-            }));
+            max = Math.max.apply(
+                Math,
+                option.data.map(function (item) {
+                    return item[dimension];
+                })
+            );
         this._configuration = {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
             textStyle: {
                 fontSize: basicSize,
                 color: option.fontColor
             },
             grid: Object.assign({
-                top: 1 * basicSize,
-                left: 1 * basicSize,
-                right: 5 * basicSize,
-                bottom: 1 * basicSize,
-                containLabel: true
-            }, option.grid),
+                    top: 1 * basicSize,
+                    left: 1 * basicSize,
+                    right: 5 * basicSize,
+                    bottom: 1 * basicSize,
+                    containLabel: true
+                },
+                option.grid
+            ),
             xAxis: {
                 position: "top",
-                type: 'category',
+                type: "category",
                 axisLabel: {
                     fontSize: basicSize
                 },
@@ -1252,7 +1283,7 @@ _perfectInherit(ScatterChart, Chart, {
                 }
             },
             yAxis: {
-                type: 'category',
+                type: "category",
                 inverse: true,
                 axisLabel: {
                     fontSize: basicSize
@@ -1280,21 +1311,51 @@ _perfectInherit(ScatterChart, Chart, {
                 },
                 calculable: false,
                 precision: 0.1,
-                inRange: { //定义被选中时 selected:true 的样式
+                inRange: {
+                    //定义被选中时 selected:true 的样式
                     color: option.palletColors
                 },
                 dimension: 2
             },
             series: Object.assign({
-                type: 'scatter',
-                coordinateSystem: "cartesian2d",
-                data: option.data
-            }, option.series)
+                    type: "scatter",
+                    coordinateSystem: "cartesian2d",
+                    data: option.data
+                },
+                option.series
+            )
         };
     }
+});
+/**词云图  wordCloud 需要先引入wordCloud组件
+ * @class
+ * @description 词云图
+ * @param {object} option 包含所有参数
+ * @param {string} option.ele 图表容器的id （必填）
+ * @param {number} option.fontSize 图表中字体的大小 （必填）
+ * @param {string} option.fontColor 图表中字体的颜色 默认#fff
+ * @param {array} option.palletColors 图表的调色板，颜色从中依次选取 支持渐变（必填）
+ * @param {object} option.series 参数 除本文档介绍的参数外 支持echart中series的参数扩展 本文档未作介绍（必填）
+ * @param {string} option.series.name 名字（必填）
+ * @param {array} option.data 数据 同series也支持echart中的参数扩展 可以不设置 后续通过.setData设置
+ * @param {string} option.data.name 数据名称（必填）
+ * @param {number} option.data.max 数据最大值（必填）
+ * @param {number} option.data.value 数据值（必填）
+ * @return {object} 创建的实例对象
+ * @example
+ *new WordCloudChart({
+    ele: 'wordCloud',
+    fontSize: litterFS,
+    fontColor: '#fff',
+    palletColors: [
+        "#02ebfa",
+        "#03df4b",
+        "#f9fc02",
+        "#fc8f02",
+        "#2ddfb9",
+    ]
 })
-
-//wordCloud 需要先引入wordCloud组件
+ */
 function WordCloudChart(option) {
     Chart.call(this, option);
 }
@@ -1303,39 +1364,41 @@ _perfectInherit(WordCloudChart, Chart, {
         var option = this._option,
             basicSize = option.fontSize;
         this._configuration = {
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
             textStyle: {
                 fontSize: basicSize,
                 color: option.fontColor
             },
             series: option.series.map(function (item, i) {
                 return Object.assign({
-                    type: 'wordCloud',
-                    left: 'center',
-                    top: 'center',
-                    width: '100%',
-                    height: '100%',
-                    //网格在像素中的大小，以标记网格的可用性 网格尺寸大，字之间的差距大。
-                    gridSize: 0.1 * basicSize,
-                    //数据中的值将映射到的文本大小范围。默认为具有最小12px和最大60px大小。如果设置太大会出现少词（溢出屏幕）
-                    sizeRange: [0.5 * basicSize, 1 * basicSize],
-                    //设置为true以允许部分在画布外部绘制单词。
-                    drawOutOfBound: false,
-                    //文本旋转范围和步进度。文本将在[-90，90]范围内随机旋转，旋转步骤45
-                    rotationRange: [-90, 90],
-                    rotationStep: 45,
-                    textStyle: {
-                        normal: {
-                            color: function (v) {
-                                var index = v.dataIndex % 5,
-                                    arr = option.palletColors
-                                return arr[index]
+                        type: "wordCloud",
+                        left: "center",
+                        top: "center",
+                        width: "100%",
+                        height: "100%",
+                        //网格在像素中的大小，以标记网格的可用性 网格尺寸大，字之间的差距大。
+                        gridSize: 0.1 * basicSize,
+                        //数据中的值将映射到的文本大小范围。默认为具有最小12px和最大60px大小。如果设置太大会出现少词（溢出屏幕）
+                        sizeRange: [0.5 * basicSize, 1 * basicSize],
+                        //设置为true以允许部分在画布外部绘制单词。
+                        drawOutOfBound: false,
+                        //文本旋转范围和步进度。文本将在[-90，90]范围内随机旋转，旋转步骤45
+                        rotationRange: [-90, 90],
+                        rotationStep: 45,
+                        textStyle: {
+                            normal: {
+                                color: function (v) {
+                                    var index = v.dataIndex % 5,
+                                        arr = option.palletColors;
+                                    return arr[index];
+                                }
                             }
-                        }
+                        },
+                        data: option.data[i]
                     },
-                    data: option.data[i]
-                }, item);
+                    item
+                );
             })
         };
     }
-})
+});

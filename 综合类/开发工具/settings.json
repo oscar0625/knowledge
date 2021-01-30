@@ -11,8 +11,9 @@
     "search.followSymlinks": false,
     //搜索排除某个文件
     "search.exclude": {
-        "**/obj": true,
-        "**/dist": true
+        ".nuxt": true,
+        "**/dist": true,
+        "**/obj": true
     },
     //editor配置
     // 控制是否在键入时自动显示建议。
@@ -110,5 +111,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.sideBar.location": "left",
     "window.zoomLevel": 0,
-    "update.mode": "none"
+    "update.mode": "none",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.maxTokenizationLineLength": 1e+36
 }
