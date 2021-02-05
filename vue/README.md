@@ -86,7 +86,32 @@ https://cli.vuejs.org/zh/guide/browser-compatibility.html#polyfill
     </style>
     有些像 Sass 之类的预处理器无法正确解析 >>>。这种情况下你可以使用 /deep/ 操作符取而代之
 ```
-## 7.其他
+## 7.引入第三方JS库
+适用于cdn和静态资源js的使用
+webpack->externals 防止将某些 import 的包(package)打包到 bundle 中
+```
+    index.html
+    <script src="<%= BASE_URL %>echarts/dist/echarts.min.js"></script>
+    <script src="./static/jquery-1.12.4.js"></script>
+
+    vue.config.js
+    configureWebpack: {
+        externals: {
+            echarts: "echarts",
+            jquery: "$"
+        }
+    }
+    使用
+    import * as echarts from "echarts";
+    import $ from 'jquery'
+    export default {
+        created() {
+            console.log(echarts)
+            console.log($)
+        }
+    }
+```
+## 8.其他
 * 构建一个多页应用  
 https://cli.vuejs.org/zh/config/#pages
 

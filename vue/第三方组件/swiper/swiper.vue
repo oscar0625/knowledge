@@ -14,9 +14,6 @@
 </template>
 
 <script>
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
-
 /*
  * vue-awesome-swiper
  * see https://www.swiper.com.cn/api/
@@ -29,10 +26,6 @@ import "swiper/css/swiper.css";
 
 export default {
   name: "MySwiper",
-  components: {
-    Swiper,
-    SwiperSlide
-  },
   props: {
     // option相关
     autoplay: {
@@ -84,7 +77,7 @@ export default {
   },
   computed: {
     swiper() {
-      return this.$refs.mySwiper.$swiper;
+      return this.$refs.mySwiper.swiper;
     }
   }
 };

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>旭日图</title>
+    <style>
+        #right {
+            width: 473px;
+            height: 306px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="right"></div>
+
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.0.1/echarts.min.js"></script>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById("right"));
+    var color = [
+        "#3667E3",
+        "#AA4F33",
+        "#7943C0",
+    ]
+    var data = [{
+            name: "军队需求",
+            value: 10,
+            itemStyle: {
+                color: color[0]
+            },
+            children: [{
+                    name: "预研",
+                    value: 1,
+                    itemStyle: {
+                        color: color[0]
+                    }
+                },
+                {
+                    name: "订购",
+                    value: 2,
+                    itemStyle: {
+                        color: color[0]
+                    }
+                },
+                {
+                    name: "维修",
+                    value: 3,
+                    itemStyle: {
+                        color: color[0]
+                    }
+                },
+                {
+                    name: "研制",
+                    value: 4,
+                    itemStyle: {
+                        color: color[0]
+                    }
+                },
+            ]
+        },
+        {
+            name: "军工需求",
+            value: 10,
+            itemStyle: {
+                color: color[1]
+            },
+            children: [{
+                    name: "预研",
+                    value: 4,
+                    itemStyle: {
+                        color: color[1]
+                    }
+                },
+                {
+                    name: "订购",
+                    value: 3,
+                    itemStyle: {
+                        color: color[1]
+                    }
+                },
+                {
+                    name: "维修",
+                    value: 2,
+                    itemStyle: {
+                        color: color[1]
+                    }
+                },
+                {
+                    name: "研制",
+                    value: 1,
+                    itemStyle: {
+                        color: color[1]
+                    }
+                },
+            ]
+        },
+        {
+            name: "民企需求",
+            value: 12,
+            itemStyle: {
+                color: color[2]
+            },
+            children: [{
+                    name: "预研",
+                    value: 3,
+                    itemStyle: {
+                        color: color[2]
+                    }
+                },
+                {
+                    name: "订购",
+                    value: 3,
+                    itemStyle: {
+                        color: color[2]
+                    }
+                },
+                {
+                    name: "维修",
+                    value: 3,
+                    itemStyle: {
+                        color: color[2]
+                    }
+                },
+                {
+                    name: "研制",
+                    value: 3,
+                    itemStyle: {
+                        color: color[2]
+                    }
+                },
+            ]
+        },
+    ]
+
+
+    var option = {
+        backgroundColor: "transparent", //整体背景
+        color: color,
+        series: {
+            type: 'sunburst',
+            name: "demo",
+            center: ['50%', '50%'],
+            radius: ['0%', '100%'],
+            sort: null,
+            nodeClick: "rootToNode",
+            label: {
+                rotate: 'tangential',
+            },
+            itemStyle: {
+                borderWidth: 2
+            },
+            emphasis: {
+                focus: 'descendant'
+            },
+            levels: [{}, {
+                r0: '0%',
+                r: '50%',
+            }, {
+                r0: '60%',
+                r: '90%',
+
+            }],
+            data: data
+        }
+
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+</script>
+
+</html>

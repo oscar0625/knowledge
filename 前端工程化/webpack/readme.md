@@ -139,6 +139,12 @@ const config = {
     devtool: 'inline-source-map',
 };
 ```
+## 8. externals
+外部扩展 
+```
+    防止将某些 import 的包(package)打包到 bundle 中，而是在运行时(runtime)再去从外部获取这些扩展依赖  
+    例如，从 CDN 引入 jQuery，而不是把它打包
+```
 
 # 三、其他
 ## 1. 代码分离缓存和懒加载
