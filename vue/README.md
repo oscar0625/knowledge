@@ -1266,9 +1266,14 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
         </div>
     </el-scrollbar>
     在使用时必须要设置.el-scrollbar__wrap的最大高度
-    .el-scrollbar__wrap{
-        //预定高度600px 加上17px（隐藏默认滚动条）
-        max-height: 617px; 
+    .el-scrollbar {
+        height: 100%;
+        .el-scrollbar__wrap {
+            width: calc(100% + 18px);
+            height: calc(100% + 18px);
+            margin-bottom: 0 !important;
+            margin-right: 0 !important;
+        }
     }
 ```
 
