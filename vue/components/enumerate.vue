@@ -1,16 +1,16 @@
 <template>
   <el-select
     :value="value"
+    @input="updateValue"
     :placeholder="placeholder"
     :clearable="!unclearable"
-    style="width: 100%;"
-    @input="updateValue"
+    style="width:100%;"
   >
     <el-option
       v-for="(item, key) in list"
       :key="key"
       :label="item.name"
-      :value="item.value"
+      :value="item.id"
     >
     </el-option>
   </el-select>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: "Enumerate", // 数据枚举的公共组件
+  name: "enumerate", //数据枚举的公共组件
   props: {
     url: {
       type: String,
@@ -51,17 +51,17 @@ export default {
   },
   methods: {
     load() {
-      this.$axios.get(this.url).then((res) => {
-        // 设定默认值
+      this.$axios.get(this.url).then(res => {
+        //设定默认值
         if (this.$props.defaultValue) {
-          res.enumList.some((item) => {
+          res.dataList.some(item => {
             if (item.name === this.$props.defaultValue) {
-              this.$emit("input", item.value);
+              this.$emit("input", item.id);
               return true;
             }
           });
         }
-        return (this.list = res.enumList);
+        return (this.list = res.dataList);
       });
     },
     updateValue(value) {
@@ -71,4 +71,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less"></style>

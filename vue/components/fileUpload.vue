@@ -22,9 +22,8 @@
 </template>
 
 <script>
-import { storage } from "../utils/public";
 export default {
-  name: "FileUpload",
+  name: "fileUpload",
   props: {
     url: {
       type: String,
@@ -44,7 +43,7 @@ export default {
     },
     sizeLimit: {
       type: Number,
-      default: 2 // MB
+      default: 2 //MB
     },
     numLimit: {
       type: Number,
@@ -58,49 +57,49 @@ export default {
         : process.env.VUE_APP_DOMAIN;
     return {
       action: DOMAIN + this.url,
-      Authorization: "Bearer " + storage.getSession("token"),
+      Authorization: "Bearer " + this.$cookies.get("token"),
       loading: false
     };
   },
   methods: {
-    // 触发numLimit
+    //触发numLimit
     exceed() {
       this.$message.error(`最多只能上传${this.numLimit}个文件`);
     },
-    // 删除已经上传或者正在上传中的
+    //删除已经上传或者正在上传中的
     remove(file, fileList) {
       this.loading = false;
       this.updateFileList(fileList);
     },
-    // 更新fileList
+    //更新fileList
     updateFileList(fileList) {
       // console.log(fileList);
       this.$emit("update:fileList", fileList);
     },
-    // 上传之前验证
+    //上传之前验证
     upLoadBefore(file) {
       const verificationType =
         this.accept === "" || this.accept.includes(file.type);
-      const verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
+      // verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
         this.$message.error("上传的文件类型有误");
       }
-      if (!verificationSize) {
-        this.$message.error(`上传文件大小不能超过${this.sizeLimit}MB!`);
-      }
-      return verificationType && verificationSize;
+      // if (!verificationSize) {
+      //   this.$message.error(`上传文件大小不能超过${this.sizeLimit}MB!`);
+      // }
+      return verificationType;
     },
     uploadProgress() {
       this.loading = true;
     },
-    // 成功调取接口 返回后台给的状态
+    //成功调取接口 返回后台给的状态
     uploadSuccess(res, file, fileList) {
       this.loading = false;
-      // 判断是否真正成功
+      //判断是否真正成功
       if (res.code === 0) {
         this.updateFileList(fileList);
       } else {
-        // 服务器没响应成功 从fileList中删除当前的file
+        //服务器没响应成功 从fileList中删除当前的file
         fileList.some((item, index) => {
           if (Object.is(item, file)) {
             fileList.splice(index, 1);
@@ -113,7 +112,7 @@ export default {
         }
       }
     },
-    // 调取接口失败
+    //调取接口失败
     uploadError(error) {
       this.loading = false;
       // 状态码判断
@@ -133,4 +132,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less"></style>

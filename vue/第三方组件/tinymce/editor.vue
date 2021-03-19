@@ -1,7 +1,6 @@
 <template>
   <div>
     <editor
-      id="tinymceEditor"
       :init="tinymceInit"
       :value="value"
       @input="updateValue"
@@ -9,15 +8,17 @@
   </div>
 </template>
 <script>
-import myAxios from "@/utils/request";
 import "tinymce/tinymce";
-import "tinymce/themes/silver/theme";
 import Editor from "@tinymce/tinymce-vue";
+import "tinymce/themes/silver/theme";
+import "tinymce/icons/default/icons"; //解决5.3.x以上 icons.js报错Unexpected token '<'
+// 编辑器插件plugins
 import "tinymce/plugins/code";
 import "tinymce/plugins/link";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/image";
+import "tinymce/plugins/media";
 import "tinymce/plugins/table";
 import "tinymce/plugins/paste";
 import "tinymce/plugins/preview";
@@ -28,6 +29,9 @@ import "tinymce/plugins/lineheight";
 
 export default {
   name: "tinymceEditor",
+  components: {
+    editor: Editor
+  },
   props: {
     value: {
       type: String,
@@ -50,7 +54,7 @@ export default {
     let handleImgUpload = (blobInfo, success, failure) => {
         let formData = new FormData();
         formData.append("File", blobInfo.blob());
-        myAxios
+        this.$axios
           .post(this.imgUploadUrl, formData, {
             headers: {
               "Content-Type": "multipart/form-data"
@@ -86,14 +90,14 @@ export default {
 
         menubar: true, // 隐藏最上方menu
         plugins:
-          "code link advlist lists image table paste preview fullscreen wordcount lineheight",
+          "code link advlist lists image media table paste preview fullscreen wordcount lineheight",
         toolbar: [
           "code undo redo restoredraft | bold italic underline strikethrough forecolor backcolor | lineheight alignleft aligncenter alignright alignjustify | bullist numlist blockquote subscript superscript removeformat",
-          " formatselect fontselect fontsizeselect | image table link unlink | outdent indent| preview fullscreen wordcount "
+          " formatselect fontselect fontsizeselect | image media table link unlink | outdent indent| preview fullscreen wordcount "
         ],
         fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
         font_formats:
-          "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif",
+          "微软雅黑=Microsoft YaHei,sans-serif;黑体=SimHei,sans-serif;楷体=KaiTi,sans-serif;宋体=simsun,sans-serif;新宋体=NSimSun,sans-serif;仿宋体=FangSong,sans-serif;思源黑体=Noto Sans SC,sans-serif;思源宋体=Noto Serif SC,serif;苹果-苹方=PingFang SC,sans-serif;苹果-黑体=Heiti SC,sans-serif;苹果-冬青黑体=Hiragino Sans GB,sans-serif;",
         //上传图片 有2种方式
         images_upload_handler: function(blobInfo, success, failure) {
           const verificationType = accept.includes(blobInfo.blob().type),
@@ -114,12 +118,12 @@ export default {
     };
   },
   methods: {
-    updateValue: function(value) {
+    updateValue(value) {
       this.$emit("input", value);
     }
-  },
-  components: {
-    editor: Editor
   }
 };
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=Noto+Serif+SC&display=swap");
+</style>

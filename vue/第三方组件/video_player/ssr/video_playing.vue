@@ -5,6 +5,7 @@
     :playsinline="true"
     @timeupdate="onPlayerTimeupdate($event)"
     @ready="playerReadied"
+    @contextmenu.prevent
   ></div>
 </template>
 
@@ -21,6 +22,10 @@ export default {
     videoURL: {
       type: String,
       required: true
+    },
+    visible: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -29,7 +34,8 @@ export default {
     };
   },
   watch: {
-    videoURL: "createOption"
+    videoURL: "createOption",
+    visible: "pauseVideo"
   },
   created() {
     if (process.client) {
@@ -65,6 +71,12 @@ export default {
           fullscreenToggle: true // 是否显示全屏按钮
         }
       };
+    },
+    // 关闭后暂停视频
+    pauseVideo(val) {
+      if (!val) {
+        this.myVideoPlayer.pause();
+      }
     },
     // listen event
     // 视频的时间改变就触发

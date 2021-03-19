@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @contextmenu.prevent>
     <video-player
       class="video-player vjs-custom-skin"
       ref="videoPlayer"

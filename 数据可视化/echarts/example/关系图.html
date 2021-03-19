@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <title>index</title>
+    <style>
+        #container {
+            width: 1000px;
+            height: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="../script/echarts.js"></script>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var colors = [{
+            c1: "#00c7ef",
+            c2: "#0AF3FF"
+        },
+        {
+            c1: "#FF8E14",
+            c2: "#FFA12F"
+        },
+        {
+            c1: "#AF5AFF",
+            c2: "#B62AFF"
+        },
+        {
+            c1: "#25dd59",
+            c2: "#29f463"
+        },
+        {
+            c1: "#6E35FF",
+            c2: "#6E67FF"
+        },
+        {
+            c1: "#002AFF",
+            c2: "#0048FF"
+        },
+        {
+            c1: "#8CD282",
+            c2: "#95F300"
+        },
+        {
+            c1: "#3B0EFF",
+            c2: "#604BFF"
+        },
+        {
+            c1: "#00BE74",
+            c2: "#04FDB8"
+        },
+        {
+            c1: "#4a3ac6",
+            c2: "#604BFF"
+        }
+    ];
+    // 数据源
+    function getData() {
+        let data = {
+            name: "根节点1",
+            id: 0,
+            value: 0,
+            list: []
+        };
+        for (let i = 1; i <= 9; i++) {
+            let obj = {
+                name: "节点" + i,
+                value: i,
+                id: i,
+                list: [],
+            };
+            data.list.push(obj);
+        }
+        var arr = []
+        arr.push(data)
+        return arr;
+    }
+    //创建数据
+    function createData(source) {
+        const data = JSON.parse(JSON.stringify(source));
+        const res = [];
+        const recursion = function (arr, idx, color) {
+            arr.map((item, index) => {
+                // 设置节点大小
+                let symbolSize = (item.name.length + 1) * 14;
+
+                // 计算出颜色,根节点一种颜色 第二级一种颜色 第三级开始和第二级相同
+                if (idx === 0) {
+                    color = colors[0];
+                }
+                if (idx == 1) {
+                    color = colors.find((itemm, eq) => eq == (index + 1) % colors.length);
+                }
+                // 设置节点样式
+                let bgcolor = null;
+                if (idx === 0) {
+                    bgcolor = {
+                        type: "radial",
+                        x: 0.5,
+                        y: 0.5,
+                        r: 0.5,
+                        colorStops: [{
+                                offset: 0,
+                                color: color.c1 // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.8,
+                                color: color.c1 // 80% 处的颜色
+                            },
+                            {
+                                offset: 1,
+                                color: "rgba(0, 0, 0, 0.3)" // 100% 处的颜色
+                            }
+                        ],
+                        global: false
+                    };
+                } else {
+                    bgcolor = {
+                        type: "radial",
+                        x: 0.5,
+                        y: 0.5,
+                        r: 0.5,
+                        colorStops: [{
+                                offset: 0,
+                                color: color.c1 // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.4,
+                                color: color.c1 // 0% 处的颜色
+                            },
+                            {
+                                offset: 1,
+                                color: color.c2 // 100% 处的颜色
+                            }
+                        ],
+                        global: false
+                    };
+                }
+                let itemStyle = {
+                    borderColor: color.c2,
+                    //根节点还是子节点  
+                    color: idx === 0 ? bgcolor : color.c2
+                };
+                //可以改变来实现节点发光效果，但体验不好
+                itemStyle = Object.assign(itemStyle, {
+                    shadowColor: "rgba(255, 255, 255, 0.5)",
+                    shadowBlur: 10
+                });
+
+                let obj = {
+                    symbolSize: symbolSize,
+                    color: bgcolor,
+                    itemStyle
+                };
+                obj = Object.assign(item, obj);
+                // 如果是根节点
+                if (idx === 0) {
+                    obj = Object.assign(obj, {
+                        root: true
+                    });
+                }
+                // 如果是子节点
+                if (item.list && item.list.length === 0) {
+                    obj = Object.assign(obj, {
+                        isEnd: true
+                    });
+                }
+                res.push(obj);
+                // 是否递归
+                if (!obj.isEnd) {
+                    recursion(item.list, idx + 1, color);
+                }
+            });
+        }
+        recursion(data, 0);
+        return res
+    }
+    // 计算links
+    function createLink(source) {
+        const data = JSON.parse(JSON.stringify(source));
+        const res = [];
+        const recursion = function (arr, idx, color) {
+            arr.map(item => {
+                if (item.list && item.list.length > 0) {
+                    item.list.map((itemSon, index) => {
+                        // 计算出颜色 第一级一种颜色 第二级开始和第一级相同
+                        if (idx === 0) {
+                            color = colors.find((itemm, eq) => eq == (index + 1) % colors.length);
+                        }
+                        // 设置线条颜色
+                        let lineStyle = {
+                            color: color.c2
+                        };
+                        let obj = {
+                            source: item.id,
+                            target: itemSon.id,
+                            lineStyle
+                        };
+                        res.push(obj);
+                        if (itemSon.list && itemSon.list.length > 0) {
+                            recursion(item.list, idx + 1);
+                        }
+                    });
+                }
+            });
+        }
+        recursion(data, 0);
+        return res
+    }
+
+    var listData = getData()
+    var list = createData(listData);
+    var links = createLink(listData);
+    console.log(listData);
+    console.log(list);
+    console.log(links);
+    option = {
+        backgroundColor: "#000",
+        toolbox: {
+            show: true,
+            left: "right",
+            right: 20,
+            top: "bottom",
+            bottom: 20,
+        },
+        selectedMode: "false",
+        bottom: 20,
+        left: 0,
+        right: 0,
+        top: 0,
+        animationDuration: 1500,
+        animationEasingUpdate: "quinticInOut",
+        series: [{
+            name: "知识图谱",
+            type: "graph",
+            layout: "force",
+            force: {
+                repulsion: 300,
+                edgeLength: 100
+            },
+            draggable: true,
+            roam: true,
+            data: list,
+            links: links,
+            edgeSymbol: ["circle", "arrow"],
+            edgeSymbolSize: [4, 8],
+            label: {
+                show: true,
+                position: "inside",
+                color: "#fff",
+                distance: 5,
+                fontSize: 10
+            },
+            lineStyle: {
+                width: 1.5,
+                curveness: 0.2,
+                type: "solid"
+            }
+        }]
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    };
+</script>
+
+</html>

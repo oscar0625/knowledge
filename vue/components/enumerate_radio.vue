@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "EnumerateRadio", // 数据枚举的公共组件 radio方式
+  name: "enumerateRadio", //数据枚举的公共组件 radio方式
   props: {
     url: {
       type: String,
@@ -34,10 +34,10 @@ export default {
   },
   methods: {
     load() {
-      this.$axios.get(this.url).then((res) => {
-        // 设定默认值
+      this.$axios.get(this.url).then(res => {
+        //设定默认值
         if (this.$props.defaultValue) {
-          res.enumList.some((item) => {
+          res.enumList.some(item => {
             if (item.name === this.$props.defaultValue) {
               this.$emit("input", item.value);
               return true;
@@ -54,4 +54,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less"></style>

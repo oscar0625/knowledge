@@ -107,11 +107,15 @@
     //Settings Sync
     "sync.gist": "ca73ace3c38c00082effdb0151bdebbf",
     "sync.autoDownload": true,
+    //fileheader
+    "fileheader.Author": "oscar",
+    "fileheader.LastModifiedBy": "oscar",
     //其他
     "workbench.iconTheme": "material-icon-theme",
     "workbench.sideBar.location": "left",
     "window.zoomLevel": 0,
     "update.mode": "none",
     "diffEditor.ignoreTrimWhitespace": false,
-    "editor.maxTokenizationLineLength": 1e+36
+    "editor.maxTokenizationLineLength": 1e+36,
+    "extensions.autoUpdate": false
 }

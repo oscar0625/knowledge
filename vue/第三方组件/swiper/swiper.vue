@@ -1,9 +1,9 @@
 <template>
   <swiper ref="mySwiper" :options="swiperOption">
     <swiper-slide v-for="(item, index) in carouselData" :key="index">
-      <nuxt-link :to="item.linkURL">
-        <el-image :src="item.imgURL" :alt="item.title"></el-image>
-      </nuxt-link>
+      <a :href="item.linkURL">
+        <img :src="item.imgURL" :alt="item.title" />
+      </a>
     </swiper-slide>
     <!-- 分页 -->
     <div slot="pagination" class="swiper-pagination"></div>
