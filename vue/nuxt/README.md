@@ -132,7 +132,7 @@ asyncData方法会在组件 **(限于页面组件）** 每次加载之前被调�
     };
 ```
 ## fetch
-待续 和vuex有关
+https://www.nuxtjs.cn/api/pages-fetch
 ## 上下文对象
 在页面 validate asyncData fetch函数中都可以使用context。
 middleware中的js也可一使用context。
