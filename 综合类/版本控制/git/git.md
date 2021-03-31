@@ -98,11 +98,13 @@ http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html
     $ git config --global user.email "749301111@qq.com"
 ```
 ## 1.利用 SSH 完成 Git 与 GitHub 的绑定
+https://docs.github.com/cn/github/authenticating-to-github/about-ssh
 ```
     生成 SSH key 
         $ ssh-keygen -t rsa         然后敲三次回车键
-    找到 C:\Documents and Settings\username\\.ssh 
-        -> id_rsa  获取里面的密钥
+    获取里面的密钥 
+        $ clip < ~/.ssh/id_rsa.pub
+        位置在 C:\Documents and Settings\username\\.ssh -> id_rsa  
         example: ssh-rsa ***************
     在github官网上 进入Settings页面后，再点击SSH and GPG Keys进入此子界面，然后点击New SSH key按钮
     测试

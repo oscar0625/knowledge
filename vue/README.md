@@ -438,7 +438,7 @@ methods和computed区别：从某种程度上来说method可以完全代替compu
     </child>
     子：
     <slot :user="user" :age="18">
-      {{ user.lastName }}
+      {{ user.lastName }} 后备内容
     </slot>
 ```
 ## 5.组件通信
