@@ -16,7 +16,7 @@ export default {
   name: "region", //地区
   props: {
     value: {
-      type: String,
+      type: Array,
       required: true
     }
   },

@@ -41,15 +41,23 @@
             src: url("~@/assets/fonts/SourceHanSerifCN.otf") format("opentype");
             /* https://github.com/adobe-fonts/source-han-serif/tree/release */
         }
+
+        /* google font 本地化 */
+        @font-face {
+            font-family: "Noto Sans SC";
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local(""), url("/fonts/Noto_Sans_SC/font.woff2") format("woff2"),
+                url("/fonts/Noto_Sans_SC/font.woff") format("woff");
+        }
     </style>
 </head>
 
 <body>
 </body>
 <script>
-    /**
-     * 
-     * **/
+    // 一、非第三方字体
     // https://segmentfault.com/a/1190000006110417?utm_source=tag-newest
     // 1.最优字体 越靠前优先级越高
     // Helvetica, Tahoma, Arial,                                    最好英文字体
@@ -58,19 +66,30 @@
     // "WenQuanYi Micro Hei",                                       linux下最好的中文字体         
     // sans-serif;                                                  所有字体都失效最后选择无衬线体
 
-    // 中文网页字体设置方案
+    // 2.CSS font-family常见中文字体对应的英文名称
+    // https://www.zhangxinxu.com/wordpress/2017/03/css-font-family-chinese-english/
+
+
+    // 二、第三方字体
+    // https://www.cnblogs.com/hellman/p/6773461.html 
+    // 1.@font-face 允许您在网页中使用电脑中没有安装的字体，完全摆脱安全字体的限制。只需将字体包安装在服务器上，当用户加载网页时，字体包会自动下载到用户机器上，保证字体能够正确渲染。
+
+
+    // 2.中文网页字体设置方案
     // https://ridiqulous.com/chinese-webfont-guide/
 
-    // https://www.cnblogs.com/hellman/p/6773461.html 
-    // 2.@font-face 允许您在网页中使用电脑中没有安装的字体，完全摆脱安全字体的限制。只需将字体包安装在服务器上，当用户加载网页时，字体包会自动下载到用户机器上，保证字体能够正确渲染。
-
-    // 3.Google Fonts API 提供了超过 600 种的高质量的字体，所有的浏览器都兼容，无需引入 JavaScript，简单易用，更重要的是，免费。
+    // 3.Google Fonts API 提供了超过 600 种的高质量的字体，所有的浏览器都兼容，无需引入 JavaScript，简单易用，更重要的是，免费。（国内访问不了）
     // https://fonts.google.com/?subset=chinese-simplified
     // @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=Noto+Serif+SC&display=swap");
 
+    // google fonts 国内使用解决方案
+    // https://blog.csdn.net/deng_xj/article/details/88544617
+    // https://doc.weixiaoduo.com/knowledgebase/23046.html
+    // https://google-webfonts-helper.herokuapp.com/fonts //google-webfonts-helper
 
-    // 4.CSS font-family常见中文字体对应的英文名称
-    // https://www.zhangxinxu.com/wordpress/2017/03/css-font-family-chinese-english/
+    // 4.font-display
+    // font-display 默认为 block，会导致字体加载完成（第 650ms 左右）之前页面一片空白。
+    // 为了改善这个情况，我们在使用第三方中文字体时，非常有必要把 font-display 设置为 swap 或者 fallback，前者会在当前字体文件加载时使用 font-family 中当前字体的后备字体进行文本显示，而后者则允许一个停顿时间（比如100ms），该停顿时间内先显示空白，如果过了这个时间阈值当前字体仍然没有完成加载，则采用和 swap 相同的策略进行文本显示。
 </script>
 
 </html>

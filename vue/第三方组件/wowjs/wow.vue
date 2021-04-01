@@ -2,7 +2,7 @@
   <div>
     <div class="wow slideInLeft">Hello word</div>
     <div class="wow rotateIn">Hello word</div>
-    <div class="wow slideInRight">Hello word</div>
+    <div class="wow slideInRight" data-wow-delay="0.2s">Hello word</div>
   </div>
 </template>
 <script>
@@ -12,11 +12,7 @@ import { WOW } from "wowjs";
 export default {
   name: "Wow",
   mounted() {
-    this.wow = this.wowInstance();
-    this.wow.init();
-  },
-  beforeDestroy() {
-    this.wow.stop();
+    this.createWow();
   },
   methods: {
     // 初始化wowjs
@@ -25,7 +21,14 @@ export default {
         animateClass: "animate__animated",
         live: false
       });
-    }
+    },
+    createWow() {
+      const wow = this.wowInstance();
+      wow.init();
+      this.$once("hook:beforeDestroy", function () {
+        wow.stop();
+      });
+    },
   }
 };
 </script>

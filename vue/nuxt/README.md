@@ -71,6 +71,7 @@ Nuxt.js 允许你扩展默认的布局，或在 layout 目录下创建自定义�
 提供了禁用特定页面上的默认加载进度条的选项。可以通过Configuration的加载选项全局禁用或自定义它，也可以通过将 loading 属性设置为 false 来禁用特定页面
 ## head
 使用 head 方法设置当前页面的头部标签。  
+引入static中的资源 script link
 还可引入外部资源 script link
 
 # 页面

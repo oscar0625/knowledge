@@ -83,7 +83,13 @@ http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html
     $ git checkout [file]/ 空         用暂存区的所有文件替换掉工作区的所有文件(file指定文件)
     $ git checkout HEAD [file]/ 空    用仓库区的所有文件替换掉暂存区和工作区的的所有文件(file指定文件)
 ```
-## 9.其他
+## 9.服务器代码合并本地代码
+```
+    $ git stash     //暂存当前正在进行的工作。
+    $ git pull   origin master //拉取服务器的代码
+    $ git stash pop //合并暂存的代码
+```
+## 10.其他
 ```
     $ cd        返回上一级
     $ cd /D     进入D盘

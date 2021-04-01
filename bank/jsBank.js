@@ -423,11 +423,41 @@ var oscarMethod = {
         //主动执行一次
         main();
     },
-    
+
     //去掉所有的html标记
     delHtmlTag: function (str) {
         return str.replace(/<[^>]+>/g, "");
+    },
+
+    // 缓动scrollTop
+    scrollTop({
+        scrollElement,
+        top = 0,
+        rate = 8,
+        cbk
+    }) {
+        scrollElement =
+            scrollElement ||
+            document.scrollingElement ||
+            document.body ||
+            document.documentElement;
+        let currentTop = scrollElement.scrollTop;
+        const step = function () {
+            // 缓动算法
+            currentTop = currentTop + (top - currentTop) / rate;
+            // 临界判断，终止动画
+            if (Math.abs(top - currentTop) <= 1) {
+                scrollElement.scrollTop = top;
+                cbk && cbk();
+                return;
+            }
+            scrollElement.scrollTop = currentTop;
+            // 继续执行动画
+            requestAnimationFrame(step);
+        };
+        step();
     }
+
 };
 var oscarCheck = {
     /*检验真是姓名 全中文包含少数名族 如：迪丽热巴·迪力木拉提*/
@@ -765,7 +795,7 @@ var oscarOther = {
         var currentTop = 0,
             lastTop = 0;
         window.onscroll = function () {
-            currentTop = document.body.scrollTop || document.documentElement.scrollTop;
+            currentTop = document.scrollingElement.scrollTop;
             if (currentTop >= lastTop) {
                 //下滚
                 console.log('下滚')

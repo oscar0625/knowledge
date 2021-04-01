@@ -1,10 +1,6 @@
 <template>
   <div>
-    <editor
-      :init="tinymceInit"
-      :value="value"
-      @input="updateValue"
-    ></editor>
+    <editor :init="tinymceInit" :value="value" @input="updateValue"></editor>
   </div>
 </template>
 <script>
@@ -80,7 +76,7 @@ export default {
         language_url: "/tinymce/langs/zh_CN.js",
         language: "zh_CN",
         skin_url: `/tinymce/skins/ui/oxide`,
-        content_css: `/tinymce/skins/content/default`,
+        content_css: `/tinymce/skins/content/default/content.min.css`,
 
         browser_spellcheck: true, // 拼写检查
         branding: false, // 去水印
@@ -125,5 +121,6 @@ export default {
 };
 </script>
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=Noto+Serif+SC&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=Noto+Serif+SC&display=swap"); */
+@import url("~@/assets/css/google_font.css");
 </style>
