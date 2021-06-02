@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <title>游戏引擎</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  // https://jelly.jd.com/article/6006b1055b6c6a01506c8800
+
+  // 1. Egret
+  // 案例：传奇世界
+  // 白鹭引擎是企业级游戏引擎，有团队维护。Egret 在工作流的支持上做的是比较好的，从 Wing 的代码编写，到 ResDepot 和 TextureMerger 的资源整合，再到 Inspector 调试，最后到原生打包（支持 APP 打包），游戏开发过程中的每个环节基本都有工具支撑。官网上的示例，教程也是比较多。值得一提的是，今年5月白鹭引擎支持了 WebAssembly ，这对于性能的提升又是一大里程碑。 
+
+  // 2. cocos2d
+  // Cocos2d-x 是业界比较老牌的游戏引擎了，同时支持 C++ ，Lua 和 JavaScript 三种开发语言，官方用例来看更倾向于 C++ 开发，适合做一些中大型游戏开发。Cocos2d-x 提供 Cocos Creator 游戏开发工具，组件化，脚本化，数据驱动，跨平台发布。
+
+  // 3. Phaser 3
+  // Phaser 在渲染方面直接封装了 Pixi；架构方面，Phaser 内嵌了3个物理引擎（Arcade Physics、Ninja、p2.js），提供粒子系统、动画、预下载和设备适配方案；兼容性方面，Phaser 的焦点是放在移动端浏览器上的；API 方面，Phaser 能实现丰富的游戏功能，适合复杂度高的游戏开发。
+
+  // 4. CreateJS
+  // CreateJS 官方提供了 TweenJS 支持动画开发，同时通过 SoundJS 和 PreLoadJS 提供了音频和预下载的支持，对于 H5 游戏基础功能的支持是足够的。在兼容性方面，CreateJS 支持 PC 端和移动端几乎所有的浏览器。此外，CreateJS 还支持用 flash CC 开发导出由 CreateJS 渲染的 H5 游戏
+
+  // 5. Hilo
+  // Hilo 是阿里团队推出的一个开源项目，支持模块化开发，同时提供了多种模块范式的包装版本和跨终端解决方案，适合用来开发营销小游戏。其体积也是比较轻量的，只有70kb左右。Hilo 支持 DOM 渲染，Canvas 渲染和 WebGL 渲染，同时集成了 Hilo Audio， Hilo Preload。其后推出的 Hilo 3D 也是其亮点之一。
+
+</script>
+
+</html>

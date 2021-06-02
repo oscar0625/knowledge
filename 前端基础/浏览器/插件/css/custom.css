@@ -1,0 +1,31 @@
+body {
+    opacity: 0;
+}
+
+/* 提示未登录框 */
+.login-guid-bar {
+    display: none !important;
+}
+
+/* 全屏下提示 */
+.component-toast {
+    display: none !important;
+}
+
+/* 全屏下操作面板 */
+.play-component-toolbar {
+    display: none !important;
+}
+
+/* 返回按钮 */
+.oscar-back {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    z-index: 10000;
+}
+
+.oscar-back img {
+    width: 40px;
+    height: 40px;
+}

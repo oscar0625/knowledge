@@ -1,0 +1,23 @@
+{
+   "name": "oscar_click_button",
+   "manifest_version": 2,
+   "version": "1.0.1",
+   "description": "点击金山ppt中的播放按钮插件",
+   "icons": {
+      "128": "icon-128.png"
+   },
+   "browser_action": {
+      "default_icon": "icon-128.png",
+      "default_title": "点击金山ppt中的播放按钮插件"
+   },
+   "content_scripts": [{
+      "matches": ["https://www.kdocs.cn/*"],
+      "js": ["js/jquery-1.7.2.js","js/content.js"],
+      "css": ["css/custom.css"]
+   }],
+   "permissions": [
+      "https://www.kdocs.cn/*"
+   ],
+   "web_accessible_resources": ["images/back.png"],
+   "homepage_url": "http://ckzone.cn/"
+}

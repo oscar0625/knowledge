@@ -50,8 +50,13 @@ export default {
         // 延迟时间
         delay: 0,
         // 动画的时长
-        duration: 600,
-        easing: "cubic-bezier(0.5, 0, 0, 1)"
+        duration: 1000,
+        easing: "cubic-bezier(0.455, 0.03, 0.515, 0.955)",
+        afterReveal(el) {
+          // 实际执行cleanup: true 但插件暂时不好使
+          el.style.transform = "";
+          el.style.transition = "";
+        }
       });
     },
     createSr(name = "", config = {}) {
