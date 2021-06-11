@@ -1269,10 +1269,7 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
     .el-scrollbar {
         height: 100%;
         .el-scrollbar__wrap {
-            width: calc(100% + 18px);
-            height: calc(100% + 18px);
-            margin-bottom: 0 !important;
-            margin-right: 0 !important;
+            overflow-x: auto;
         }
     }
 ```

@@ -26,14 +26,17 @@
 
     // 双向链表
     class LinkList {
-        constructor(...params) {
-            this.head = null; //头指针 指向链表中头结点 初始为null
-            this.tail = null; //尾指针 指向链表中尾结点 初始为null
-            this.length = 0;
-            // 初始化
-            this.init(params);
+        //连接两个结点
+        _connect(before, after) {
+            before && (before.next = after);
+            after && (after.prev = before);
         }
-        // 根据给定的数据源 创建一段链表
+        //解除连接两个结点
+        _disconnect(before, after) {
+            before && (before.next = null);
+            after && (after.prev = null);
+        }
+        // 根据给定的数据源 生成双向链表
         _createLink(arr) {
             let head = null;
             let tail = null;
@@ -42,14 +45,14 @@
                 const node = new Node(data);
                 //第一个结点
                 if (index === 0) {
+                    // 头指针指向当前结点
                     head = node;
                 } else {
-                    // 生成双向链表：将当前结点的前驱指向尾结点
-                    node.prev = tail;
-                    // 尾插法 将尾结点的后继指向当前结点
-                    tail.next = node;
+                    // 尾插法 尾部插入
+                    // 连接尾节点和当前节点
+                    this._connect(tail, node);
                 }
-                // 改变尾指针的指向 更新尾结点
+                // 改变尾指针的指向 指向当前结点
                 tail = node;
                 length++;
             })
@@ -57,6 +60,16 @@
                 head,
                 tail,
                 length
+            }
+        }
+
+        constructor(...params) {
+            this.head = null; //头指针 指向链表中头结点 初始为null
+            this.tail = null; //尾指针 指向链表中尾结点 初始为null
+            this.length = 0;
+            // 有数据进行初始化
+            if (params.length > 0) {
+                this.init(params);
             }
         }
 
@@ -115,30 +128,16 @@
             return i
         }
 
-        //连接两个结点
-        _connect(before, after) {
-            before && (before.next = after);
-            after && (after.prev = before);
-        }
-
-        //解除连接两个结点
-        _disconnect(before, after) {
-            before && (before.next = null);
-            after && (after.prev = null);
-        }
-
         //插入 根据索引值位置 插入输入的所有新元素
         insert(i, ...params) {
+            if (params.length <= 0) return false
             // 创建一段链表
             const {
                 head: partFirst,
                 tail: partLast,
                 length: partLength
             } = this._createLink(params);
-            // 是否有数据
-            if (!partFirst) {
-                return false
-            }
+
             // 查找索引为i的p 
             let p = this.getElem(i);
             let before;
@@ -236,17 +235,20 @@
         constructor(...params) {
             super(...params);
         }
+        // 获取栈顶
+        getTop() {
+            return this.tail
+        }
         push(...params) {
+            if (params.length <= 0) return this.length
+
             // 创建一段链
             const {
                 head: partFirst,
                 tail: partLast,
                 length: partLength
             } = this._createLink(params);
-            // 是否有数据
-            if (!partFirst) {
-                return this.length;
-            }
+
             // 如果是空栈
             if (this.isEmpty()) {
                 this.head = partFirst;
@@ -324,10 +326,10 @@
     }
 
 
-    var oscar = new Queue(1, 2, 3);
-    console.log(oscar.deQueue());
-    console.log(oscar);
-    console.log(oscar.display());
+    // var oscar = new Queue(1, 2, 3);
+    // console.log(oscar.deQueue());
+    // console.log(oscar);
+    // console.log(oscar.display());
     // var arr = [1]
     // console.log(arr.pop());
 

@@ -1,4 +1,9 @@
+https://developers.google.com/web/updates/2018/09/inside-browser-part1
+https://developers.google.com/web/updates/2018/09/inside-browser-part2
+https://developers.google.com/web/updates/2018/09/inside-browser-part3
+https://developers.google.com/web/updates/2018/09/inside-browser-part4
 https://segmentfault.com/a/1190000012925872
+
 
 # CPU，GPU，内存和多进程架构
 https://developers.google.com/web/updates/2018/09/inside-browser-part1
@@ -55,7 +60,7 @@ https://developers.google.com/web/updates/2018/09/inside-browser-part2
     2. JS引擎线程
         也称为JS内核，负责处理Javascript脚本程序。（例如V8引擎）
         JS引擎线程负责解析Javascript脚本，运行代码。
-        JS引擎一直等待着任务队列中任务的到来，然后加以处理，一个Tab页（renderer进程）中无论什么时候都只有一个JS线程在运行JS程序
+        JS引擎一直等待着事件队列中任务的到来，然后加以处理，一个Tab页（renderer进程）中无论什么时候都只有一个JS线程在运行JS程序
         同样注意，GUI渲染线程与JS引擎线程是互斥的，所以如果JS执行的时间过长，这样就会造成页面的渲染不连贯，导致页面渲染加载阻塞。
     3. 事件触发线程
         归属于浏览器而不是JS引擎，用来控制事件循环（可以理解，JS引擎自己都忙不过来，需要浏览器另开线程协助）
@@ -91,7 +96,7 @@ https://developers.google.com/web/updates/2018/09/inside-browser-part2
     2. 样式计算 构建render树
     将CSS代码解析成树形的数据结构，然后结合DOM合并成render树。(即使不提供任何 CSS，浏览器对每个元素也会有一个默认的样式。)
     3. 布局 render树（Layout/reflow）
-    布局其实是找到所有元素的几何关系的过程。布局树和 DOM 树类似，但是其中只包含页面可见的元素，如果一个元素设置了 display:none ，这个元素不会出现在布局树上，伪元素虽然在 DOM 树上不可见，但是在布局树上是可见的。
+    布局其实是找到所有元素的几何关系的过程，负责各元素尺寸、位置的计算。布局树和 DOM 树类似，但是其中只包含页面可见的元素，如果一个元素设置了 display:none ，这个元素不会出现在布局树上，伪元素虽然在 DOM 树上不可见，但是在布局树上是可见的。
     4. 绘制 render树（paint）
     拥有DOM，样式和布局仍然不足以呈现页面。假设您正在尝试复制一幅画。您知道元素的大小，形状和位置，但是仍然需要判断以什么顺序绘制它们。
     5. 合成

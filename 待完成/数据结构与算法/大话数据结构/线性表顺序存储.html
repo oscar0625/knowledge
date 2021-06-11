@@ -18,19 +18,13 @@
     // 线性表顺序存储结构 插入操作
     // i索引 e插入的元素
     Array.prototype.insert = function (i, e) {
+        // 如果i小于0
+        if (i < 0) return this;
         let j = this.length;
         // 如果大于等于数组的长度，i将被设置为数组的长度
         if (i >= j) {
             i = j
         } else {
-            // 如果为负，将从数组末尾开始那么多元素。累加长度
-            while (i < 0 && j > 0) {
-                i += j
-            }
-            // 如果i依然小于0
-            if (i < 0) {
-                return this
-            }
             // 最后一个元素到i 分别往后移动一个位置
             while (i < j) {
                 this[j] = this[j - 1]
@@ -47,18 +41,10 @@
     Array.prototype.delete = function (i) {
         let j = this.length,
             e;
-        // 如果大于等于数组的长度
-        if (i >= j) {
+        // 如果i小于0或大于等于数组的长度
+        if (i < 0||i >= j) {
             return e
         } else {
-            // 如果为负，将从数组末尾开始那么多元素。累加长度
-            while (i < 0 && j > 0) {
-                i += j
-            }
-            // 如果i依然小于0
-            if (i < 0) {
-                return e
-            }
             // 保留被删除的元素
             e = this[i]
             // i到最后一个元素 分别往前移动一个位置
@@ -71,7 +57,7 @@
             return e
         }
     }
-    
+
     var arr = [1, 2, 3]
     console.log(arr);
 </script>
