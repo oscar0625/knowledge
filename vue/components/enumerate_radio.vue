@@ -1,8 +1,12 @@
 <template>
-  <el-radio-group :value="value" @input="updateValue">
-    <el-radio v-for="(item, key) in list" :key="key" :label="item.value">{{
-      item.name
-    }}</el-radio>
+  <el-radio-group :value="value" :class="customStyle" @input="updateValue">
+    <el-radio
+      v-for="(item, key) in list"
+      :key="key"
+      :label="item.code"
+      :border="customStyle === 'card'"
+      >{{ item.description }}</el-radio
+    >
   </el-radio-group>
 </template>
 
@@ -18,8 +22,11 @@ export default {
       type: [String, Number],
       required: true
     },
-
     defaultValue: {
+      type: String,
+      default: ""
+    },
+    customStyle: {
       type: String,
       default: ""
     }
@@ -37,14 +44,14 @@ export default {
       this.$axios.get(this.url).then(res => {
         //设定默认值
         if (this.$props.defaultValue) {
-          res.enumList.some(item => {
-            if (item.name === this.$props.defaultValue) {
-              this.$emit("input", item.value);
+          res.dataList.some(item => {
+            if (item.description === this.$props.defaultValue) {
+              this.$emit("input", item.code);
               return true;
             }
           });
         }
-        return (this.list = res.enumList);
+        return (this.list = res.dataList);
       });
     },
     updateValue(value) {
@@ -54,4 +61,18 @@ export default {
 };
 </script>
 
-<style lang="less"></style>
+<style lang="less" scoped>
+.el-radio-group {
+  /deep/ .el-radio {
+    margin-right: 10px;
+  }
+  //风格一 card
+  &.card {
+    /deep/ .el-radio {
+      .el-radio__input {
+        // display: none;
+      }
+    }
+  }
+}
+</style>

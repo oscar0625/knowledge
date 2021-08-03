@@ -1,5 +1,7 @@
 <template>
   <div class="image-upload">
+    <!-- 头部插槽 -->
+    <slot name="header"></slot>
     <el-upload
       :class="{ disabled: uploadDisabled }"
       :action="action"
@@ -10,20 +12,19 @@
       :limit="numLimit"
       :auto-upload="true"
       :file-list="fileList"
+      :multiple="multiple"
       :before-upload="upLoadBefore"
       :on-success="uploadSuccess"
       :on-error="uploadError"
       :on-exceed="exceed"
       :on-remove="remove"
     >
-      <i class="el-icon-plus"></i>
+      <i class="el-icon-picture"></i>
+      <h4>点击选择图片</h4>
+      <p v-if="multiple">可选多个图片进行上传</p>
     </el-upload>
-    <el-alert
-      :title="`上传图片大小不能超过${sizeLimit}MB!`"
-      type="warning"
-      v-if="showAlert"
-    >
-    </el-alert>
+    <!-- 默认插槽 -->
+    <slot></slot>
   </div>
 </template>
 
@@ -43,6 +44,10 @@ export default {
       type: String,
       default: "image/jpeg,image/png"
     },
+    multiple: {
+      type: Boolean,
+      default: true
+    },
     sizeLimit: {
       type: Number,
       default: 2
@@ -50,10 +55,6 @@ export default {
     numLimit: {
       type: Number,
       default: 1
-    },
-    showAlert: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
@@ -63,48 +64,48 @@ export default {
         : process.env.VUE_APP_DOMAIN;
     return {
       action: DOMAIN + this.url,
-      Authorization: "Bearer " + this.$cookies.get("token")
+      Authorization: this.$cookies.get("token")
     };
   },
   computed: {
-    //判读当前图片已经到限制数量
+    // 判读当前图片已经到限制数量
     uploadDisabled() {
       return this.fileList.length >= this.numLimit;
     }
   },
   methods: {
-    //触发numLimit
+    // 触发numLimit
     exceed() {
       this.$message.error(`最多只能上传${this.numLimit}张图片`);
     },
-    //删除已经上传或者正在上传中的
+    // 删除已经上传或者正在上传中的
     remove(file, fileList) {
       this.updateFileList(fileList);
     },
-    //更新fileList
+    // 更新fileList
     updateFileList(fileList) {
       // console.log(fileList);
       this.$emit("update:fileList", fileList);
     },
-    //上传之前验证
+    // 上传之前验证
     upLoadBefore(file) {
-      const verificationType = this.accept.includes(file.type),
-        verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
+      const verificationType = this.accept.includes(file.type);
+      const verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
-        this.$message.error("上传的文件类型有误");
+        this.$message.error("上传的图片类型有误");
       }
       if (!verificationSize) {
         this.$message.error(`上传图片大小不能超过${this.sizeLimit}MB!`);
       }
       return verificationType && verificationSize;
     },
-    //成功
+    // 成功
     uploadSuccess(res, file, fileList) {
-      //判断是否真正成功
+      // 判断是否真正成功
       if (res.code === 0) {
         this.updateFileList(fileList);
       } else {
-        //服务器没响应成功 从fileList中删除当前的file
+        // 服务器没响应成功 从fileList中删除当前的file
         fileList.some((item, index) => {
           if (Object.is(item, file)) {
             fileList.splice(index, 1);
@@ -117,7 +118,7 @@ export default {
         }
       }
     },
-    //失败
+    // 失败
     uploadError(error) {
       // 状态码判断
       switch (error.status) {
@@ -143,25 +144,34 @@ export default {
     display: none;
     visibility: hidden;
   }
-  .el-upload {
+  /deep/ .el-upload {
     position: relative;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
+    line-height: normal;
     cursor: pointer;
     overflow: hidden;
     &:hover {
       border-color: #409eff;
     }
+    .el-icon-picture {
+      font-size: 34px;
+      line-height: 70px;
+      padding-top: 20px;
+    }
+    > h4 {
+      font-size: 12px;
+      font-weight: 400;
+      color: #999999;
+      line-height: 30px;
+    }
+    > p {
+      font-size: 10px;
+      color: #cccccc;
+    }
   }
-  .el-icon-plus {
-    font-size: 30px;
-    color: #8c939d;
-    width: 148px;
-    height: 148px;
-    line-height: 148px;
-    text-align: center;
-  }
-  .el-alert {
+
+  /deep/ .el-alert {
     margin-top: 10px;
     line-height: normal;
   }

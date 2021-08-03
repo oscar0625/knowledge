@@ -1,3 +1,4 @@
+https://www.nuxtjs.cn/
 https://juejin.im/post/5cc81e1a6fb9a032414f695b#heading-18
 https://www.jianshu.com/p/840169ba92e6
 # nuxt.js相关概述
@@ -155,7 +156,7 @@ layout中也可以使用context。
 ```
 
 # Vuex状态树
-待续
+https://www.nuxtjs.cn/guide/vuex-store
 
 # 模块
 ## @nuxtjs/axios:
@@ -233,56 +234,6 @@ https://segmentfault.com/a/1190000012774650
     3.在服务器上部署运行
         npm install 安装依赖
         npm start 运行nuxt服务渲染 （也可采用pm2管理）
-```
-
-## pm2
-### 创建pm2start.js
-```
-    npm install node-cmd --save
-
-    in pm2start.js
-        const cmd = require("node-cmd");
-        cmd.run("npm run start");
-```
-### 指令
-```
-    安装
-    npm install pm2 -g
-
-    启动
-    pm2 start pm2start.js --name "my-nuxt" #my-nuxt为PM2进程名称
-
-    保存和开机自启动
-    pm2 save                             #保存当前应用列表                       
-    pm2 startup                          #创建开机自启动命令 
-    start => save => startup
-    
-    查看进程
-    pm2 list
-    pm2 show 0 或者 # pm2 info 0         #查看进程详细信息，0为PM2进程id 
-
-    重启
-    pm2 restart all                      #重启PM2列表中所有的进程
-    pm2 restart 0                        #重启PM2列表中进程为0的进程
-    重载
-    pm2 reload all                       #重载PM2列表中所有的进程
-    pm2 reload 0                         #重载PM2列表中进程为0的进程
-
-    停止
-    pm2 stop all                         #停止PM2列表中所有的进程
-    pm2 stop 0                           #停止PM2列表中进程为0的进程
-    删除
-    pm2 delete all                       #删除PM2列表中所有的进程
-    pm2 delete 0                         #删除PM2列表中进程为0的进程
-
-    更新
-    pm2 update                           #保存进程，终止PM2并恢复进程
-
-    输出问题
-    pm2 logs APP-NAME
-
-    升级PM2
-    npm install pm2@lastest -g           #安装最新的PM2版本
 ```
 
 # 常见问题的解决方案

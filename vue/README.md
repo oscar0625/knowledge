@@ -728,30 +728,37 @@ Vue 在插入、更新或者移除 DOM 时，提供多种不同方式的应用�
 ### 1.3JavaScript 钩子
 可以在 attribute 中声明 JavaScript 钩子 这对于 Vue 的过渡系统和其他第三方 JS 动画库，如 Velocity.js animate.js 结合使用十分有用。
 ```
-    <transition
-        v-on:before-enter="beforeEnter"
-        v-on:enter="enter"
-        v-on:leave="leave"
-        v-bind:css="false"
-    ></transition>
+    <transition :css="false" @enter="slideDown" @leave="slideUp">
+        <div v-show="activeIndex === index" >
+        </div>
+    </transition>
     methods: {
         beforeEnter: function (el) {
-            el.style.opacity = 0
-            el.style.transformOrigin = 'left'
+           // ...
         },
-        enter: function (el, done) {
-            Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
-            Velocity(el, { fontSize: '1em' }, { complete: done })
+        // 展开面板过渡效果
+        slideDown(el, done) {
+            this.$anime({
+                targets: el,
+                height: el.children[0].offsetHeight,
+                duration: 500,
+                easing: "easeInOutQuad",
+                complete: () => {
+                done();
+                }
+            });
         },
-        leave: function (el, done) {
-        Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
-            Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
-            Velocity(el, {
-                rotateZ: '45deg',
-                translateY: '30px',
-                translateX: '30px',
-                opacity: 0
-            }, { complete: done })
+        // 关闭面板过渡效果
+        slideUp(el, done) {
+            this.$anime({
+                targets: el,
+                height: 0,
+                duration: 500,
+                easing: "easeInOutQuad",
+                complete: () => {
+                done();
+                }
+            });
         }
     }
     注意：当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。

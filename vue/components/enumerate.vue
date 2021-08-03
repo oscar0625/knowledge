@@ -9,8 +9,8 @@
     <el-option
       v-for="(item, key) in list"
       :key="key"
-      :label="item.name"
-      :value="item.id"
+      :label="item.description"
+      :value="item.code"
     >
     </el-option>
   </el-select>
@@ -55,8 +55,8 @@ export default {
         //设定默认值
         if (this.$props.defaultValue) {
           res.dataList.some(item => {
-            if (item.name === this.$props.defaultValue) {
-              this.$emit("input", item.id);
+            if (item.description === this.$props.defaultValue) {
+              this.$emit("input", item.code);
               return true;
             }
           });
@@ -71,4 +71,4 @@ export default {
 };
 </script>
 
-<style lang="less"></style>
+<style lang="less" scoped></style>
