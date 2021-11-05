@@ -13,18 +13,52 @@
 
 </body>
 <script>
+    //https://segmentfault.com/a/1190000011154120
+    //https://www.jianshu.com/p/8e99b4aed464
     //https://segmentfault.com/a/1190000018264176?utm_source=tag-newest
-    //https://www.jianshu.com/p/e747f64b8d38
-    //https://www.jianshu.com/p/702e0546c8de   
+
+    //跨平台方案（大前端）（按照技术演进时间排序）
+
+    // 一、Native App
+    // 传统的原生App开发模式，有iOS和aOS两大系统，需要各自语言开发各自App。
+
+    // 二、Web App
+    // 移动端的网站，常被称为H5应用，就是特定运行在移动端浏览器上的网站应用。泛指 SPA(Single Page Application)模式开发出的网站
+    // 1. PWA PWA的核心目标就是提升WebApp的性能
+
+    // 三、Hybrid App
+    // 基于 Web 的 Hybrid 解决方案
+    // 混合模式移动应用，介于Web App、Native App这两者之间的App开发技术
+    // 采用 H5 + 原生 混合开发（Cordova、Ionic、VasSonic、微信小程序）
+
+    // 四、JavaScript开发+原生渲染
+    // 非基于 Web UI 但业务逻辑基于 JavaScript 的解决方案
+    // 由 JavaScript 开发并且由 原生控件渲染 ，代表有 React Native、Weex、快应用。
+
+    // 五、自绘UI+原生
+    // 代表 Flutter
+
+    // 跨平台技术发展的三个阶段
+    // 第一阶段是混合开发的web容器时代
+    //     为了解决原生开发的高成本、低效率，出现了Hybrid混合开发
+    //     原生中嵌入依托于浏览器的WebView
+    //     Web浏览器中可以实现的需求在WebView中基本都可以实现
+    //     但是Web最大的问题是，它的性能和体验与原生开发存在肉眼可感知的差异
+    //     因此并不适用于对性能和用户体验要求较高的场景
+    // 第二阶段是以RN和Weex为代表的泛web容器时代
+    //     RN对Web标准进行了功能裁剪
+    //     用户体验更接近于原生了
+    //     由于进行了功能裁剪，所以RN对业务的支持能力还不到浏览器的5%
+    //     因此仅适用于中低复杂度的低交互类页面。面对稍微复杂一点儿的交互和动画需求，都需要通过调用原生代码去扩展才能实现
+    // 第三阶段是以Flutter为代表的自绘引擎时代
+    //     Flutter是构建Google物联网操作系统Fuchsia的SDK
+    //     它使用Dart语言开发APP
+    //     一套代码可以同时运行在iOS和Android平台上
+    //     Flutter采用自带的Native渲染引擎渲染视图，它是自己完成了组件渲染的闭环
+    //     而RN、Weex之类的框架，只是通过JavaScript虚拟机扩展调用系统组件，最后是由Android或者iOS系统来完成组件的渲染
 
     //小程序多端框架全面测评
     //https://juejin.im/post/5c90eb366fb9a070d4199cc9
-
-    //跨平台方案（大前端）
-    //  1. H5+原生（Cordova、Ionic、微信小程序）
-    //  2. JavaScript开发+原生渲染 （React Native、Weex、快应用）
-    //  3. 自绘UI+原生(Flutter)
-    //  4. 增强版Web App(PWA)
 
     //多端统一开发解决方案 
     //  uni-app(vue)
