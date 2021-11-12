@@ -1,3 +1,4 @@
+wepack 5
 # 一、开始
 因为现存的模块打包器都不太适合大型 SPA 应用，于是决定打造一个适合大型 SPA 应用的模块打包器，也就是说 webpack 其实就是为大型 SPA 而生的。
 ## 1. 安装
@@ -14,7 +15,7 @@ npm install --save-dev webpack webpack-cli webpack-dev-server webpack-merge
 ```
 
 # 二、webpack.config配置
-更多配置教程：https://www.webpackjs.com/configuration/
+更多配置教程：https://webpack.docschina.org/configuration/
 ## 1. 入口起点
 ### 1.1 单页应用程序
 ```
@@ -51,7 +52,7 @@ const config = {
 ```
 ## 3. loader
 loader 用于对模块的源代码进行转换。
-loader列表：https://www.webpackjs.com/loaders/
+loader列表：https://webpack.docschina.org/loaders/
 
 常用loader
 ```
@@ -66,6 +67,9 @@ const config = {
                     },
                     {
                         loader: 'css-loader'
+                    },
+                    {
+                      loader: "postcss-loader"
                     }
                 ]
             },
@@ -76,6 +80,8 @@ const config = {
                     loader: "style-loader"
                 }, {
                     loader: "css-loader"
+                }, {
+                loader: "postcss-loader"
                 }, {
                     loader: "less-loader"
                 }]
@@ -101,7 +107,7 @@ const config = {
 ```
 ## 4. 插件(plugins)
 插件目的在于解决 loader 无法实现的其他事。
-插件列表：https://www.webpackjs.com/plugins/
+插件列表：https://webpack.docschina.org/plugins/
 
 常用插件
 ```
@@ -112,9 +118,12 @@ CleanWebpackPlugin 清理 /dist 文件夹插件
 webpack-dev-server 能够用于快速开发应用程序 或者使用 webpack-dev-middleware 但需要配合其他服务程序一起使用。
 ```
 devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
     //启用热更新
     hot: true,
+    open: true,
     port: 9000
 },
 ```
@@ -127,15 +136,17 @@ const config = {
 };
 ```
 ## 7. devtool
+https://webpack.docschina.org/configuration/devtool/
 此选项控制是否生成，以及如何生成 source map。
 ```
 const config = {
     //适合开发环境
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'eval',
+    devtool: 'eval-source-map',
     //适合生产环境
-    devtool: 'source-map',
     devtool: 'none',
-    //针对一些第三方工具
+    devtool: 'source-map',
+    //发布单个文件时的可能选择
     devtool: 'inline-source-map',
 };
 ```
@@ -148,14 +159,14 @@ const config = {
 
 # 三、其他
 ## 1. 代码分离缓存和懒加载
-代码分离：https://www.webpackjs.com/guides/code-splitting/
+代码分离：https://webpack.docschina.org/guides/code-splitting/
 ```
 1.入口起点：使用 entry 配置手动地分离代码。
 2.防止重复：使用 SplitChunksPlugin 去重和分离 chunk。 ExtractTextPlugin: 用于将 CSS 从主应用程序中分离。
 3.动态导入：通过模块的内联函数调用来分离代码。
 ```
-缓存：https://www.webpackjs.com/guides/caching/
-懒加载：https://www.webpackjs.com/guides/lazy-loading/
+缓存：https://webpack.docschina.org/guides/caching/
+懒加载：https://webpack.docschina.org/guides/lazy-loading/
 ## 2. SplitChunksPlugin
 分包：webpack4分包工具SplitChunksPlugin
 ```
@@ -179,7 +190,7 @@ optimization:{
 }
 ```
 ## 3. 创建 library
-https://www.webpackjs.com/guides/author-libraries/
+https://webpack.docschina.org/guides/author-libraries/
 ```
     module.exports = {
         mode:"production",
@@ -201,7 +212,7 @@ https://www.webpackjs.com/guides/author-libraries/
     };
 ```
 ## 4. shimming 全局变量
-https://www.webpackjs.com/guides/shimming/#shimming-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F
+https://webpack.docschina.org/guides/shimming/
 ```
     plugins: [
         new webpack.ProvidePlugin({
@@ -209,7 +220,7 @@ https://www.webpackjs.com/guides/shimming/#shimming-%E5%85%A8%E5%B1%80%E5%8F%98%
         })
     ]
 ```
-## 5  环境变量
+## 5. 环境变量
 ### 5.1 process.env.NODE_ENV
 ```
 process 是webpack的一个全局变量 
@@ -217,7 +228,7 @@ mode: development --> process.env.NODE_ENV = development
 mode: production --> process.env.NODE_ENV = production
 ```
 ### 5.2 使用环境变量
-https://www.webpackjs.com/guides/environment-variables/
+https://webpack.docschina.org/guides/environment-variables/
 ```
     webpack --env.NODE_ENV=local --env.production 
 ```
@@ -228,14 +239,24 @@ DefinePlugin可以定义一些全局变量，让我们在模块当中直接使�
         "process.env.OSCAR":123
     }),
 ```
-# 四、webpakc中的gulp
-https://www.webpackjs.com/guides/integrations/#gulp
+## 6. 配置 eslint
+* https://webpack.docschina.org/plugins/eslint-webpack-plugin/
+## 7. 集成 prettier 
+https://blog.windstone.cc/front-end-engineering/code-formatter/eslint/eslint-prettier.html#%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE
+* npm install -save-d --save-exact prettier
+* npm install --save-d eslint-plugin-prettier eslint-config-prettier 
+```
+  extends: ["plugin:prettier/recommended"],
+```
+
+# 四、webpack中的gulp
+https://webpack.docschina.org/guides/integrations/#gulp
 ```
 npm install --save-dev webpack-stream
 ```
 
 # 五、TypeScript
-https://www.webpackjs.com/guides/typescript/
+https://webpack.docschina.org/guides/typescript/
 
 # 六、API
-https://www.webpackjs.com/api/
+https://webpack.docschina.org/api/

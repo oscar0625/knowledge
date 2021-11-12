@@ -47,12 +47,12 @@
     // 5.Blob的使用
     //  a.分片上传
 
-    //  b.通过url显示图片
+    //  b.通过url显示图片（同样可以发起请求返回视频）
     var testFilePath = "DSCN0614_small.jpg";
     function test() {
         var http = new XMLHttpRequest();
         http.open("GET", testFilePath, true);
-        http.responseType = "blob";
+        http.responseType = "blob"; //重点
         http.onload = function (e) {
             if (this.status === 200) {
                 var image = new Image();

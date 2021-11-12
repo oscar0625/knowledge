@@ -18,6 +18,7 @@
     *FileReader对象允许Web应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容，使用 File 或 Blob 对象指定要读取的文件或数据。
     *
     **/
+    // 一、FileReader   
     // 1.构造FileReader对象
     var reader = new FileReader();
 
@@ -53,6 +54,10 @@
 
     //手动终止读取操作，只有当 readyState 为 1 时才能调用，调用后，readyState 值为 2
     reader.abort()     
+
+    // 二、createObjectURL
+    // URL.createObjectURL(blob) 方法返回一个 blob: 开头的字符串，指向文件在内存中的地址。
+    
 </script>
 
 </html>
