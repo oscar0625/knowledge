@@ -1279,6 +1279,14 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
             overflow-x: auto;
         }
     }
+    .el-scrollbar {
+        display: flex;
+        height: 100%;
+        /deep/ .el-scrollbar__wrap {
+            flex: auto;
+            height: auto;
+        }
+    }
 ```
 
 # 十一、Vue测试指南

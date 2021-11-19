@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>margin正负值理解</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 情况一 */
+    .box1 {
+      width: 500px;
+      margin: 0 auto;
+    }
+
+    .son1 {
+      margin-left: 10px;
+      /* margin-left: -10px;
+      margin-right: 10px;
+      margin-right: -10px; */
+      background: red;
+    }
+
+    /* 情况二 */
+    .box2 {
+      display: flex;
+      width: 500px;
+      height: 500px;
+      margin: 0 auto;
+    }
+
+    .son2 {
+      margin-top: 10px;
+      /* margin-top: -10px;
+      margin-bottom: 10px;
+      margin-bottom: -10px; */
+      background: red;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div style="height:100px;"></div>
+  <div class="box1">
+    <div class="son1">123</div>
+  </div>
+  <!-- <div class="box2">
+    <div class="son2">123</div>
+  </div> -->
+</body>
+<script>
+
+  //当元素 宽度/高度 固定时
+  // ml正 元素向右移动 ml负 元素向左移动
+  // mr正 元素下一个元素向右移动 mr负 元素下一个元素向左移动 （如果没有下一个元素则看不出效果）
+  // mt正 元素向下移动 mt负 元素向上移动
+  // mb正 元素下一个元素向下移动 mb负 元素下一个元素向上移动 （如果没有下一个元素则看不出效果）
+  // 宽高始终不受影响
+
+  //当元素 宽度/高度 不固定时
+  // 情况一 宽 宽度根据容器自适应
+  // 情况二 高 高度度根据容器自适应
+
+</script>
+
+</html>
