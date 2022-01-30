@@ -1,3 +1,4 @@
+// mock模块会影响原生的ajax请求，使得服务器返回的blob类型变成乱码
 import Mock from "mockjs";
 
 const mock = Mock.mock;

@@ -48,6 +48,7 @@ export default {
         autoplay,
         loop,
         effect,
+        allowTouchMove: false,
         pagination: {
           el: ".swiper-pagination",
           clickable: true

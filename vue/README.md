@@ -616,7 +616,7 @@ methods和computed区别：从某种程度上来说method可以完全代替compu
 ```
     // 父级组件提供
     var Provider = {
-        provide: function () {
+        provide () {
             return {
                 getMap: this.getMap
             }
@@ -1277,6 +1277,7 @@ elementUI 使用el-image组件双击图片会给body添加overflow: hidden;
         height: 100%;
         .el-scrollbar__wrap {
             overflow-x: auto;
+            margin-bottom: 0 !important;
         }
     }
     .el-scrollbar {

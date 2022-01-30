@@ -1,5 +1,10 @@
 <template>
-  <el-button :type="buttonType" :loading="loading" @click="download">
+  <el-button
+    :type="buttonType"
+    icon="el-icon-download"
+    :loading="loading"
+    @click="download"
+  >
     <slot></slot>
   </el-button>
 </template>
@@ -12,15 +17,15 @@ export default {
       type: String,
       required: true
     },
-    buttonType: {
-      type: String,
-      default: "primary"
-    },
     params: {
-      type: Object,
+      type: [Object, Array],
       default() {
         return {};
       }
+    },
+    buttonType: {
+      type: String,
+      default: "primary"
     },
     fileType: {
       type: String,
@@ -29,7 +34,7 @@ export default {
     },
     fileSuffix: {
       type: String,
-      default: ".txt"
+      default: ".xlsx"
     },
     fileName: {
       type: String,
@@ -50,14 +55,13 @@ export default {
           responseType: "blob"
         })
         .then((res) => {
-          const type = res.type || "";
+          const type = res.type;
           if (fileType.includes(type)) {
             const link = document.createElement("a");
             link.href = URL.createObjectURL(res);
             link.download = fileName + Date.now() + fileSuffix;
             link.click();
-          }
-          if (type.includes("application/json")) {
+          } else if (type.includes("application/json")) {
             const reader = new FileReader();
             reader.onload = (e) => {
               const result = JSON.parse(e.target.result);

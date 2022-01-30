@@ -73,7 +73,7 @@ https://www.babeljs.cn/docs/babel-preset-env#usebuiltins
 ```
     useBuiltIns: "entry",
     corejs: 3 
-    //注意：这里需要指定 corejs3 版本 
+    //注意：这里需要下载 corejs3 
     //npm install core-js@3 --save
 
     根据配置的浏览器兼容，引入浏览器不兼容的 polyfill。
@@ -84,12 +84,18 @@ https://www.babeljs.cn/docs/babel-preset-env#usebuiltins
 ```
     useBuiltIns: "usage",
     corejs: { version: 3, proposals: true }
-    //注意：这里需要指定 corejs3 版本 
+    //注意：这里需要下载 corejs3 
     //npm install core-js@3 --save
     //proposals: true 需要先下载插件 @babel/plugin-transform-runtime 这个插件是用来复用辅助函数。
     
     usage 会根据配置的浏览器兼容，以及你代码中用到的 API 来进行 polyfill，实现了按需添加。
 ```
+## 3. corejs
+https://babeljs.io/docs/en/babel-preset-env#corejs
+* 该参数项的取值可以是2或3，这个参数项只有useBuiltIns设置为'usage'或'entry'时，才会生效。
+* 取默认值或2的时候，Babel转码的时候使用的是core-js@2版本（即core-js2.x.x）。因为某些新API只有core-js@3里才有，例如数组的flat方法，我们需要使用core-js@3的API模块进行补齐，这个时候我们就把该项设置为3
+* 需要注意的是，corejs取值为2的时候，需要安装并引入core-js@2版本，或者直接安装并引入polyfill也可以。如果corejs取值为3，必须安装并引入core-js@3版本才可以，否则Babel会转换失败并提示：
+
 
 # 五、原理解析
 https://segmentfault.com/a/1190000013261724

@@ -24,7 +24,8 @@ export default {
   },
   // 校验邮箱
   checkEmail(str) {
-    const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const reg =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (reg.test(str)) {
       return true;
     } else {
@@ -35,10 +36,10 @@ export default {
   checkPatentNumber(str) {
     const next2002 = str.match(/(\d{4}[12389]\d{7})\.?(\d|X)/); // 2002之后
     const prev2002 = str.match(/(\d{2}[12389]\d{5})\.?(\d|X)/); // 2002之前
-    const parity = function(arr) {
+    const parity = function (arr) {
       let code = 1;
       const parityBit =
-        arr[1].split("").reduce(function(acc, cur) {
+        arr[1].split("").reduce(function (acc, cur) {
           code++;
           code = code === 10 ? 2 : code;
           return acc + cur * code;

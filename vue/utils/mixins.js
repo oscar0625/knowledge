@@ -2,15 +2,10 @@ import Vue from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
-import "@/utils/filters.js";
 
 import axios from "@/utils/request";
 import api from "@/api";
 import cookies from "@/plugins/cookie";
-import { upperFirst, camelCase } from "lodash";
-// import mock from "@/plugins/mock";
-// // 执行mock 拦截
-// mock();
 
 Vue.config.productionTip = false;
 
@@ -44,7 +39,7 @@ Vue.mixin({
     // 节流
     customThrottle(fn, delay, time) {
       let timer, previous;
-      return function() {
+      return function () {
         const current = new Date();
         const context = this;
         const args = arguments;
@@ -55,7 +50,7 @@ Vue.mixin({
         } else {
           // 否则 延时执行
           clearTimeout(timer);
-          timer = setTimeout(function() {
+          timer = setTimeout(function () {
             fn.apply(context, args);
           }, delay);
         }
@@ -64,11 +59,11 @@ Vue.mixin({
     // 防抖
     customDebounce(fn, delay) {
       let timer;
-      return function() {
+      return function () {
         const context = this;
         const args = arguments;
         clearTimeout(timer);
-        timer = setTimeout(function() {
+        timer = setTimeout(function () {
           fn.apply(context, args);
         }, delay);
       };
@@ -94,42 +89,8 @@ Vue.mixin({
   }
 });
 
-// 自动化全局注册
-const requireComponent = require.context(
-  // 其组件目录的相对路径
-  "../components",
-  // 是否查询其子目录
-  true,
-  // 匹配基础组件文件名的正则表达式
-  /\w+\.(vue|js)$/
-);
-requireComponent.keys().forEach(fileName => {
-  // 获取组件配置
-  const componentConfig = requireComponent(fileName);
-
-  // 获取组件的 PascalCase 命名
-  const componentName = upperFirst(
-    camelCase(
-      // 获取和目录深度无关的文件名
-      fileName
-        .split("/")
-        .pop()
-        .replace(/\.\w+$/, "")
-    )
-  );
-
-  // 全局注册组件
-  Vue.component(
-    componentName,
-    // 如果这个组件选项是通过 `export default` 导出的，
-    // 那么就会优先使用 `.default`，
-    // 否则回退到使用模块的根。
-    componentConfig.default || componentConfig
-  );
-});
-
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount("#app");
