@@ -1,4 +1,8 @@
-# 一、配置 
+# 微信开发者平台
+* https://developers.weixin.qq.com/doc/
+* https://developers.weixin.qq.com/community/develop/question
+
+# 一、配置小程序
 ## 1. 全局配置
     app.json 小程序的配置
         pages       用于指定小程序由哪些页面组成，
@@ -24,10 +28,10 @@
     }
 ## 3. 开发者工具的配置
     project.config.json 
-
-
-
-
+## 4. sitemap 配置
+* https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/sitemap.html
+## 5. 服务器域名配置要求
+* https://developers.weixin.qq.com/miniprogram/dev/framework/ability/network.html
 
 # 二、逻辑层 (js)
 ## 1.注册程序 app.js   
@@ -196,8 +200,6 @@
     例如：设计稿750px宽度 那么恭喜您，你ps上量出宽度是多少，那么你就定义多少rpx，也就是 1px = 1rpx
 
     例如：设计稿640px宽度  那么很遗憾，你需要转换一下 640px = 750rpx   在psd量出的尺寸 num*750/640 的得到的对应 rpx数量
-
-    
 ### 2.2 class_style
     class="{{className}}" 
     style="color:{{className}};"
@@ -215,14 +217,11 @@
     })
     query.exec()
 ```
-        
-
-
-# 四、事件    
-## 1.事件绑定
+## 4.事件    
+### 4.1事件绑定
     bind* / catch*
     以bind或catch开头，bind事件绑定不会阻止冒泡事件向上冒泡，catch事件绑定可以阻止冒泡事件向上冒泡。
-## 2.事件类型  
+### 4.2事件类型  
     tap 手指触摸后马上离开
     longpress	手指触摸后，超过350ms再离开，如果指定了事件回调函数并触发了这个事件，tap事件将不被触发
     touchstart	手指触摸动作开始	
@@ -230,13 +229,11 @@
     touchcancel	手指触摸动作被打断，如来电提醒，弹窗	
     touchend	手指触摸动作结束     
     等等
-## 3.事件对象    
+### 4.3事件对象    
     event.target.dataset  //自定义数据
     event.detail //自定义事件所携带的数据，如表单组件的提交事件会携带用户的输入 点击事件的detail 带有的 x, y 同 pageX, pageY 代表距离文档左上角的距离。
-
-
-# 五、模板
-## 1.定义模板
+## 5.模板
+### 5.1定义模板
 ```    
     <template name="模板名">
         <view>
@@ -245,7 +242,7 @@
         </view>
     </template>
 ```    
-## 2.使用模板    
+### 5.2使用模板    
 ``` wxml引用
     <import src="../../template/template.wxml"/>
 
@@ -259,17 +256,15 @@
     //is 属性可以使用 Mustache 语法，来动态决定具体需要渲染哪个模板：
     <template is="{{item % 2 == 0 ? 'even' : 'odd'}}"/>
 ```
-## 3.引用
+### 5.3引用
     import  可以在该文件中使用目标文件定义的template
     include 可以将目标文件除了 <template/> <wxs/> 外的整个代码引用
     <include src="header.wxml"/>
     <include src="footer.wxml"/>    
 
 
-
-
-# 六、小程序组件 
-    https://developers.weixin.qq.com/miniprogram/dev/component/
+# 四、小程序组件 
+* https://developers.weixin.qq.com/miniprogram/dev/component/
 ## 1. view  相当于与div
 ## 2. swiper 轮播图组件
 ## 3. icon
@@ -278,12 +273,9 @@
 ## 5. progress
 ## 6. 表单组件
 ## 7. navigator 导航a标签
-## 8. <block> </block >
 
-    
-
-# 七、小程序API
-    https://developers.weixin.qq.com/miniprogram/dev/api/
+# 五、小程序API
+* https://developers.weixin.qq.com/miniprogram/dev/api/
 ## 1. API约定
    事件监听：我们约定，以 on 开头的 API 用来监听某个事件是否触发。
    同步API：我们约定，以 Sync 结尾的 API 都是同步 API。
@@ -363,10 +355,10 @@
     wx.getStorage(Object)
     wx.removeStorage(Object)
     wx.clearStorage(Object)   
-## 7.系统(获取手机型号 宽度 高度等)    
+## 7. 系统(获取手机型号 宽度 高度等)    
     wx.getSystemInfoSync()
 
-# 八、用户信息
+# 六、用户相关组件、API
 ## 1.小程序登录
 ```
     wx.login({
@@ -380,10 +372,24 @@
         }
     }) 
 ```
-## 2.授权
-    https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/authorize.html
 
-### 2.1 获取用户已经授权的设置
+## 2.用户信息
+* wx.getUserProfile()
+
+## 3.授权
+* https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/authorize.html
+```          
+    wx.authorize({
+        scope: 'scope.record',      //不支持 scope.userInfo了
+        //同意授权
+        success (res) {},
+        //拒绝授权
+        fail(res){}
+    })
+```
+
+## 4.设置
+### 4.1 获取用户已经授权的设置
 ```
     wx.getSetting({
       success(res) {
@@ -395,37 +401,14 @@
       }
     })
 ```
-### 2.2 打开授权设置页
+### 4.2 打开授权设置页
 ```
     //必须由点击行为触发wx.openSetting接口的调用
     <view bindtap="openSetting">打开设置页</view>  openSetting() {  wx.openSetting()}
 ```
-### 2.3 提前发起授权请求
-```          
-    wx.authorize({
-        scope: 'scope.record',      //不支持 scope.userInfo了
-        //同意授权
-        success (res) {},
-        //拒绝授权
-        fail(res){}
-    })
-```
 
-### 2.4 wx.getUserInfo()
-```
-    //必须使用 button 来授权登录
-    <button  open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
-    bindGetUserInfo (e) {
-        console.log(e.detail.userInfo)
-    }
-```
-### 2.5 授权流程
-    scope.userInfo
-    程序一开始  wx.getSetting() (2.1)  如果没有res.authSetting['scope.userInfo']授权  跳转到授权页面 进行授权操作 (2.4)  如果不授权不可以
-    scope.userLocation等等...
-    wx.authorize() (2.3)  调取授权弹框  如果同意ok 不同意 给用户主动点击的操作空间 用 wx.openSetting() (2.2) 再次进行授权
 
-# 九、地图  
+# 七、地图相关相关组件、API
 ## 1.使用腾讯地图的功能
     注意：gcj02 比 wgs84 定位准确
     wx.getLocation(Object object)       //获取当前的地理位置、速度。
@@ -441,18 +424,7 @@
      wx.createMapContext(string mapId, Object this)
 
 
-
-# 十、WXS
-    WXS : 小程序架构存在通讯阻塞问题，厂商为解决这个问题，创造了“WXS”脚本语言及关键帧动画等方式，但这些都是厂商维度的优化方案。
-
-    WXS（WeiXin Script）是小程序的一套脚本语言，结合 WXML，可以构建出页面的结构。
-    wxs可以说就是为了满足能在页面中使用js存在的。
-    wxs 与 javascript 是不同的语言，有自己的语法，并不和 javascript 一致。
-    wxs 的运行环境和其他 javascript 代码是隔离的，wxs 中不能调用其他 javascript 文件中定义的函数，也不能调用小程序提供的API。
-    wxs 函数不能作为组件的事件回调。
-    由于运行环境的差异，在 iOS 设备上小程序内的 wxs 会比 javascript 代码快 2 ~ 20 倍。在 android 设备上二者运行效率无差异。
-
-# 十一、原生组件
+# 八、原生组件
     注意：原生组件的层级是最高的。
 ```
     通过配置项创建的：选项卡、导航栏，还有下拉刷新；
@@ -466,11 +438,19 @@
     2.通讯问题：比如一个长列表中内嵌视频组件，页面滚动时，需通知原生的视频组件一起滚动，通讯阻塞，可能导致组件抖动或拖影；
 ```
 
-# 十二、性能优化
+
+# 九、WXS
+    WXS : 小程序架构存在通讯阻塞问题，厂商为解决这个问题，创造了“WXS”脚本语言及关键帧动画等方式，但这些都是厂商维度的优化方案。
+
+    WXS（WeiXin Script）是小程序的一套脚本语言，结合 WXML，可以构建出页面的结构。
+    wxs可以说就是为了满足能在页面中使用js存在的。
+    wxs 与 javascript 是不同的语言，有自己的语法，并不和 javascript 一致。
+    wxs 的运行环境和其他 javascript 代码是隔离的，wxs 中不能调用其他 javascript 文件中定义的函数，也不能调用小程序提供的API。
+    wxs 函数不能作为组件的事件回调。
+    由于运行环境的差异，在 iOS 设备上小程序内的 wxs 会比 javascript 代码快 2 ~ 20 倍。在 android 设备上二者运行效率无差异。
+
+
+# 十、性能优化
 ## 1.减少 setData 调用次数
    小程序开发性能优化，核心就是“setData”的调用，你能做只有两件事情：尽量少调用“setData”；每次调用“setData”，传递尽可能少的数据量，即数据差量更新。
 ## 2.差量更新   
-
-
-# 十三、小程序社区
-    http://www.wxapp-union.com/

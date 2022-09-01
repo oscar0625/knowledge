@@ -29,6 +29,9 @@
     // npm update <Module Name>
     // npm search <Module Name>
     // npm cache clean -f       npm清理缓存
+    // 快速删除node_moudles 
+    //      npm install rimraf -g
+    //      rimraf node_modules  
 
     // npm publish              发布包
     // npm unpublish <package>@<version>   撤销发布自己发布过的某个版本代码。
@@ -78,6 +81,21 @@
 
     // 3.private 这是防止意外发布私有存储库的方法。
     // private: true
+
+    // 二 npm config
+    // npm config set <key> <value> [--global]
+    // npm config get <key>
+    // npm config delete <key>
+    // npm config list
+    // npm config edit
+    // npm get <key>
+    // npm set <key> <value> [--global]
+    
+    // 1.代理
+    // npm config set proxy http://server:port
+    // npm config set https-proxy http://server:port
+    // npm config set registry "http://registry.npmjs.org/"
+
 </script>
 
 </html>

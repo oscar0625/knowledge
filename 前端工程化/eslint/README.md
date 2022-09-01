@@ -208,7 +208,7 @@
 # 集成 prettier 
 https://blog.windstone.cc/front-end-engineering/code-formatter/eslint/eslint-prettier.html#%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE
 https://juejin.cn/post/6924546232945737742
-* npm install -save-d --save-exact prettier
+* npm install -save-d prettier
 * npm install --save-d eslint-plugin-prettier eslint-config-prettier 
 ```
   extends: ["plugin:prettier/recommended"],

@@ -85,6 +85,33 @@ Vue.mixin({
           cbk && cbk();
         }
       });
+    },
+    // transition js方式过渡
+    // 展开面板过渡效果
+    slideDown(el, done) {
+      console.log(el);
+      // this.$anime({
+      //   targets: el,
+      //   height: el.children[0].offsetHeight,
+      //   duration: 500,
+      //   easing: "easeInOutQuad",
+      //   complete: () => {
+      //     done();
+      //   }
+      // });
+    
+    },
+    // 关闭面板过渡效果
+    slideUp(el, done) {
+      this.$anime({
+        targets: el,
+        height: 0,
+        duration: 500,
+        easing: "easeInOutQuad",
+        complete: () => {
+          done();
+        }
+      });
     }
   }
 });

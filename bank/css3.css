@@ -1,4 +1,4 @@
-/*禁用*/
+/*禁用*/ 
 div{
     cursor:not-allowed; /*出现禁用标志*/
     pointer-events: none;/*禁用点击事件  ie11及以上*/

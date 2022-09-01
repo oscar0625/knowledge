@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from "vue"; 
 // 字符串长度过滤
 Vue.filter("lengthFilter", function (value, length) {
   if (typeof value !== "string") return "";
