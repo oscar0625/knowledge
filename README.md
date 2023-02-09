@@ -9,7 +9,7 @@ ts
 日常学习顺序二：
 es6 图解http css解密
 css Animation
-可视化 Canvas、SVG、d3、WebGL、three.js
+可视化 Canvas、SVG 动效、d3、WebGL、three.js
 
 技能顺序：
 node书

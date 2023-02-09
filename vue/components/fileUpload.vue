@@ -3,7 +3,7 @@
     <el-upload
       :action="action"
       :headers="{ Authorization }"
-      :show-file-list="true"
+      :show-file-list="showFileList"
       list-type="text"
       :accept="accept"
       :limit="numLimit"
@@ -19,14 +19,15 @@
     >
       <el-button type="primary" :loading="loading">{{ text }}</el-button>
     </el-upload>
-    <el-alert
-      style="margin-top: 10px; line-height: normal;"
-      :title="
-        `上传文件格式要求 pdf、doc,docx、txt、excel；最多可上传5个文件；文件名(包含后缀名)的最大长度为100个字符`
-      "
-      type="warning"
-    >
-    </el-alert>
+    <!-- 默认插槽 -->
+    <slot>
+      <el-alert
+        style="margin-top: 10px; line-height: normal"
+        :title="`上传文件格式要求ppt、pdf、doc、docx、txt、xls、xlsx；最多可上传${numLimit}个文件；文件名(包含后缀名)的最大长度为100个字符`"
+        type="warning"
+      >
+      </el-alert>
+    </slot>
   </div>
 </template>
 
@@ -37,6 +38,10 @@ export default {
     url: {
       type: String,
       required: true
+    },
+    showFileList: {
+      type: Boolean,
+      default: true
     },
     fileList: {
       type: Array,
@@ -52,7 +57,7 @@ export default {
     },
     sizeLimit: {
       type: Number,
-      default: 2 // MB
+      default: 200 // MB
     },
     numLimit: {
       type: Number,
@@ -66,7 +71,7 @@ export default {
         : process.env.VUE_APP_DOMAIN;
     return {
       action: DOMAIN + this.url,
-      Authorization: this.$cookies.get("token"),
+      Authorization: this.$cookies.get("backToken"),
       loading: false
     };
   },
@@ -88,12 +93,13 @@ export default {
     // 上传之前验证
     upLoadBefore(file) {
       const verificationType =
-        this.accept === "" || this.accept.includes(file.type);
+        this.accept === "" ||
+        (file.type === "" ? false : this.accept.includes(file.type));
       // verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
         this.$message.error("上传的文件类型有误");
       }
-      // if (!verificationSize) {
+      // else if (!verificationSize) {
       //   this.$message.error(`上传文件大小不能超过${this.sizeLimit}MB!`);
       // }
       return verificationType;
@@ -107,6 +113,9 @@ export default {
       // 判断是否真正成功
       if (res.code === 0) {
         this.updateFileList(fileList);
+        // 如果不显示列表 以弹框形式提示
+        !this.showFileList && this.$message.success("上传成功");
+        this.$emit("complete", true);
       } else {
         // 服务器没响应成功 从fileList中删除当前的file
         fileList.some((item, index) => {

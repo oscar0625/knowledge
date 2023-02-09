@@ -645,7 +645,7 @@ var oscarCheck = {
 
     /*检验座机电话*/
     checkTelephone: function (str) {
-        if (/\d{3}-\d{8}|\d{4}-\d{7}/.test(str)) {
+        if (/\d{3}-\d{8}|\d{4}-\d{7,8}/.test(str)) {
             return true;
         } else {
             return false;

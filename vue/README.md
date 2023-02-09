@@ -1331,6 +1331,7 @@ https://vue-test-utils.vuejs.org/zh/guides/#%E8%B5%B7%E6%AD%A5
 
 # 待续
 ## 状态管理
+https://v3.vuex.vuejs.org/zh/
 ## 插件和开发插件
 插件几种引入方式
 ```

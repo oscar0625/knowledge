@@ -1,0 +1,91 @@
+body {
+  font-size: 26 / @rem;
+  color: #141414;
+  // 将点击后的背景高亮颜色设置为透明
+  //  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.wrapper {
+  padding: 0 30 / @rem;
+}
+
+.wx-input {
+  min-height: auto;
+}
+
+.link-icon {
+  background-repeat: no-repeat;
+  background-size: 12 / @rem auto;
+  background-position: right 0 center;
+  background-image: url("~@/assets/images/link_icon.png");
+}
+
+.link-icon-mini {
+  background-repeat: no-repeat;
+  background-size: auto 14 / @rem;
+  background-position: right 30 / @rem center;
+  background-image: url("~@/assets/images/link_icon_mini.png");
+}
+.card-link-icon{
+  padding-right: 20 / @rem!important;
+  .link-icon();
+}
+
+.weui-form {
+  padding: 0 30 / @rem;
+
+  .weui-form__control-area,
+  .weui-form__tips-area,
+  .weui-form__opr-area,
+  .weui-form__tips-area,
+  .weui-form__extra-area {
+    margin: 0;
+  }
+}
+
+// 公共btn类
+.common-btn {
+  width: 570 / @rem;
+  height: 80 / @rem;
+  border-radius: 40 / @rem;
+  line-height: 80 / @rem;
+  font-size: 28 / @rem;
+  font-weight: bold;
+  background-color: transparent;
+  background-image: linear-gradient(90deg, #0c40d4, #245bf5);
+
+  &::after {
+    display: none;
+  }
+}
+
+// 已失效的数据状态
+.failure-data {
+  position: relative;
+  pointer-events: none;
+
+  > * {
+    opacity: 0.6;
+    filter: grayscale(100%);
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 10 / @rem;
+    right: 10 / @rem;
+    width: 148 / @rem;
+    height: 130 / @rem;
+    background-image: url("~@/assets/images/failure_data_icon.png");
+    background-size: cover;
+    background-position: center;
+  }
+}
+// 富文本中图片宽度修改
+.rich-text {
+  line-height: 1.5;
+  // 解决img宽度问题
+  .rich-text-img {
+    max-width: 100%;
+    height: auto!important;
+  }
+}

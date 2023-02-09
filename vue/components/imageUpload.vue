@@ -64,7 +64,7 @@ export default {
         : process.env.VUE_APP_DOMAIN;
     return {
       action: DOMAIN + this.url,
-      Authorization: this.$cookies.get("token")
+      Authorization: this.$cookies.get("backToken")
     };
   },
   computed: {
@@ -89,12 +89,12 @@ export default {
     },
     // 上传之前验证
     upLoadBefore(file) {
-      const verificationType = this.accept.includes(file.type);
+      const verificationType =
+        file.type === "" ? false : this.accept.includes(file.type);
       const verificationSize = file.size / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
         this.$message.error("上传的图片类型有误");
-      }
-      if (!verificationSize) {
+      } else if (!verificationSize) {
         this.$message.error(`上传图片大小不能超过${this.sizeLimit}MB!`);
       }
       return verificationType && verificationSize;

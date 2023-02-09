@@ -1,7 +1,6 @@
 <template>
-  <div class="video-upload">
+  <div>
     <el-upload
-      :class="{ disabled: uploadDisabled }"
       ref="videoUpload"
       :action="action"
       :headers="{ Authorization }"
@@ -20,13 +19,15 @@
     >
       <el-button type="primary" :loading="loading">{{ text }}</el-button>
     </el-upload>
-    {{ uploadDisabled }}
-    <el-alert
-      :title="`上传视频大小不能超过${this.sizeLimit}GB!`"
-      type="warning"
-      v-if="showAlert"
-    >
-    </el-alert>
+    <!-- 默认插槽 -->
+    <slot>
+      <el-alert
+        style="margin-top: 10px; line-height: normal"
+        :title="`上传视频最佳展示比例为 16：9`"
+        type="warning"
+      >
+      </el-alert>
+    </slot>
   </div>
 </template>
 
@@ -57,10 +58,6 @@ export default {
     numLimit: {
       type: Number,
       default: 1
-    },
-    showAlert: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
@@ -70,15 +67,9 @@ export default {
         : process.env.VUE_APP_DOMAIN;
     return {
       action: DOMAIN + this.url,
-      Authorization: "Bearer " + this.$cookies.get("token"),
+      Authorization: this.$cookies.get("backToken"),
       loading: false
     };
-  },
-  computed: {
-    //判读当前图片已经到限制数量
-    uploadDisabled() {
-      return this.fileList.length >= this.numLimit;
-    }
   },
   methods: {
     //触发numLimit
@@ -98,20 +89,15 @@ export default {
     //上传之前验证
     upLoadBefore(file) {
       const verificationType =
-          file.type.includes("video") || this.accept.includes(file.type),
-        verificationSize = file.size / 1024 / 1024 / 1024 < this.sizeLimit,
-        verificationName =
-          file.name.match(/\./g).length < 2 && file.name.search(/\s/) === -1;
-      if (!verificationName) {
-        this.$message.error("上传的视频名称中不能含有 点字符 或 空格字符");
-      }
+          file.type.includes("video") ||
+          (file.type === "" ? false : this.accept.includes(file.type)),
+        verificationSize = file.size / 1024 / 1024 / 1024 < this.sizeLimit;
       if (!verificationType) {
         this.$message.error("上传的视频类型有误");
-      }
-      if (!verificationSize) {
+      } else if (!verificationSize) {
         this.$message.error(`上传视频大小不能超过${this.sizeLimit}GB!`);
       }
-      return verificationName && verificationType && verificationSize;
+      return verificationType && verificationSize;
     },
     uploadProgress() {
       this.loading = true;
@@ -162,16 +148,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.video-upload {
-  //当前图片已经到限制数量隐藏
-  /deep/ .disabled .el-upload--text {
-    display: none;
-    visibility: hidden;
-  }
-  .el-alert {
-    margin-top: 10px;
-    line-height: normal;
-  }
-}
-</style>
+<style lang="less" scoped></style>

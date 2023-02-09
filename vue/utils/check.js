@@ -16,7 +16,7 @@ export default {
     }
   },
   checkTelephone(str) {
-    if (/(^0\d{2}-\d{8}$)|(^0\d{3}-\d{7}$)/.test(str)) {
+    if (/(^0\d{2}-\d{8}$)|(^0\d{3}-\d{7,8}$)/.test(str)) {
       return true;
     } else {
       return false;
