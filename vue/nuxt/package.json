@@ -18,7 +18,7 @@
     "@nuxtjs/style-resources": "^1.0.0",
     "animate.css": "^4.1.0",
     "cookie-universal-nuxt": "^2.1.4",
-    "echarts": "^4.8.0",
+    "echarts": "^5.4.2",
     "element-china-area-data": "^4.1.2",
     "element-ui": "^2.13.2",
     "node-cmd": "^3.0.0",
