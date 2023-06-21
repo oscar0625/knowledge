@@ -22,7 +22,7 @@
     "element-china-area-data": "^4.1.2",
     "element-ui": "^2.13.2",
     "node-cmd": "^3.0.0",
-    "nuxt": "^2.13.0",
+    "nuxt": "^3.4.3",
     "nzh": "^1.0.4",
     "swiper": "^4.5.1",
     "vue-animejs": "^2.1.1",
